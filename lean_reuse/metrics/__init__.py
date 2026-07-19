@@ -31,6 +31,7 @@ MODULES = [
     "trust_base",
     "elab_cost",
     "amortization",
+    "triviality",
 ]
 
 
@@ -52,6 +53,8 @@ class Prep:
         self.private = _np(d["private"], np.int8).astype(bool)
         self.has_doc = _np(d["has_doc"], np.int8).astype(bool) if "has_doc" in d else np.zeros(self.n, bool)
         self.branch = _np(d["branch"], np.int32) if "branch" in d else np.zeros(self.n, np.int32)
+        self.triv_stmt = _np(d["triv_stmt"], np.int8).astype(bool) if "triv_stmt" in d else np.zeros(self.n, bool)
+        self.triv_proof = _np(d["triv_proof"], np.int8).astype(bool) if "triv_proof" in d else np.zeros(self.n, bool)
         self.sorry = _np(d["sorry"], np.int32)
         self.proof_lines = _np(d["proof_lines"], np.int32)
         self.sig_lines = _np(d["sig_lines"], np.int32) if "sig_lines" in d else np.zeros(self.n, np.int32)

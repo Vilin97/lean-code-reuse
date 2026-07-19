@@ -29,9 +29,7 @@ ORDER = [
     "tauceti", "strongpnt", "sphere-gauss", "atlas", "erdos90", "clawristotle",
     "seed-prover", "superhuman", "pedigree", "rubik", "gblean",
 ]
-# quality anchors for calibration (declared, defensible, and clearly labeled)
-HIGH_ANCHOR = {"mathlib4", "flt", "pfr", "carleson", "addcombi"}
-LOW_ANCHOR = {"seed-prover", "superhuman", "atlas", "pedigree", "rubik", "gblean"}
+
 CCDF_KEYS = None  # all repos
 VOCAB_KEYS = ["carleson", "flt", "tauceti", "strongpnt", "erdos90"]
 DISPLAY_LABEL = {}
@@ -46,6 +44,8 @@ COMPOSITE = [
     ("doc coverage", lambda r: r["m10"].get("pct_defs_with_doc")),
     ("amortization", lambda r: r["m14"].get("mean_log10_cost")),
     ("elab economy", lambda r: -r["m13"]["secs_per_kloc"] if r["m13"].get("secs_per_kloc") is not None else None),
+    ("no trivial statements", lambda r: -r["m15"]["pct_trivial_statements"] if r["m15"].get("pct_trivial_statements") is not None else None),
+    ("Mathlib vocabulary breadth", lambda r: r["m4"].get("vocab1k")),
 ]
 
 
@@ -59,7 +59,7 @@ def pack_repo(key, res, tier):
         "decls": d["n_reusable_decls"], "alldecls": meta["decls"], "edges": meta["edges"],
         "provenance": meta["provenance"],
         "excluded": False,
-        "anchor": "high" if key in HIGH_ANCHOR else "low" if key in LOW_ANCHOR else None,
+        "anchor": None,
         "m1": {
             "mean": d["degree"]["mean"], "median": d["degree"]["median"],
             "p90": d["degree"]["p90"], "max": d["degree"]["max"],
@@ -115,6 +115,7 @@ def pack_repo(key, res, tier):
         "m12": m.get("trust_base", {}),
         "m13": m.get("elab_cost", {"secs_per_kloc": None}),
         "m14": m.get("amortization", {}),
+        "m15": m.get("triviality", {}),
     }
 
 
@@ -192,10 +193,7 @@ def main():
         for k in VOCAB_KEYS if k in byk and byk[k]["m4"]["vocab"]
     ]
 
-    # ---- anchor-calibrated AUC table ----------------------------------------
-    hi = [byk[k] for k in HIGH_ANCHOR if k in byk]
-    lo = [byk[k] for k in LOW_ANCHOR if k in byk]
-
+    # ---- metric battery (definitions reused by PCA and composite) ----------
     def fmtv(v, pct=False):
         if v is None:
             return "—"
@@ -214,8 +212,6 @@ def main():
         ("M1 · share reused >=2", lambda r: r["m1"]["ge2"], True, True),
         ("M1 · share never reused", lambda r: r["m1"]["never"], False, True),
         ("M2 · statement share of refs", lambda r: r["m2"]["sig"], True, True),
-        ("M4 · Mathlib refs per decl", lambda r: r["m4"]["ml_per_decl"] or None, True, False),
-        ("M4 · Mathlib vocabulary per 1k refs", lambda r: r["m4"]["vocab1k"], True, False),
         ("M5 · top-1% reuse share", lambda r: r["m5"]["top1"] or 0, False, True),
         ("M6 · max dependency depth", lambda r: r["m6"]["maxd"], True, False),
         ("M12 · axioms per 1k decls", lambda r: r["m12"].get("axioms_per_1k_decls"), False, False),
@@ -225,25 +221,12 @@ def main():
         ("M8 · p90 proof length (lines)", lambda r: r["m8"]["pl_p90"], False, False),
         ("M8 · median statement length (chars)", lambda r: r["m8"].get("stmt_med"), False, False),
         ("M9 · median file length (LOC)", lambda r: r["m9"].get("file_med"), False, False),
+        ("M15 · trivial statements", lambda r: r["m15"].get("pct_trivial_statements"), False, True),
+        ("M15 · trivial one-liner proofs", lambda r: r["m15"].get("pct_trivial_proofs"), False, True),
     ]
     auc_rows = []
-    for label, f, good_high, pct in metrics:
-        hv = [f(r) for r in hi if f(r) is not None]
-        lv = [f(r) for r in lo if f(r) is not None]
-        if not hv or not lv:
-            continue
-        a = auc(hv, lv, good_high)
-        mids = [f(byk[k]) for k in ORDER
-                if k in byk and k not in HIGH_ANCHOR and k not in LOW_ANCHOR
-                and f(byk[k]) is not None]
-        auc_rows.append({
-            "label": label, "dir": "↑ good" if good_high else "↓ good",
-            "medH": fmtv(med(hv), pct), "medM": fmtv(med(mids), pct) if mids else "—",
-            "medL": fmtv(med(lv), pct), "auc": round(a, 3),
-        })
-    auc_rows.sort(key=lambda r: -abs(r["auc"] - 0.5))
 
-    # ---- composite quality score (percentile-rank mean over discriminators) --
+    # ---- composite of mechanical checks (percentile-rank mean) -------------
     comp = []
     for r in repos:
         parts = []
@@ -262,15 +245,15 @@ def main():
 
     # ---- PCA over the standardized metric battery --------------------------
     import numpy as _np
-    pca_metrics = [(lbl, f) for lbl, f, _, _ in metrics]
-    M = []
-    for r in repos:
-        M.append([f(r) for _, f in pca_metrics])
-    M = _np.array(M, dtype=float)
+    all_metrics = [(lbl, f) for lbl, f, _, _ in metrics]
+    # no imputation: keep only metrics computed for EVERY corpus repo
+    pca_metrics = [
+        (lbl, f) for lbl, f in all_metrics
+        if all(f(r) is not None for r in repos)
+    ]
+    M = _np.array([[f(r) for _, f in pca_metrics] for r in repos], dtype=float)
     for j in range(M.shape[1]):
         col = M[:, j]
-        med_j = _np.nanmedian(col) if not _np.all(_np.isnan(col)) else 0.0
-        col[_np.isnan(col)] = med_j
         sd = col.std()
         M[:, j] = (col - col.mean()) / (sd if sd > 1e-9 else 1.0)
     U, S, Vt = _np.linalg.svd(M, full_matrices=False)
@@ -281,8 +264,8 @@ def main():
     if pcs[mi, 0] < 0:
         pcs[:, 0] *= -1
         Vt[0] *= -1
-    hi_idx = [i for i, r in enumerate(repos) if r["key"] in HIGH_ANCHOR]
-    if pcs[hi_idx, 1].mean() < 0:
+    si = next(i for i, r in enumerate(repos) if r["key"] == "seed-prover")
+    if pcs[si, 1] > 0:
         pcs[:, 1] *= -1
         Vt[1] *= -1
     load1 = sorted(zip([l for l, _ in pca_metrics], Vt[0]), key=lambda t: -abs(t[1]))[:5]
@@ -299,6 +282,7 @@ def main():
         "load1": [{"m": l, "w": round(float(w), 2)} for l, w in load1],
         "load2": [{"m": l, "w": round(float(w), 2)} for l, w in load2],
         "load3": [{"m": l, "w": round(float(w), 2)} for l, w in load3],
+        "included": [l for l, _ in pca_metrics],
     }
 
     data = {
@@ -325,17 +309,17 @@ def main():
 
 VERDICTS = [
     {"good": True, "title": "Amortization exponent (M14)",
-     "text": "Reuse measured as compression: log₁₀ of the fully-inlined dependency tree. Mathlib averages 10^7.5 (deepest 10^41); unreviewed dumps sit near 10^0.5–0.8. AUC 0.87 where raw reuse counts were a coin flip — and chain-splitting cannot inflate it, since a chain of length k only reaches cost k."},
+     "text": "Reuse measured as compression: log₁₀ of the fully-inlined dependency tree. Mathlib averages 10^7.5 (deepest 10^41); unreviewed dumps sit near 10^0.5–0.8, and chain-splitting cannot inflate it, since a chain of length k only reaches cost k."},
     {"good": True, "title": "Cross-directory reuse (M3)",
-     "text": "The strongest structural separator (AUC 1.0): Mathlib routes 62% of reuse edges across top-level directories; every AI-heavy corpus — curated included — sits below 2%. LeanPool's 93 directories with 0.1% cross-dir reuse reflect its pool-of-projects design, not its authorship."},
+     "text": "The strongest structural separator: Mathlib routes 62% of reuse edges across top-level directories; every AI-heavy corpus — curated included — sits below 2%. LeanPool's 93 directories with 0.1% cross-dir reuse reflect its pool-of-projects design, not its authorship."},
     {"good": True, "title": "Docstring coverage (M10)",
      "text": "A process signal: Mathlib's linter enforces docstrings on definitions (99.4% coverage) and the habit propagates through reviewed projects; both Gauss-completed corpora sit near 20%. Mirrors the SE finding that process metrics out-predict product metrics."},
     {"good": True, "title": "Hygiene profile (M7/M8/M9)",
-     "text": "Sorries, duplicate bodies, wholesale imports: each catches a different failure mode — ATLAS's 2,900 sorries, Seed-Prover's 60% duplication, superhuman's blanket `import Mathlib`. Jointly with locality they separate the anchors completely."},
+     "text": "Sorries, duplicate bodies, wholesale imports, trivial statements: each catches a different failure mode — ATLAS's 2,900 sorries, Seed-Prover's 60% duplication, superhuman's blanket `import Mathlib`, Pedigree's 59 axioms. Jointly with locality they flag every unreviewed corpus in this study."},
     {"good": False, "title": "Raw reuse counts (M1)",
-     "text": "Median in-degree: AUC ~0.5. Never-reused even inverts — superhuman's bespoke proof towers reuse 97% of their lemmas, exactly once each. Citation volume cannot tell a cathedral from scaffolding; that is what M14 fixes."},
+     "text": "Median in-degree separates nothing. Never-reused even inverts — superhuman's bespoke proof towers reuse 97% of their lemmas, exactly once each. Citation volume cannot tell a cathedral from scaffolding; that is what M14 fixes."},
     {"good": False, "title": "Elaboration cost per LOC (M13) — refuted",
-     "text": "The heartbeats hypothesis inverts (AUC 0.2): sorried or shallow content elaborates cheaply (ATLAS: 12 s/kLOC) while TauCeti's 73 s/kLOC reflects genuinely hard mathematics. Cost per line measures effort, not quality — expensive-per-line *and* nothing-reused is the actual smell."},
+     "text": "The heartbeats hypothesis inverts: sorried or shallow content elaborates cheaply (ATLAS: 12 s/kLOC) while TauCeti's 73 s/kLOC reflects genuinely hard mathematics. Cost per line measures effort, not quality — expensive-per-line *and* nothing-reused is the actual smell."},
     {"good": False, "title": "Depth, leverage, statement share",
      "text": "Depth is inheritable via vendored code (LeanPool's 163-deep chain runs through a vendored logic library); Mathlib leverage measures participation, which every serious pipeline has; statement share inverts on hypothesis-heavy restated problem statements."},
 ]
@@ -416,44 +400,36 @@ headline). The curated AI projects are clean on both counts (TauCeti:
 duplicates, {pct(spnt['m8']['sorry'])} sorries). The two Sphere Packing rows are compared
 directly in §11.</p>""",
         "discussProse": f"""
-<p>Calibrated against the declared anchors, the discriminating metrics form a coherent
-family: <b>compounding reuse</b> (the amortization exponent), <b>organization</b>
-(cross-directory and outside-file reuse), <b>process discipline</b> (docstring coverage,
-granular imports, sorry hygiene) and <b>economy</b> (duplication). The failures are all
-<em>volume</em> metrics — raw citation counts, depth, Mathlib leverage, statement share,
-elaboration cost — that a large or machine-generated corpus satisfies incidentally. This
-mirrors three decades of software measurement: volume-derived indices predict quality
-poorly, while process signals and threshold risk-profiles hold up. The check-profile here
-is a SIG-style risk profile adapted to Lean, with the amortization exponent as the
-reuse-native addition.</p>
-<p><b>The Sphere Packing A/B is the study's most important result — and it is a
-warning, not a victory lap.</b> The corpus contains both the community formalization
-(blueprint-led, maintainer-reviewed, still in progress) and Math Inc's Gauss PR against it:
-same theorem, same target repo. The PR <em>wins every mechanically checkable axis</em> —
-composite {comp.get('sphere-gauss', 0)*100:.0f} (top of the corpus) versus the community's
-{comp.get('spherepacking', 0)*100:.0f}: sorry-free, docstrings on
-{pct(sg.get('m10', {}).get('pct_defs_with_doc'))} of definitions versus
-{pct(spc.get('m10', {}).get('pct_defs_with_doc'))}, cross-directory reuse
-{pct(sg.get('m3', {}).get('crossdir'))} versus {pct(spc.get('m3', {}).get('crossdir'))},
-lower duplication, higher amortization. Yet the community declined to merge it, for reasons
-that live precisely in the quadrant §12 shows no metric here can see: definition quality,
-statement generality, API design. A modern AI pipeline already produces artifacts that
-pass — indeed top — every structural and hygiene check in this study. These metrics are a
-floor, and the floor has been crossed; they remain useful for catching unforced errors
-(dumps, sorries, clones, archipelagos), not for certifying quality. Optimizing them
-directly is now demonstrably Goodhartable.</p>
-<p>The slop calibration set (Pedigree Polytopes, Rubik Cube Group, GBLean — flagged as
-crank or majority-sorry scaffolding during LeanPool's candidate triage) lands in the lower
-band: {comp.get('pedigree',0)*100:.0f}, {comp.get('rubik',0)*100:.0f} and
-{comp.get('gblean',0)*100:.0f} — though not at the very bottom, a reminder that the
-composite is descriptive: textual-tier repos carry only partial checks, and
-organized-but-empty corpora are punished harder than sorry-heavy scaffolds. The calibrated
-instrument is the anchor-AUC table above; the composite is a summary. The
-composite is visibly <em>not</em> a provenance ordering — TauCeti and LeanPool
-(65 human / 38 AI / 20 mixed projects) sit inside the human band — and SciLean and Tao's
-<i>Analysis</i> are excluded from the corpus entirely: their <code>sorry_proof</code> and
-exercises-left-to-the-reader conventions are deliberate design choices the hygiene checks
-misread, a reminder that no metric substitutes for knowing what a project is.</p>""",
+<p>The discriminating metrics form a coherent family: <b>compounding reuse</b> (the
+amortization exponent), <b>organization</b> (cross-directory and outside-file reuse),
+<b>process discipline</b> (docstring coverage, granular imports, sorry hygiene) and
+<b>economy</b> (duplication, triviality). The failures are <em>volume</em> metrics — raw
+citation counts, depth, Mathlib leverage, statement share, elaboration cost — that a large
+or machine-generated corpus satisfies incidentally, mirroring the software-measurement
+literature where volume indices predict quality poorly and process signals hold up.</p>
+<p><b>The Sphere Packing A/B, and why the composite must be read with suspicion.</b> The
+corpus contains the community formalization and Math Inc's Gauss PR against it: same
+theorem, different process. The PR tops the composite
+({comp.get('sphere-gauss', 0)*100:.0f} vs {comp.get('spherepacking', 0)*100:.0f}) — yet the
+community's review of it was scathing, reporting padding such as declarations of type
+<code>True</code> and lemmas of the form <code>1 + 1 = 2</code>. We built a triviality
+detector (M15) for exactly these; on the branch head we measure (pinned 2026-07-19), it
+finds none — either they were cleaned after review or predate this snapshot — and the PR
+passes every other mechanical check too. The honest conclusion is not that the PR is
+high-quality; it is that <b>a modern AI pipeline can saturate every mechanically checkable
+signal while failing expert review</b> on definition quality, statement generality and API
+design (§12). The residual quantitative tells are vocabulary poverty per citation
+({(sg.get('m4') or {}).get('vocab1k','—')} distinct Mathlib lemmas per 1k refs vs the
+community's {(spc.get('m4') or {}).get('vocab1k','—')}) and a heavier proof-length tail.
+Treat the composite as a floor-detector: scoring low is meaningful, scoring high is not a
+certificate.</p>
+<p>The slop calibration set behaves as floors should: Pedigree Polytopes
+({comp.get('pedigree',0)*100:.0f}) is exposed by axioms (59 declared) rather than sorries,
+GBLean ({comp.get('gblean',0)*100:.0f}) and Rubik ({comp.get('rubik',0)*100:.0f}) by
+sorry-rates, Seed-Prover ({comp.get('seed-prover',0)*100:.0f}) by duplication and
+isolation. TauCeti and LeanPool (65 human / 38 AI / 20 mixed projects) sit inside the human
+band. SciLean and Tao's <i>Analysis</i> remain excluded: their sorry conventions are
+deliberate design choices the checks misread.</p>""",
         "amortProse": f"""
 <p>This is the graph-theoretic formulation under which reuse <em>does</em> discriminate —
 massively. Mathlib's average declaration would cost 10<sup>{ml['m14'].get('mean_log10_cost','?')}</sup>
@@ -471,12 +447,11 @@ chains through Mathlib are credited to M4, not here.</p>""",
 declarations (0.76–0.79 on every repo checked); the textual tier under-counts dot-notation
 and instance uses but preserves ranking, justifying its use for the unbuildable corpora
 (Seed-Prover, superhuman, Erdős-90, Clawristotle).</p>
-<p><b>Anchors, not ground truth.</b> "High" anchors are maintainer-reviewed,
-Mathlib-integration-bound projects (Mathlib, FLT, PFR, AddCombi, Carleson); "low" anchors
-are unreviewed dumps or corpora shipping thousands of sorries (Seed-Prover, superhuman,
-ATLAS). The choice is declared but it is a choice; mid-corpus repos are never used for
-calibration, only scored. Sample sizes are small — read AUCs as effect directions, not
-significance tests.</p>
+<p><b>No fitted labels.</b> Nothing here is trained or calibrated against a quality
+labeling: the PCA uses only complete-coverage metrics with no imputation, and the composite
+is an unweighted mean of percentile ranks. Where we assert a metric "discriminates," the
+claim rests on the visible separation in its panel and on the slop set behaving as
+expected — judge from the charts.</p>
 <p><b>Elaboration cost caveats.</b> Wall-clock re-elaboration approximates heartbeats;
 import-loading is subtracted via per-import-set stub baselines, but toolchain differences
 (v4.21–v4.33), caching and machine noise remain; samples are 12 files per repo.</p>

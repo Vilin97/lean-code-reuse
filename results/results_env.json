@@ -270,6 +270,12 @@
     "mean_log10_cost_theorems": 3.52,
     "total_amortization_exp": 5.59,
     "n_scored": 30483
+   },
+   "triviality": {
+    "pct_trivial_statements": 0.0001,
+    "n_trivial_statements": 5,
+    "pct_trivial_proofs": 0.0531,
+    "pct_statements_no_refs": 0.0001
    }
   }
  },
@@ -531,6 +537,12 @@
     "mean_log10_cost_theorems": 0.7,
     "total_amortization_exp": 2.0,
     "n_scored": 2733
+   },
+   "triviality": {
+    "pct_trivial_statements": 0.0,
+    "n_trivial_statements": 0,
+    "pct_trivial_proofs": 0.101,
+    "pct_statements_no_refs": 0.0
    }
   }
  },
@@ -792,6 +804,12 @@
     "mean_log10_cost_theorems": 1.4,
     "total_amortization_exp": 2.79,
     "n_scored": 1838
+   },
+   "triviality": {
+    "pct_trivial_statements": 0.0,
+    "n_trivial_statements": 0,
+    "pct_trivial_proofs": 0.0,
+    "pct_statements_no_refs": 0.0
    }
   }
  },
@@ -1057,6 +1075,12 @@
     "mean_log10_cost_theorems": 8.12,
     "total_amortization_exp": 37.21,
     "n_scored": 299050
+   },
+   "triviality": {
+    "pct_trivial_statements": 0.0,
+    "n_trivial_statements": 1,
+    "pct_trivial_proofs": 0.0859,
+    "pct_statements_no_refs": 0.0
    }
   }
  },
@@ -1427,6 +1451,12 @@
     "mean_log10_cost_theorems": 1.43,
     "total_amortization_exp": 2.17,
     "n_scored": 3032
+   },
+   "triviality": {
+    "pct_trivial_statements": 0.0,
+    "n_trivial_statements": 0,
+    "pct_trivial_proofs": 0.1019,
+    "pct_statements_no_refs": 0.0
    }
   }
  },
@@ -1797,6 +1827,12 @@
     "mean_log10_cost_theorems": 2.79,
     "total_amortization_exp": 8.67,
     "n_scored": 11938
+   },
+   "triviality": {
+    "pct_trivial_statements": 0.0,
+    "n_trivial_statements": 0,
+    "pct_trivial_proofs": 0.086,
+    "pct_statements_no_refs": 0.0
    }
   }
  },
@@ -2171,6 +2207,12 @@
     "mean_log10_cost_theorems": 1.46,
     "total_amortization_exp": 10.79,
     "n_scored": 4063
+   },
+   "triviality": {
+    "pct_trivial_statements": 0.0,
+    "n_trivial_statements": 0,
+    "pct_trivial_proofs": 0.0954,
+    "pct_statements_no_refs": 0.0
    }
   }
  },
@@ -2541,6 +2583,12 @@
     "mean_log10_cost_theorems": 1.56,
     "total_amortization_exp": 3.6,
     "n_scored": 1307
+   },
+   "triviality": {
+    "pct_trivial_statements": 0.0,
+    "n_trivial_statements": 0,
+    "pct_trivial_proofs": 0.0197,
+    "pct_statements_no_refs": 0.0
    }
   }
  },
@@ -2911,6 +2959,12 @@
     "mean_log10_cost_theorems": 1.81,
     "total_amortization_exp": 5.31,
     "n_scored": 3659
+   },
+   "triviality": {
+    "pct_trivial_statements": 0.0011,
+    "n_trivial_statements": 3,
+    "pct_trivial_proofs": 0.0604,
+    "pct_statements_no_refs": 0.0
    }
   }
  },
@@ -3283,6 +3337,12 @@
     "mean_log10_cost_theorems": 2.11,
     "total_amortization_exp": 6.42,
     "n_scored": 46365
+   },
+   "triviality": {
+    "pct_trivial_statements": 0.0,
+    "n_trivial_statements": 0,
+    "pct_trivial_proofs": 0.0022,
+    "pct_statements_no_refs": 0.0
    }
   }
  },
@@ -3649,6 +3709,12 @@
     "mean_log10_cost_theorems": 0.49,
     "total_amortization_exp": 0.75,
     "n_scored": 5206
+   },
+   "triviality": {
+    "pct_trivial_statements": 0.0014,
+    "n_trivial_statements": 5,
+    "pct_trivial_proofs": 0.0101,
+    "pct_statements_no_refs": 0.0
    }
   }
  },
@@ -4019,6 +4085,12 @@
     "mean_log10_cost_theorems": 1.47,
     "total_amortization_exp": 2.81,
     "n_scored": 7174
+   },
+   "triviality": {
+    "pct_trivial_statements": 0.0,
+    "n_trivial_statements": 0,
+    "pct_trivial_proofs": 0.099,
+    "pct_statements_no_refs": 0.0
    }
   }
  },
@@ -4389,6 +4461,12 @@
     "mean_log10_cost_theorems": 2.94,
     "total_amortization_exp": 29.77,
     "n_scored": 44159
+   },
+   "triviality": {
+    "pct_trivial_statements": 0.0002,
+    "n_trivial_statements": 7,
+    "pct_trivial_proofs": 0.0516,
+    "pct_statements_no_refs": 0.0
    }
   }
  },
@@ -4759,6 +4837,12 @@
     "mean_log10_cost_theorems": 0.67,
     "total_amortization_exp": 1.0,
     "n_scored": 242
+   },
+   "triviality": {
+    "pct_trivial_statements": 0.0,
+    "n_trivial_statements": 0,
+    "pct_trivial_proofs": 0.019,
+    "pct_statements_no_refs": 0.0
    }
   }
  },
@@ -5129,6 +5213,12 @@
     "mean_log10_cost_theorems": 1.5,
     "total_amortization_exp": 2.95,
     "n_scored": 8221
+   },
+   "triviality": {
+    "pct_trivial_statements": 0.0,
+    "n_trivial_statements": 0,
+    "pct_trivial_proofs": 0.0035,
+    "pct_statements_no_refs": 0.0
    }
   }
  },
@@ -5499,6 +5589,12 @@
     "mean_log10_cost_theorems": 1.75,
     "total_amortization_exp": 5.61,
     "n_scored": 3102
+   },
+   "triviality": {
+    "pct_trivial_statements": 0.0,
+    "n_trivial_statements": 0,
+    "pct_trivial_proofs": 0.0083,
+    "pct_statements_no_refs": 0.0
    }
   }
  },
@@ -5869,6 +5965,12 @@
     "mean_log10_cost_theorems": 0.78,
     "total_amortization_exp": 4.15,
     "n_scored": 1129
+   },
+   "triviality": {
+    "pct_trivial_statements": 0.0,
+    "n_trivial_statements": 0,
+    "pct_trivial_proofs": 0.0157,
+    "pct_statements_no_refs": 0.0
    }
   }
  },
@@ -6242,6 +6344,12 @@
     "mean_log10_cost_theorems": 1.43,
     "total_amortization_exp": 3.57,
     "n_scored": 1488
+   },
+   "triviality": {
+    "pct_trivial_statements": 0.0,
+    "n_trivial_statements": 0,
+    "pct_trivial_proofs": 0.0651,
+    "pct_statements_no_refs": 0.0
    }
   }
  },
@@ -6612,6 +6720,12 @@
     "mean_log10_cost_theorems": 2.04,
     "total_amortization_exp": 6.97,
     "n_scored": 3005
+   },
+   "triviality": {
+    "pct_trivial_statements": 0.0,
+    "n_trivial_statements": 0,
+    "pct_trivial_proofs": 0.0375,
+    "pct_statements_no_refs": 0.0
    }
   }
  }

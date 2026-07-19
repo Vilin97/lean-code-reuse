@@ -303,6 +303,8 @@ def build_env_cache(
     priv_a = array("b")
     doc_a = array("b")
     branch_a = array("i")
+    tstmt_a = array("b")
+    tproof_a = array("b")
     sorry_a = array("i")
     proof_lines = array("i")
     value_lines = array("i")
@@ -336,6 +338,8 @@ def build_env_cache(
             td = tx["decls"]
             doc_a.append(td["has_doc"][ti] if "has_doc" in td else 0)
             branch_a.append(td["branch"][ti] if "branch" in td else 0)
+            tstmt_a.append(td["triv_stmt"][ti] if "triv_stmt" in td else 0)
+            tproof_a.append(td["triv_proof"][ti] if "triv_proof" in td else 0)
             line_a.append(td["line"][ti])
             proof_lines.append(td["proof_lines"][ti])
             value_lines.append(td["value_lines"][ti])
@@ -348,6 +352,8 @@ def build_env_cache(
         else:
             doc_a.append(0)
             branch_a.append(0)
+            tstmt_a.append(0)
+            tproof_a.append(0)
             line_a.append(0)
             sig_lines.append(0)
             proof_lines.append(0)
@@ -421,6 +427,8 @@ def build_env_cache(
             "private": priv_a,
             "has_doc": doc_a,
             "branch": branch_a,
+            "triv_stmt": tstmt_a,
+            "triv_proof": tproof_a,
             "sorry": sorry_a,
             "proof_lines": proof_lines,
             "value_lines": value_lines,

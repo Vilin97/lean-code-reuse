@@ -122,6 +122,8 @@ def build_repo(key: str, repos_dir: str, dep_tables: dict[str, dict], nproc: int
     anonymous = array("b")
     private = array("b")
     has_doc = array("b")
+    triv_stmt = array("b")
+    triv_proof = array("b")
     proof_lines = array("i")
     value_lines = array("i")
     sig_lines = array("i")
@@ -142,6 +144,8 @@ def build_repo(key: str, repos_dir: str, dep_tables: dict[str, dict], nproc: int
             anonymous.append(1 if d.anonymous else 0)
             private.append(1 if d.private else 0)
             has_doc.append(1 if d.has_doc else 0)
+            triv_stmt.append(1 if d.triv_stmt else 0)
+            triv_proof.append(1 if d.triv_proof else 0)
             proof_lines.append(d.proof.count("\n") + (1 if d.proof.strip() else 0))
             value_lines.append(d.value.count("\n") + (1 if d.value.strip() else 0))
             sig_lines.append(d.sig.count("\n") + (1 if d.sig.strip() else 0))
@@ -238,6 +242,8 @@ def build_repo(key: str, repos_dir: str, dep_tables: dict[str, dict], nproc: int
             "anonymous": anonymous,
             "private": private,
             "has_doc": has_doc,
+            "triv_stmt": triv_stmt,
+            "triv_proof": triv_proof,
             "branch": branch_cnt,
             "sorry": sorry_cnt,
             "proof_lines": proof_lines,

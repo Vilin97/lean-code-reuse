@@ -78,6 +78,8 @@ class Decl:
     anonymous: bool = False
     private: bool = False
     has_doc: bool = False
+    triv_stmt: bool = False
+    triv_proof: bool = False
 
 
 @dataclass
@@ -225,6 +227,16 @@ def parse_file(path: str, rel: str, text: str) -> FileData:
             return
         body = "\n".join(cur_body)
         cur.sig, cur.value, cur.proof = split_decl_body(cur.kind, body)
+        nsig = " ".join(cur.sig.split()).lstrip(": ")
+        # vacuous / numeral-only statements: `True`, `1 + 1 = 2`, `0 < 2` ...
+        cur.triv_stmt = nsig in ("True", "trivial") or bool(
+            nsig and re.fullmatch(r"[\d\s()+*^/<>=≤≥≠.-]+", nsig)
+        )
+        nproof = " ".join(cur.proof.split()).lstrip(":= ")
+        cur.triv_proof = nproof in (
+            "trivial", "rfl", "decide", "norm_num", "simp",
+            "by trivial", "by rfl", "by decide", "by norm_num", "by simp",
+        )
         cur.end_line = end_line
         decls.append(cur)
         cur, cur_body = None, None
