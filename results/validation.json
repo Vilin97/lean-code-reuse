@@ -35,6 +35,18 @@
   "textual_zero_env_nonzero": 0.1647,
   "env_zero_textual_nonzero": 0.0298
  },
+ "asympstat": {
+  "n_joined": 1200,
+  "join_rate_env": 0.9868,
+  "spearman_indeg": 0.898,
+  "pearson_log1p": 0.929,
+  "never_textual": 0.2108,
+  "never_env": 0.1767,
+  "mean_deg_textual": 3.497,
+  "mean_deg_env": 4.176,
+  "textual_zero_env_nonzero": 0.0375,
+  "env_zero_textual_nonzero": 0.0033
+ },
  "batteries": {
   "n_joined": 2215,
   "join_rate_env": 0.7874,
@@ -82,6 +94,30 @@
   "mean_deg_env": 4.594,
   "textual_zero_env_nonzero": 0.1021,
   "env_zero_textual_nonzero": 0.0857
+ },
+ "econcs": {
+  "n_joined": 2102,
+  "join_rate_env": 0.9576,
+  "spearman_indeg": 0.715,
+  "pearson_log1p": 0.773,
+  "never_textual": 0.392,
+  "never_env": 0.254,
+  "mean_deg_textual": 2.814,
+  "mean_deg_env": 4.34,
+  "textual_zero_env_nonzero": 0.1632,
+  "env_zero_textual_nonzero": 0.0252
+ },
+ "econlib": {
+  "n_joined": 5893,
+  "join_rate_env": 0.9744,
+  "spearman_indeg": 0.641,
+  "pearson_log1p": 0.701,
+  "never_textual": 0.4129,
+  "never_env": 0.2102,
+  "mean_deg_textual": 2.435,
+  "mean_deg_env": 4.871,
+  "textual_zero_env_nonzero": 0.2111,
+  "env_zero_textual_nonzero": 0.0085
  },
  "equational_theories": {
   "n_joined": 16379,
@@ -202,6 +238,18 @@
   "mean_deg_env": 3.161,
   "textual_zero_env_nonzero": 0.0661,
   "env_zero_textual_nonzero": 0.0187
+ },
+ "statlearn": {
+  "n_joined": 1995,
+  "join_rate_env": 0.9808,
+  "spearman_indeg": 0.91,
+  "pearson_log1p": 0.931,
+  "never_textual": 0.2261,
+  "never_env": 0.1799,
+  "mean_deg_textual": 2.695,
+  "mean_deg_env": 3.113,
+  "textual_zero_env_nonzero": 0.0506,
+  "env_zero_textual_nonzero": 0.0045
  },
  "strongpnt": {
   "n_joined": 1121,

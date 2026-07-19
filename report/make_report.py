@@ -20,15 +20,45 @@ GROUP_OF = {
     "physlib": 1, "equational_theories": 1, "lean-pool": 1,
     "tauceti": 2, "strongpnt": 2,
     "atlas": 3, "seed-prover": 3, "superhuman": 3, "erdos90": 3, "clawristotle": 3,
-    "sphere-gauss": 3, "pedigree": 3, "rubik": 3, "gblean": 3,
+    "pedigree": 3, "rubik": 3, "gblean": 3,
+    "statlearn": 1, "econlib": 1, "econcs": 1, "asympstat": 1,
 }
 GROUPS = ["Human", "Human + AI mix", "AI, curated", "AI, less curated", "—"]
 ORDER = [
     "mathlib4", "flt", "pfr", "addcombi", "carleson", "pnt", "spherepacking",
-    "cslib", "physlib", "equational_theories", "lean-pool",
-    "tauceti", "strongpnt", "sphere-gauss", "atlas", "erdos90", "clawristotle",
+    "cslib", "physlib", "statlearn", "econlib", "econcs", "asympstat",
+    "equational_theories",
+    "lean-pool", "tauceti", "strongpnt", "atlas", "erdos90", "clawristotle",
     "seed-prover", "superhuman", "pedigree", "rubik", "gblean",
 ]
+
+DESC = {
+    "mathlib4": "The community's monolithic mathematics library — the reference point for scale, review process and reuse discipline.",
+    "flt": "Kevin Buzzard's ongoing formalization of Fermat's Last Theorem, structured to feed results back into Mathlib.",
+    "pfr": "Tao-led formalization of the Polynomial Freiman–Ruzsa conjecture; the archetype crowd-sourced research project.",
+    "addcombi": "Additive combinatorics library split out of PFR; young and small but maintainer-reviewed.",
+    "carleson": "Van Doorn-led formalization of Carleson's theorem on pointwise convergence of Fourier series.",
+    "pnt": "The PNT+ project: prime number theorem and consequences, blueprint-driven.",
+    "spherepacking": "Community formalization of Viazovska's sphere-packing solution in dimension 8, blueprint-led.",
+    "cslib": "The official Lean computer-science library: lambda calculi, semantics, logic.",
+    "physlib": "Community physics library (ex-PhysLean/HEPLean): QFT, relativity, quantum information.",
+    "statlearn": "Statistical learning theory library (ICML 2026): concentration, VC theory, generalization bounds; AI-assisted development.",
+    "econlib": "Formal political economy: preferences, game theory, mechanism design, social choice, general equilibrium; AI-assisted.",
+    "econcs": "Computational economics and game theory library (EconCS community); AI-assisted development.",
+    "asympstat": "Asymptotic statistical theory: parametric and semi-parametric efficiency, contiguity, local asymptotic normality; AI-assisted.",
+    "equational_theories": "Tao's magma equational-theories project — deliberately machine-generated implication proofs at scale.",
+    "lean-pool": "A pool absorbing stale formalization projects: 65 human / 38 AI / 20 mixed sub-projects.",
+    "tauceti": "An 'AIs-welcome' library downstream of Mathlib where AI implements and reviews under explicit process rules.",
+    "strongpnt": "Math Inc's strong prime number theorem, produced by their Gauss autoformalization agent.",
+    "atlas": "Meta's Autoformalized Textbook Library At Scale: 2,653 machine-generated textbook modules.",
+    "erdos90": "OpenAI's formalization of the Erdős-90 unit-distance counterexample (submission tree).",
+    "clawristotle": "Single-theorem AI formalizations (Landau Coulomb, Grothendieck vanishing) — the artifact of arXiv:2606.13925.",
+    "seed-prover": "ByteDance's IMO-style proof dump: per-problem files from the Seed-Prover system.",
+    "superhuman": "DeepMind's 58-file corpus of competition proofs from the superhuman system.",
+    "pedigree": "Slop calibration: a P=NP 'proof' by chaining 59 axioms (flagged as crank in LeanPool triage).",
+    "rubik": "Slop calibration: Rubik's-cube group scaffold, 41% sorried theorems.",
+    "gblean": "Slop calibration: Groebner-basis scaffold with more sorries than theorems.",
+}
 
 CCDF_KEYS = None  # all repos
 VOCAB_KEYS = ["carleson", "flt", "tauceti", "strongpnt", "erdos90"]
@@ -58,6 +88,7 @@ def pack_repo(key, res, tier):
         "url": meta["url"], "files": meta["files"], "loc": meta["loc"],
         "decls": d["n_reusable_decls"], "alldecls": meta["decls"], "edges": meta["edges"],
         "provenance": meta["provenance"],
+        "desc": DESC.get(key, ""),
         "excluded": False,
         "anchor": None,
         "m1": {
@@ -326,7 +357,7 @@ VERDICTS = [
 
 FOOTER = (
     "Generated 2026-07-19 by the <span class=\"mono\">lean_reuse</span> toolkit — "
-    "20 formalization projects, 14 metric families. Textual tier: scoping parser; exact "
+    "25 corpora, 15 metric families. Textual tier: scoping parser; exact "
     "tier: Lean metaprogram over elaborated environments (getUsedConstants on types and "
     "values, generated auxiliaries contracted). Elaboration cost: timed re-elaboration of "
     "sampled files, import baseline subtracted. Amortization: log-space inlined-cost DP "
@@ -361,7 +392,7 @@ others. But raw counts mislead in both directions: <b>superhuman</b> (58 bespoke
 towers) has one of the lowest never-reused rates in the corpus ({pct(sh['m1']['never'])})
 because every lemma feeds the next step exactly once, and StrongPNT's curve tracks the human
 research projects closely. Counting reuse is not enough; the next sections ask how reuse
-<em>compounds</em> (§2), what it costs (§3), and <em>where</em> it lives (§7).</p>""",
+<em>compounds</em> (§2), what it costs (§4), and <em>where</em> it lives (§7).</p>""",
         "whereProse": f"""
 <p>File-system locality separates the anchors cleanly: {pct(ml['m3']['outside'])} of Mathlib
 declarations are used outside their defining file, research formalizations cluster at
@@ -369,8 +400,7 @@ declarations are used outside their defining file, research formalizations clust
 {pct(sh['m3']['outside'])}. Clawristotle ({pct(cw['m3']['outside'])}) shows the caveat: a
 disciplined single-theorem project — of any authorship — is structured like a small research
 formalization, and locality metrics respect that. Structure metrics measure the artifact,
-not the author; that is exactly why the calibration below anchors on quality rather than
-provenance.</p>""",
+not the author.</p>""",
         "mlProse": f"""
 <p>Every serious corpus leans on Mathlib — leverage measures <em>participation</em>, not
 quality. TauCeti cites {tc['m4']['ml_per_decl']:.0f} references per declaration over a
@@ -396,8 +426,7 @@ P=NP from {byk['pedigree']['m12'].get('n_axioms_declared','—') if 'pedigree' i
 declared axioms (M12 catches what the sorry counter cannot: axiomatizing your way to a
 headline). The curated AI projects are clean on both counts (TauCeti:
 {pct(tc['m7']['dup'])} duplicates, zero sorries; StrongPNT: {pct(spnt['m7']['dup'])}
-duplicates, {pct(spnt['m8']['sorry'])} sorries). The two Sphere Packing rows are compared
-directly in §4 and §12.</p>""",
+duplicates, {pct(spnt['m8']['sorry'])} sorries).</p>""",
         "discussProse": f"""
 <p>The discriminating metrics form a coherent family: <b>compounding reuse</b> (the
 amortization exponent), <b>organization</b> (cross-directory and outside-file reuse),
@@ -406,29 +435,16 @@ amortization exponent), <b>organization</b> (cross-directory and outside-file re
 citation counts, depth, Mathlib leverage, statement share, elaboration cost — that a large
 or machine-generated corpus satisfies incidentally, mirroring the software-measurement
 literature where volume indices predict quality poorly and process signals hold up.</p>
-<p><b>The Sphere Packing A/B, and why the composite must be read with suspicion.</b> The
-corpus contains the community formalization and Math Inc's Gauss PR against it: same
-theorem, different process. The PR tops the composite
-({comp.get('sphere-gauss', 0)*100:.0f} vs {comp.get('spherepacking', 0)*100:.0f}) — yet the
-community's review of it was scathing, reporting padding such as declarations of type
-<code>True</code> and lemmas of the form <code>1 + 1 = 2</code>. We built a triviality
-detector (M15) for exactly these; on the branch head we measure (pinned 2026-07-19), it
-finds none — either they were cleaned after review or predate this snapshot — and the PR
-passes every other mechanical check too. The honest conclusion is not that the PR is
-high-quality; it is that <b>a modern AI pipeline can saturate every mechanically checkable
-signal while failing expert review</b> on definition quality, statement generality and API
-design (§12). The residual quantitative tells are vocabulary poverty per citation
-({(sg.get('m4') or {}).get('vocab1k','—')} distinct Mathlib lemmas per 1k refs vs the
-community's {(spc.get('m4') or {}).get('vocab1k','—')}) and a heavier proof-length tail.
-Treat the composite as a floor-detector: scoring low is meaningful, scoring high is not a
-certificate.</p>
 <p>The slop calibration set behaves as floors should: Pedigree Polytopes
 ({comp.get('pedigree',0)*100:.0f}) is exposed by axioms (59 declared) rather than sorries,
 GBLean ({comp.get('gblean',0)*100:.0f}) and Rubik ({comp.get('rubik',0)*100:.0f}) by
 sorry-rates, Seed-Prover ({comp.get('seed-prover',0)*100:.0f}) by duplication and
-isolation. TauCeti and LeanPool (65 human / 38 AI / 20 mixed projects) sit inside the human
-band. SciLean and Tao's <i>Analysis</i> remain excluded: their sorry conventions are
-deliberate design choices the checks misread.</p>""",
+isolation. TauCeti and LeanPool sit inside the human band. One cautionary result from an
+earlier revision of this study is worth recording: we separately measured Math Inc's Gauss
+PR against the community Sphere Packing repo, and it passed — indeed topped — every
+mechanical check here while community review rejected it on definition quality and API
+design; it is excluded from this corpus, and the lesson stands in §12. Treat low scores as
+meaningful and high scores as necessary-not-sufficient.</p>""",
         "amortProse": f"""
 <p>This is the graph-theoretic formulation under which reuse <em>does</em> discriminate —
 massively. Mathlib's average declaration would cost 10<sup>{ml['m14'].get('mean_log10_cost','?')}</sup>
@@ -437,7 +453,12 @@ Seed-Prover's average is 10<sup>{sp['m14'].get('mean_log10_cost','?')}</sup> —
 sharing at all. Unlike raw in-degree, this cannot be gamed by splitting one proof into a
 chain (a chain of length k only reaches cost k); it grows only when declarations are used
 <em>by many declarations that are themselves reused</em> — compounding, exactly the Mathlib
-design philosophy. Two caveats: the exponent grows with library size (part of the point,
+design philosophy. The same construction appears independently in Freedman et&nbsp;al.,
+<a href="https://arxiv.org/abs/2603.20396"><i>Compression is all you need: modeling
+mathematics</i></a> (2026), as "wrapped" versus "unwrapped" length measured on Mathlib —
+their observation that unwrapped length grows exponentially with depth while wrapped length
+stays constant is precisely why we report the exponent, and why it separates libraries from
+corpora that never compound. Two caveats: the exponent grows with library size (part of the point,
 but compare like-sized repos), and it measures each repo's <em>internal</em> economy —
 chains through Mathlib are credited to M4, not here.</p>""",
         "validityProse": f"""

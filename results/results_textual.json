@@ -10284,5 +10284,1493 @@
     "pct_statements_no_refs": 0.0
    }
   }
+ },
+ "statlearn": {
+  "meta": {
+   "tier": "textual",
+   "join_rate": null,
+   "label": "Stat Learning Theory",
+   "category": "research formalization",
+   "provenance": "human+AI",
+   "stars": 107,
+   "url": "https://github.com/YuanheZ/lean-stat-learning-theory",
+   "files": 65,
+   "loc": 44920,
+   "decls": 2027,
+   "edges": 26020,
+   "dotted_coverage": 0.6981,
+   "parse_errors": 0
+  },
+  "metrics": {
+   "reuse_degree": {
+    "n_reusable_decls": 1995,
+    "degree": {
+     "mean": 2.695,
+     "median": 1.0,
+     "p90": 6.0,
+     "p99": 28.059999999999945,
+     "max": 91
+    },
+    "pct_never_reused": 0.2261,
+    "pct_reused_ge2": 0.3774,
+    "ccdf": {
+     "1": 0.77393,
+     "2": 0.37744,
+     "3": 0.2396,
+     "5": 0.12832,
+     "10": 0.05664,
+     "20": 0.02155,
+     "50": 0.00301,
+     "100": 0.0,
+     "200": 0.0,
+     "500": 0.0,
+     "1000": 0.0
+    },
+    "top": [
+     {
+      "name": "GaussianSobolev.E",
+      "deg": 91
+     },
+     {
+      "name": "LeastSquares.empiricalNorm",
+      "deg": 77
+     },
+     {
+      "name": "GaussianMeasure.stdGaussianPi",
+      "deg": 73
+     },
+     {
+      "name": "EfronSteinApp.CompactlySupportedSmooth",
+      "deg": 62
+     },
+     {
+      "name": "LeastSquares.EmpiricalSpace",
+      "deg": 58
+     },
+     {
+      "name": "l1norm",
+      "deg": 53
+     },
+     {
+      "name": "RMT.randomMatrix",
+      "deg": 47
+     },
+     {
+      "name": "LogSobolev.entropy",
+      "deg": 45
+     },
+     {
+      "name": "LeastSquares.localizedBall",
+      "deg": 41
+     },
+     {
+      "name": "LinearMap.rayleighQuotient",
+      "deg": 38
+     },
+     {
+      "name": "condExpExceptCoord",
+      "deg": 37
+     },
+     {
+      "name": "LeastSquares.designMatrixMul",
+      "deg": 35
+     },
+     {
+      "name": "RMT.matrixBernsteinSum",
+      "deg": 35
+     },
+     {
+      "name": "GaussianMeasure.stdGaussianE",
+      "deg": 34
+     },
+     {
+      "name": "EfronSteinApp.rademacherSumProd",
+      "deg": 33
+     },
+     {
+      "name": "HansonWright.operatorNorm",
+      "deg": 30
+     },
+     {
+      "name": "RMT.matrixOperatorNorm",
+      "deg": 30
+     },
+     {
+      "name": "EfronSteinApp.RademacherSpace",
+      "deg": 30
+     },
+     {
+      "name": "IsENet",
+      "deg": 30
+     },
+     {
+      "name": "GaussianSobolev.mollify",
+      "deg": 29
+     }
+    ]
+   },
+   "statement_vs_proof": {
+    "share_signature": 0.2049,
+    "share_value": 0.0176,
+    "share_proof": 0.7775,
+    "load_bearing_share": 0.2225,
+    "mean_stmt_indeg": 1.332,
+    "mean_proof_indeg": 1.96,
+    "internal_refs_to_theorems": 2576,
+    "internal_refs_to_defs": 9457,
+    "thm_def_ref_ratio": 0.272,
+    "pct_theorems_used_in_statements": 0.0018
+   },
+   "cross_file": {
+    "pct_edges_cross_file": 0.2963,
+    "pct_edges_cross_dir": 0.0776,
+    "pct_decls_used_outside_file": 0.1649,
+    "pct_decls_used_in_5plus_external_files": 0.0095,
+    "mean_user_files_per_used_decl": 1.293,
+    "n_dirs": 7
+   },
+   "external_reuse": {
+    "external_refs_total": 38841,
+    "external_refs_per_decl": 19.324,
+    "external_internal_ratio": 3.224,
+    "per_dep": {
+     "mathlib4": {
+      "refs": 30226,
+      "distinct_decls_used": 2058
+     },
+     "batteries": {
+      "refs": 10,
+      "distinct_decls_used": 3
+     },
+     "aesop": {
+      "refs": 0,
+      "distinct_decls_used": 0
+     },
+     "core": {
+      "refs": 8605,
+      "distinct_decls_used": 197
+     }
+    },
+    "mathlib_refs_per_decl": 15.038,
+    "mathlib_vocab": 2058,
+    "mathlib_vocab_per_1k_refs": 68.1,
+    "top_mathlib": [
+     {
+      "name": "Real.exp",
+      "refs": 1669
+     },
+     {
+      "name": "Real.sqrt",
+      "refs": 1484
+     },
+     {
+      "name": "Real.log",
+      "refs": 1157
+     },
+     {
+      "name": "linarith",
+      "refs": 751
+     },
+     {
+      "name": "MeasureTheory.Integrable",
+      "refs": 728
+     },
+     {
+      "name": "Finset",
+      "refs": 692
+     },
+     {
+      "name": "Matrix",
+      "refs": 677
+     },
+     {
+      "name": "MeasureTheory.Measure",
+      "refs": 639
+     },
+     {
+      "name": "Set",
+      "refs": 529
+     },
+     {
+      "name": "EuclideanSpace",
+      "refs": 521
+     },
+     {
+      "name": "Function.update",
+      "refs": 507
+     },
+     {
+      "name": "norm_num",
+      "refs": 469
+     },
+     {
+      "name": "deriv",
+      "refs": 440
+     },
+     {
+      "name": "Filter.atTop",
+      "refs": 430
+     },
+     {
+      "name": "le_of_lt",
+      "refs": 368
+     },
+     {
+      "name": "positivity",
+      "refs": 313
+     },
+     {
+      "name": "ENNReal.ofReal",
+      "refs": 290
+     },
+     {
+      "name": "Module.finrank",
+      "refs": 276
+     },
+     {
+      "name": "mul_le_mul_of_nonneg_left",
+      "refs": 264
+     },
+     {
+      "name": "MeasureTheory.IsProbabilityMeasure",
+      "refs": 259
+     },
+     {
+      "name": "sq_nonneg",
+      "refs": 237
+     },
+     {
+      "name": "nlinarith",
+      "refs": 219
+     },
+     {
+      "name": "Measurable",
+      "refs": 209
+     },
+     {
+      "name": "Filter.Tendsto",
+      "refs": 207
+     },
+     {
+      "name": "Finset.univ",
+      "refs": 202
+     }
+    ]
+   },
+   "concentration": {
+    "gini": 0.6705,
+    "top1pct_share": 0.1635,
+    "top10pct_share": 0.5584
+   },
+   "dependency_depth": {
+    "max_depth": 27,
+    "mean_depth": 3.914,
+    "p90_depth": 8.0,
+    "pct_in_cycles": 0.0
+   },
+   "duplication": {
+    "body_dup_rate": 0.0032,
+    "body_dup_n": 1568,
+    "body_max_cluster": 2,
+    "stmt_dup_rate": 0.01,
+    "stmt_dup_n": 1603,
+    "stmt_max_cluster": 5
+   },
+   "proof_economy": {
+    "stmt_lines": {
+     "mean": 4.224,
+     "median": 3.0,
+     "p90": 8.0,
+     "p99": 17.37999999999988,
+     "max": 60
+    },
+    "stmt_chars_median": 154.0,
+    "n_theorems": 1663,
+    "proof_lines": {
+     "mean": 26.941,
+     "median": 12.0,
+     "p90": 60.0,
+     "p99": 205.37999999999988,
+     "max": 1492
+    },
+    "refs_per_proof": 23.793,
+    "refs_per_proof_line": 0.883,
+    "sorry_rate": 0.0,
+    "n_sorried_theorems": 0,
+    "n_examples": 0
+   },
+   "import_graph": {
+    "file_loc_stats": {
+     "mean": 691.1,
+     "median": 396.0,
+     "p90": 1493.4000000000005,
+     "max": 4658
+    },
+    "median_file_loc": 396.0,
+    "n_files": 65,
+    "mean_internal_imports_per_file": 1.585,
+    "median_fan_in": 1.0,
+    "pct_files_fan_in_ge2": 0.3077,
+    "max_fan_in": 6,
+    "pct_files_importing_all_mathlib": 0.0923,
+    "n_distinct_external_modules": 129
+   },
+   "doc_coverage": {
+    "pct_defs_with_doc": 0.9149,
+    "pct_theorems_with_doc": 0.7343,
+    "pct_public_decls_with_doc": 0.7642,
+    "comment_density": 0.1608
+   },
+   "complexity": {
+    "branch_per_proof": 0.561,
+    "branch_per_100_lines": 2.08,
+    "pct_proofs_branchy": 0.0253,
+    "p90_branch": 2.0
+   },
+   "trust_base": {
+    "n_axioms_declared": 0,
+    "axioms_per_1k_decls": 0.0,
+    "axiom_names": [],
+    "n_native_decide_users": null
+   },
+   "elab_cost": {
+    "secs_per_kloc": 6.9,
+    "secs_per_kloc_median": 4.9,
+    "files_sampled": 12,
+    "loc_sampled": 11822,
+    "import_baseline_secs": 6.81
+   },
+   "amortization": {
+    "mean_log10_cost": 0.8,
+    "median_log10_cost": 0.6,
+    "p90_log10_cost": 1.78,
+    "max_log10_cost": 3.96,
+    "mean_log10_cost_theorems": 0.91,
+    "total_amortization_exp": 1.95,
+    "n_scored": 2027
+   },
+   "triviality": {
+    "pct_trivial_statements": 0.0,
+    "n_trivial_statements": 0,
+    "pct_trivial_proofs": 0.0235,
+    "pct_statements_no_refs": 0.0114
+   }
+  }
+ },
+ "econlib": {
+  "meta": {
+   "tier": "textual",
+   "join_rate": null,
+   "label": "EconLib",
+   "category": "curated library",
+   "provenance": "human+AI",
+   "stars": 1,
+   "url": "https://github.com/danlyng/Econlib",
+   "files": 509,
+   "loc": 101186,
+   "decls": 6024,
+   "edges": 54121,
+   "dotted_coverage": 0.3937,
+   "parse_errors": 0
+  },
+  "metrics": {
+   "reuse_degree": {
+    "n_reusable_decls": 5893,
+    "degree": {
+     "mean": 2.435,
+     "median": 1.0,
+     "p90": 5.0,
+     "p99": 27.0,
+     "max": 344
+    },
+    "pct_never_reused": 0.4129,
+    "pct_reused_ge2": 0.3301,
+    "ccdf": {
+     "1": 0.58714,
+     "2": 0.33005,
+     "3": 0.21483,
+     "5": 0.12184,
+     "10": 0.04599,
+     "20": 0.01544,
+     "50": 0.00305,
+     "100": 0.00136,
+     "200": 0.00051,
+     "500": 0.0,
+     "1000": 0.0
+    },
+    "top": [
+     {
+      "name": "Econlib.Probability.FinDist",
+      "deg": 344
+     },
+     {
+      "name": "Econlib.Probability.ProbDist",
+      "deg": 331
+     },
+     {
+      "name": "Econlib.Probability.ContDist",
+      "deg": 213
+     },
+     {
+      "name": "Econlib.Preferences.PreferenceRel",
+      "deg": 185
+     },
+     {
+      "name": "Econlib.MechanismDesign.InformationDesign.Persuasion.Moment.MomentSetup",
+      "deg": 126
+     },
+     {
+      "name": "Econlib.GameTheory.FinitePerfectInfoTree",
+      "deg": 125
+     },
+     {
+      "name": "Econlib.SocialChoice.Profile",
+      "deg": 120
+     },
+     {
+      "name": "Econlib.GameTheory.ExtensiveForm",
+      "deg": 117
+     },
+     {
+      "name": "Econlib.Probability.ProbDist.expect",
+      "deg": 83
+     },
+     {
+      "name": "Blackwell.UniformBounded",
+      "deg": 80
+     },
+     {
+      "name": "Econlib.GameTheory.NodeKind",
+      "deg": 70
+     },
+     {
+      "name": "Econlib.GameTheory.TUGameOn",
+      "deg": 67
+     },
+     {
+      "name": "Econlib.Optimization.OptimalTransport.KRSignedMeasure",
+      "deg": 62
+     },
+     {
+      "name": "Econlib.Probability.MixedDist",
+      "deg": 62
+     },
+     {
+      "name": "Econlib.Probability.ProbDist.map",
+      "deg": 62
+     },
+     {
+      "name": "Econlib.GameTheory.ExtensiveGame",
+      "deg": 58
+     },
+     {
+      "name": "Econlib.SocialChoice.ChoiceFunction",
+      "deg": 56
+     },
+     {
+      "name": "Econlib.Probability.CountDist",
+      "deg": 53
+     },
+     {
+      "name": "MeasureTheory.Measure.quantile",
+      "deg": 48
+     },
+     {
+      "name": "Econlib.Probability.CDF",
+      "deg": 47
+     }
+    ]
+   },
+   "statement_vs_proof": {
+    "share_signature": 0.244,
+    "share_value": 0.0435,
+    "share_proof": 0.7124,
+    "load_bearing_share": 0.2875,
+    "mean_stmt_indeg": 1.384,
+    "mean_proof_indeg": 1.325,
+    "internal_refs_to_theorems": 5582,
+    "internal_refs_to_defs": 17382,
+    "thm_def_ref_ratio": 0.321,
+    "pct_theorems_used_in_statements": 0.0041
+   },
+   "cross_file": {
+    "pct_edges_cross_file": 0.5079,
+    "pct_edges_cross_dir": 0.1265,
+    "pct_decls_used_outside_file": 0.2377,
+    "pct_decls_used_in_5plus_external_files": 0.0219,
+    "mean_user_files_per_used_decl": 1.748,
+    "n_dirs": 9
+   },
+   "external_reuse": {
+    "external_refs_total": 68735,
+    "external_refs_per_decl": 11.533,
+    "external_internal_ratio": 2.993,
+    "per_dep": {
+     "mathlib4": {
+      "refs": 49819,
+      "distinct_decls_used": 3108
+     },
+     "batteries": {
+      "refs": 76,
+      "distinct_decls_used": 5
+     },
+     "aesop": {
+      "refs": 0,
+      "distinct_decls_used": 0
+     },
+     "core": {
+      "refs": 18840,
+      "distinct_decls_used": 324
+     }
+    },
+    "mathlib_refs_per_decl": 8.359,
+    "mathlib_vocab": 3108,
+    "mathlib_vocab_per_1k_refs": 62.4,
+    "top_mathlib": [
+     {
+      "name": "Finset",
+      "refs": 1934
+     },
+     {
+      "name": "linarith",
+      "refs": 1893
+     },
+     {
+      "name": "EuclideanSpace",
+      "refs": 1852
+     },
+     {
+      "name": "Set",
+      "refs": 1550
+     },
+     {
+      "name": "Set.Icc",
+      "refs": 1474
+     },
+     {
+      "name": "MeasureTheory.Measure",
+      "refs": 885
+     },
+     {
+      "name": "Set.pi",
+      "refs": 833
+     },
+     {
+      "name": "Finset.univ",
+      "refs": 770
+     },
+     {
+      "name": "MeasureTheory.Integrable",
+      "refs": 747
+     },
+     {
+      "name": "Set.univ",
+      "refs": 646
+     },
+     {
+      "name": "Continuous",
+      "refs": 569
+     },
+     {
+      "name": "Measurable",
+      "refs": 498
+     },
+     {
+      "name": "symm",
+      "refs": 487
+     },
+     {
+      "name": "Set.Ioo",
+      "refs": 460
+     },
+     {
+      "name": "Filter.Tendsto",
+      "refs": 455
+     },
+     {
+      "name": "Function.update",
+      "refs": 447
+     },
+     {
+      "name": "Filter.atTop",
+      "refs": 445
+     },
+     {
+      "name": "MeasureTheory.ProbabilityMeasure",
+      "refs": 407
+     },
+     {
+      "name": "Set.Ioc",
+      "refs": 389
+     },
+     {
+      "name": "Fintype",
+      "refs": 354
+     },
+     {
+      "name": "Finset.mem_univ",
+      "refs": 336
+     },
+     {
+      "name": "smul_eq_mul",
+      "refs": 330
+     },
+     {
+      "name": "slope",
+      "refs": 320
+     },
+     {
+      "name": "Finset.range",
+      "refs": 297
+     },
+     {
+      "name": "le_of_lt",
+      "refs": 293
+     }
+    ]
+   },
+   "concentration": {
+    "gini": 0.7652,
+    "top1pct_share": 0.2539,
+    "top10pct_share": 0.626
+   },
+   "dependency_depth": {
+    "max_depth": 27,
+    "mean_depth": 3.644,
+    "p90_depth": 7.0,
+    "pct_in_cycles": 0.0
+   },
+   "duplication": {
+    "body_dup_rate": 0.0071,
+    "body_dup_n": 4109,
+    "body_max_cluster": 4,
+    "stmt_dup_rate": 0.0021,
+    "stmt_dup_n": 4222,
+    "stmt_max_cluster": 2
+   },
+   "proof_economy": {
+    "stmt_lines": {
+     "mean": 3.978,
+     "median": 3.0,
+     "p90": 8.0,
+     "p99": 17.0,
+     "max": 45
+    },
+    "stmt_chars_median": 141.0,
+    "n_theorems": 4372,
+    "proof_lines": {
+     "mean": 20.471,
+     "median": 9.0,
+     "p90": 45.0,
+     "p99": 188.15999999999985,
+     "max": 1008
+    },
+    "refs_per_proof": 14.937,
+    "refs_per_proof_line": 0.73,
+    "sorry_rate": 0.0,
+    "n_sorried_theorems": 0,
+    "n_examples": 0
+   },
+   "import_graph": {
+    "file_loc_stats": {
+     "mean": 198.8,
+     "median": 119.0,
+     "p90": 464.0,
+     "max": 1588
+    },
+    "median_file_loc": 119.0,
+    "n_files": 509,
+    "mean_internal_imports_per_file": 2.552,
+    "median_fan_in": 2.0,
+    "pct_files_fan_in_ge2": 0.7564,
+    "max_fan_in": 29,
+    "pct_files_importing_all_mathlib": 0.0236,
+    "n_distinct_external_modules": 252
+   },
+   "doc_coverage": {
+    "pct_defs_with_doc": 0.998,
+    "pct_theorems_with_doc": 0.906,
+    "pct_public_decls_with_doc": 0.9315,
+    "comment_density": 0.3196
+   },
+   "complexity": {
+    "branch_per_proof": 0.697,
+    "branch_per_100_lines": 3.4,
+    "pct_proofs_branchy": 0.0339,
+    "p90_branch": 2.0
+   },
+   "trust_base": {
+    "n_axioms_declared": 0,
+    "axioms_per_1k_decls": 0.0,
+    "axiom_names": [],
+    "n_native_decide_users": null
+   },
+   "elab_cost": {
+    "secs_per_kloc": 16.5,
+    "secs_per_kloc_median": 17.1,
+    "files_sampled": 12,
+    "loc_sampled": 2682,
+    "import_baseline_secs": 2.07
+   },
+   "amortization": {
+    "mean_log10_cost": 0.77,
+    "median_log10_cost": 0.6,
+    "p90_log10_cost": 1.76,
+    "max_log10_cost": 5.46,
+    "mean_log10_cost_theorems": 0.89,
+    "total_amortization_exp": 2.35,
+    "n_scored": 6024
+   },
+   "triviality": {
+    "pct_trivial_statements": 0.0,
+    "n_trivial_statements": 0,
+    "pct_trivial_proofs": 0.0746,
+    "pct_statements_no_refs": 0.0803
+   }
+  }
+ },
+ "econcs": {
+  "meta": {
+   "tier": "textual",
+   "join_rate": null,
+   "label": "EconCSLib",
+   "category": "curated library",
+   "provenance": "human+AI",
+   "stars": 22,
+   "url": "https://github.com/gametheoryinlean/EconCSLib",
+   "files": 144,
+   "loc": 26891,
+   "decls": 2504,
+   "edges": 16858,
+   "dotted_coverage": 0.4623,
+   "parse_errors": 0
+  },
+  "metrics": {
+   "reuse_degree": {
+    "n_reusable_decls": 2381,
+    "degree": {
+     "mean": 2.873,
+     "median": 1.0,
+     "p90": 7.0,
+     "p99": 28.199999999999818,
+     "max": 381
+    },
+    "pct_never_reused": 0.3856,
+    "pct_reused_ge2": 0.3587,
+    "ccdf": {
+     "1": 0.61445,
+     "2": 0.35867,
+     "3": 0.24528,
+     "5": 0.15792,
+     "10": 0.05964,
+     "20": 0.0168,
+     "50": 0.00378,
+     "100": 0.00126,
+     "200": 0.00084,
+     "500": 0.0,
+     "1000": 0.0
+    },
+    "top": [
+     {
+      "name": "n",
+      "deg": 381
+     },
+     {
+      "name": "BayesianSingleItemAuction",
+      "deg": 322
+     },
+     {
+      "name": "SocialChoice.FairDivision.Indivisible.Allocation",
+      "deg": 123
+     },
+     {
+      "name": "GameTree",
+      "deg": 85
+     },
+     {
+      "name": "ExtensiveGame",
+      "deg": 80
+     },
+     {
+      "name": "SocialChoice.Voting.Profile",
+      "deg": 75
+     },
+     {
+      "name": "SocialChoice.FairDivision.Indivisible.Valuation",
+      "deg": 72
+     },
+     {
+      "name": "StrategicGame",
+      "deg": 69
+     },
+     {
+      "name": "wsum",
+      "deg": 65
+     },
+     {
+      "name": "MatrixGame",
+      "deg": 47
+     },
+     {
+      "name": "CostM",
+      "deg": 44
+     },
+     {
+      "name": "GameTree.Strategy",
+      "deg": 44
+     },
+     {
+      "name": "GS.DAState",
+      "deg": 40
+     },
+     {
+      "name": "SocialChoice.FairDivision.Divisible.Allocation",
+      "deg": 40
+     },
+     {
+      "name": "GS.Preferences",
+      "deg": 38
+     },
+     {
+      "name": "OpponentTypeProfile",
+      "deg": 37
+     },
+     {
+      "name": "SocialChoice.Voting.Prefers",
+      "deg": 35
+     },
+     {
+      "name": "SocialChoice.Voting.VotingRule",
+      "deg": 34
+     },
+     {
+      "name": "SocialChoice.FairDivision.Indivisible.AdditiveValuation",
+      "deg": 33
+     },
+     {
+      "name": "KnapsackAuction",
+      "deg": 32
+     }
+    ]
+   },
+   "statement_vs_proof": {
+    "share_signature": 0.3531,
+    "share_value": 0.0806,
+    "share_proof": 0.5663,
+    "load_bearing_share": 0.4337,
+    "mean_stmt_indeg": 2.066,
+    "mean_proof_indeg": 1.205,
+    "internal_refs_to_theorems": 1575,
+    "internal_refs_to_defs": 10877,
+    "thm_def_ref_ratio": 0.145,
+    "pct_theorems_used_in_statements": 0.0022
+   },
+   "cross_file": {
+    "pct_edges_cross_file": 0.387,
+    "pct_edges_cross_dir": 0.1132,
+    "pct_decls_used_outside_file": 0.147,
+    "pct_decls_used_in_5plus_external_files": 0.013,
+    "mean_user_files_per_used_decl": 1.455,
+    "n_dirs": 10
+   },
+   "external_reuse": {
+    "external_refs_total": 14858,
+    "external_refs_per_decl": 6.17,
+    "external_internal_ratio": 1.192,
+    "per_dep": {
+     "mathlib4": {
+      "refs": 9018,
+      "distinct_decls_used": 848
+     },
+     "batteries": {
+      "refs": 28,
+      "distinct_decls_used": 3
+     },
+     "aesop": {
+      "refs": 0,
+      "distinct_decls_used": 0
+     },
+     "core": {
+      "refs": 5812,
+      "distinct_decls_used": 283
+     }
+    },
+    "mathlib_refs_per_decl": 3.745,
+    "mathlib_vocab": 848,
+    "mathlib_vocab_per_1k_refs": 94.0,
+    "top_mathlib": [
+     {
+      "name": "Finset",
+      "refs": 942
+     },
+     {
+      "name": "Fintype",
+      "refs": 775
+     },
+     {
+      "name": "linarith",
+      "refs": 412
+     },
+     {
+      "name": "Finset.univ",
+      "refs": 336
+     },
+     {
+      "name": "stdSimplex",
+      "refs": 293
+     },
+     {
+      "name": "Function.update",
+      "refs": 238
+     },
+     {
+      "name": "LinearOrder",
+      "refs": 214
+     },
+     {
+      "name": "Finset.mem_univ",
+      "refs": 160
+     },
+     {
+      "name": "Set",
+      "refs": 128
+     },
+     {
+      "name": "Fintype.card",
+      "refs": 121
+     },
+     {
+      "name": "Nontrivial",
+      "refs": 115
+     },
+     {
+      "name": "Finset.Nonempty",
+      "refs": 110
+     },
+     {
+      "name": "symm",
+      "refs": 108
+     },
+     {
+      "name": "Finset.card",
+      "refs": 102
+     },
+     {
+      "name": "Set.Iic",
+      "refs": 89
+     },
+     {
+      "name": "norm_num",
+      "refs": 84
+     },
+     {
+      "name": "by_contra",
+      "refs": 82
+     },
+     {
+      "name": "Finset.image",
+      "refs": 63
+     },
+     {
+      "name": "le_antisymm",
+      "refs": 60
+     },
+     {
+      "name": "Set.univ",
+      "refs": 58
+     },
+     {
+      "name": "Finset.univ_nonempty",
+      "refs": 57
+     },
+     {
+      "name": "Continuous",
+      "refs": 56
+     },
+     {
+      "name": "MeasureTheory.Integrable",
+      "refs": 56
+     },
+     {
+      "name": "Finset.mul_sum",
+      "refs": 51
+     },
+     {
+      "name": "le_of_lt",
+      "refs": 49
+     }
+    ]
+   },
+   "concentration": {
+    "gini": 0.7628,
+    "top1pct_share": 0.2615,
+    "top10pct_share": 0.618
+   },
+   "dependency_depth": {
+    "max_depth": 22,
+    "mean_depth": 4.29,
+    "p90_depth": 8.0,
+    "pct_in_cycles": 0.0216
+   },
+   "duplication": {
+    "body_dup_rate": 0.0106,
+    "body_dup_n": 1416,
+    "body_max_cluster": 2,
+    "stmt_dup_rate": 0.0031,
+    "stmt_dup_n": 1301,
+    "stmt_max_cluster": 2
+   },
+   "proof_economy": {
+    "stmt_lines": {
+     "mean": 3.742,
+     "median": 3.0,
+     "p90": 7.0,
+     "p99": 13.0,
+     "max": 26
+    },
+    "stmt_chars_median": 129.0,
+    "n_theorems": 1392,
+    "proof_lines": {
+     "mean": 15.514,
+     "median": 7.0,
+     "p90": 33.0,
+     "p99": 132.5399999999995,
+     "max": 649
+    },
+    "refs_per_proof": 11.078,
+    "refs_per_proof_line": 0.714,
+    "sorry_rate": 0.0014,
+    "n_sorried_theorems": 2,
+    "n_examples": 56
+   },
+   "import_graph": {
+    "file_loc_stats": {
+     "mean": 188.0,
+     "median": 71.0,
+     "p90": 467.19999999999993,
+     "max": 2680
+    },
+    "median_file_loc": 71.0,
+    "n_files": 144,
+    "mean_internal_imports_per_file": 1.285,
+    "median_fan_in": 1.0,
+    "pct_files_fan_in_ge2": 0.2708,
+    "max_fan_in": 10,
+    "pct_files_importing_all_mathlib": 0.0417,
+    "n_distinct_external_modules": 112
+   },
+   "doc_coverage": {
+    "pct_defs_with_doc": 0.9356,
+    "pct_theorems_with_doc": 0.6448,
+    "pct_public_decls_with_doc": 0.7753,
+    "comment_density": 0.3199
+   },
+   "complexity": {
+    "branch_per_proof": 0.853,
+    "branch_per_100_lines": 5.5,
+    "pct_proofs_branchy": 0.0381,
+    "p90_branch": 2.0
+   },
+   "trust_base": {
+    "n_axioms_declared": 0,
+    "axioms_per_1k_decls": 0.0,
+    "axiom_names": [],
+    "n_native_decide_users": null
+   },
+   "elab_cost": {
+    "secs_per_kloc": 6.7,
+    "secs_per_kloc_median": 5.2,
+    "files_sampled": 12,
+    "loc_sampled": 1362,
+    "import_baseline_secs": 5.12
+   },
+   "amortization": {
+    "mean_log10_cost": 0.96,
+    "median_log10_cost": 0.9,
+    "p90_log10_cost": 1.85,
+    "max_log10_cost": 4.47,
+    "mean_log10_cost_theorems": 1.21,
+    "total_amortization_exp": 2.08,
+    "n_scored": 2450
+   },
+   "triviality": {
+    "pct_trivial_statements": 0.0,
+    "n_trivial_statements": 0,
+    "pct_trivial_proofs": 0.0891,
+    "pct_statements_no_refs": 0.0223
+   }
+  }
+ },
+ "asympstat": {
+  "meta": {
+   "tier": "textual",
+   "join_rate": null,
+   "label": "Asymptotic Statistics",
+   "category": "research formalization",
+   "provenance": "human+AI",
+   "stars": 1,
+   "url": "https://github.com/junwei-lu/Lean-Asymptotic-Statistical-Theory",
+   "files": 151,
+   "loc": 55506,
+   "decls": 1241,
+   "edges": 24831,
+   "dotted_coverage": 0.6817,
+   "parse_errors": 0
+  },
+  "metrics": {
+   "reuse_degree": {
+    "n_reusable_decls": 1225,
+    "degree": {
+     "mean": 3.448,
+     "median": 1.0,
+     "p90": 6.0,
+     "p99": 45.27999999999997,
+     "max": 318
+    },
+    "pct_never_reused": 0.2114,
+    "pct_reused_ge2": 0.3649,
+    "ccdf": {
+     "1": 0.78857,
+     "2": 0.3649,
+     "3": 0.24327,
+     "5": 0.13796,
+     "10": 0.06041,
+     "20": 0.0302,
+     "50": 0.00898,
+     "100": 0.00245,
+     "200": 0.00082,
+     "500": 0.0,
+     "1000": 0.0
+    },
+    "top": [
+     {
+      "name": "AsymptoticStatistics.Core.Hilbert.L2ZeroMean",
+      "deg": 318
+     },
+     {
+      "name": "AsymptoticStatistics.ParametricFamily",
+      "deg": 122
+     },
+     {
+      "name": "AsymptoticStatistics.WeakConverges",
+      "deg": 108
+     },
+     {
+      "name": "AsymptoticStatistics.Core.TangentAbstract.TangentSpec",
+      "deg": 89
+     },
+     {
+      "name": "AsymptoticStatistics.Core.QMDPath.QMDPath",
+      "deg": 79
+     },
+     {
+      "name": "AsymptoticStatistics.Core.TangentAbstract.tangentSpace",
+      "deg": 78
+     },
+     {
+      "name": "AsymptoticStatistics.Core.Pathwise.IsEfficientInfluenceFunction",
+      "deg": 73
+     },
+     {
+      "name": "AsymptoticStatistics.AsymptoticRepresentation.productMeasure",
+      "deg": 71
+     },
+     {
+      "name": "AsymptoticStatistics.DifferentiableQuadraticMean",
+      "deg": 60
+     },
+     {
+      "name": "AsymptoticStatistics.AsymptoticRepresentation.\u0398",
+      "deg": 56
+     },
+     {
+      "name": "AsymptoticStatistics.Core.Pathwise.PathwiseDifferentiableAt",
+      "deg": 56
+     },
+     {
+      "name": "AsymptoticStatistics.ParametricFamily.IsBoundedMixtureScores",
+      "deg": 46
+     },
+     {
+      "name": "AsymptoticStatistics.fisherInformation",
+      "deg": 46
+     },
+     {
+      "name": "AsymptoticStatistics.ParametricFamily.linPerturb",
+      "deg": 43
+     },
+     {
+      "name": "AsymptoticStatistics.LowerBounds.RegularEstimator.linPerturbScore",
+      "deg": 43
+     },
+     {
+      "name": "AsymptoticStatistics.ParametricFamily.unboundedParamSubmodel",
+      "deg": 40
+     },
+     {
+      "name": "AsymptoticStatistics.IsPDFOf",
+      "deg": 39
+     },
+     {
+      "name": "AsymptoticStatistics.EmpiricalProcess.empiricalProcess",
+      "deg": 37
+     },
+     {
+      "name": "AsymptoticStatistics.BowlShaped",
+      "deg": 35
+     },
+     {
+      "name": "AsymptoticStatistics.StrictModel.EfficientScore.NuisanceTangentSpace",
+      "deg": 35
+     }
+    ]
+   },
+   "statement_vs_proof": {
+    "share_signature": 0.2461,
+    "share_value": 0.0207,
+    "share_proof": 0.7332,
+    "load_bearing_share": 0.2668,
+    "mean_stmt_indeg": 2.049,
+    "mean_proof_indeg": 1.94,
+    "internal_refs_to_theorems": 1558,
+    "internal_refs_to_defs": 8418,
+    "thm_def_ref_ratio": 0.185,
+    "pct_theorems_used_in_statements": 0.002
+   },
+   "cross_file": {
+    "pct_edges_cross_file": 0.5848,
+    "pct_edges_cross_dir": 0.416,
+    "pct_decls_used_outside_file": 0.2702,
+    "pct_decls_used_in_5plus_external_files": 0.0335,
+    "mean_user_files_per_used_decl": 1.864,
+    "n_dirs": 14
+   },
+   "external_reuse": {
+    "external_refs_total": 45166,
+    "external_refs_per_decl": 36.69,
+    "external_internal_ratio": 4.527,
+    "per_dep": {
+     "mathlib4": {
+      "refs": 35790,
+      "distinct_decls_used": 1819
+     },
+     "batteries": {
+      "refs": 2,
+      "distinct_decls_used": 1
+     },
+     "aesop": {
+      "refs": 0,
+      "distinct_decls_used": 0
+     },
+     "core": {
+      "refs": 9374,
+      "distinct_decls_used": 98
+     }
+    },
+    "mathlib_refs_per_decl": 29.074,
+    "mathlib_vocab": 1819,
+    "mathlib_vocab_per_1k_refs": 50.8,
+    "top_mathlib": [
+     {
+      "name": "Real.sqrt",
+      "refs": 3133
+     },
+     {
+      "name": "MeasureTheory.Measure",
+      "refs": 1655
+     },
+     {
+      "name": "EuclideanSpace",
+      "refs": 1620
+     },
+     {
+      "name": "ENNReal.ofReal",
+      "refs": 1278
+     },
+     {
+      "name": "Measurable",
+      "refs": 1085
+     },
+     {
+      "name": "MeasureTheory.Lp",
+      "refs": 963
+     },
+     {
+      "name": "Filter.atTop",
+      "refs": 947
+     },
+     {
+      "name": "Real.exp",
+      "refs": 826
+     },
+     {
+      "name": "Filter.Tendsto",
+      "refs": 782
+     },
+     {
+      "name": "ENNReal.toReal",
+      "refs": 732
+     },
+     {
+      "name": "MeasureTheory.IsProbabilityMeasure",
+      "refs": 695
+     },
+     {
+      "name": "Filter.map",
+      "refs": 682
+     },
+     {
+      "name": "Set",
+      "refs": 568
+     },
+     {
+      "name": "WithLp.equiv",
+      "refs": 555
+     },
+     {
+      "name": "symm",
+      "refs": 544
+     },
+     {
+      "name": "linarith",
+      "refs": 511
+     },
+     {
+      "name": "MeasureTheory.Integrable",
+      "refs": 443
+     },
+     {
+      "name": "Matrix",
+      "refs": 440
+     },
+     {
+      "name": "ProbabilityTheory.multivariateGaussian",
+      "refs": 436
+     },
+     {
+      "name": "Finset",
+      "refs": 422
+     },
+     {
+      "name": "Filter.Eventually.of_forall",
+      "refs": 404
+     },
+     {
+      "name": "MeasureTheory.MemLp",
+      "refs": 299
+     },
+     {
+      "name": "Finset.range",
+      "refs": 291
+     },
+     {
+      "name": "norm_num",
+      "refs": 275
+     },
+     {
+      "name": "MeasurableSpace",
+      "refs": 266
+     }
+    ]
+   },
+   "concentration": {
+    "gini": 0.7323,
+    "top1pct_share": 0.2737,
+    "top10pct_share": 0.6465
+   },
+   "dependency_depth": {
+    "max_depth": 26,
+    "mean_depth": 5.394,
+    "p90_depth": 11.0,
+    "pct_in_cycles": 0.0
+   },
+   "duplication": {
+    "body_dup_rate": 0.008,
+    "body_dup_n": 994,
+    "body_max_cluster": 2,
+    "stmt_dup_rate": 0.0154,
+    "stmt_dup_n": 975,
+    "stmt_max_cluster": 3
+   },
+   "proof_economy": {
+    "stmt_lines": {
+     "mean": 10.016,
+     "median": 6.0,
+     "p90": 23.0,
+     "p99": 50.98000000000002,
+     "max": 83
+    },
+    "stmt_chars_median": 267.0,
+    "n_theorems": 1003,
+    "proof_lines": {
+     "mean": 58.662,
+     "median": 30.0,
+     "p90": 148.0,
+     "p99": 370.94000000000005,
+     "max": 752
+    },
+    "refs_per_proof": 40.309,
+    "refs_per_proof_line": 0.687,
+    "sorry_rate": 0.0,
+    "n_sorried_theorems": 0,
+    "n_examples": 0
+   },
+   "import_graph": {
+    "file_loc_stats": {
+     "mean": 367.6,
+     "median": 187.0,
+     "p90": 994.0,
+     "max": 2259
+    },
+    "median_file_loc": 187.0,
+    "n_files": 151,
+    "mean_internal_imports_per_file": 2.351,
+    "median_fan_in": 1.0,
+    "pct_files_fan_in_ge2": 0.4636,
+    "max_fan_in": 19,
+    "pct_files_importing_all_mathlib": 0.0,
+    "n_distinct_external_modules": 168
+   },
+   "doc_coverage": {
+    "pct_defs_with_doc": 0.9807,
+    "pct_theorems_with_doc": 0.8533,
+    "pct_public_decls_with_doc": 0.8812,
+    "comment_density": 0.3519
+   },
+   "complexity": {
+    "branch_per_proof": 0.681,
+    "branch_per_100_lines": 1.16,
+    "pct_proofs_branchy": 0.0299,
+    "p90_branch": 2.0
+   },
+   "trust_base": {
+    "n_axioms_declared": 0,
+    "axioms_per_1k_decls": 0.0,
+    "axiom_names": [],
+    "n_native_decide_users": null
+   },
+   "elab_cost": {
+    "secs_per_kloc": 6.2,
+    "secs_per_kloc_median": 5.6,
+    "files_sampled": 12,
+    "loc_sampled": 2397,
+    "import_baseline_secs": 5.94
+   },
+   "amortization": {
+    "mean_log10_cost": 1.1,
+    "median_log10_cost": 0.85,
+    "p90_log10_cost": 2.52,
+    "max_log10_cost": 5.23,
+    "mean_log10_cost_theorems": 1.19,
+    "total_amortization_exp": 3.09,
+    "n_scored": 1241
+   },
+   "triviality": {
+    "pct_trivial_statements": 0.0,
+    "n_trivial_statements": 0,
+    "pct_trivial_proofs": 0.0279,
+    "pct_statements_no_refs": 0.005
+   }
+  }
  }
 }

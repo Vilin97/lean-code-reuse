@@ -1377,5 +1377,337 @@
     "elab": 2.79
    }
   ]
+ },
+ "statlearn": {
+  "files": 12,
+  "timeouts": 0,
+  "loc": 11822,
+  "secs": 81.5,
+  "baseline_secs": 6.81,
+  "secs_per_kloc": 6.9,
+  "secs_per_kloc_median": 4.9,
+  "per_file": [
+   {
+    "file": "SLT/LeastSquares/LinearRegression/GaussianComplexity.lean",
+    "loc": 59,
+    "secs": 38.0,
+    "elab": 26.08
+   },
+   {
+    "file": "SLT/EfronStein.lean",
+    "loc": 1807,
+    "secs": 10.73,
+    "elab": 5.83
+   },
+   {
+    "file": "SLT/RMT/Basic.lean",
+    "loc": 4658,
+    "secs": 31.7,
+    "elab": 26.37
+   },
+   {
+    "file": "SLT/GaussianSobolevDense/Density.lean",
+    "loc": 609,
+    "secs": 8.11,
+    "elab": 2.62
+   },
+   {
+    "file": "SLT/GaussianMeasure.lean",
+    "loc": 286,
+    "secs": 6.91,
+    "elab": 1.66
+   },
+   {
+    "file": "SLT/GaussianSobolevDense/Defs.lean",
+    "loc": 564,
+    "secs": 7.52,
+    "elab": 2.4
+   },
+   {
+    "file": "SLT/LipschitzProperty.lean",
+    "loc": 81,
+    "secs": 5.35,
+    "elab": 0.31
+   },
+   {
+    "file": "SLT/LeastSquares/L1Regression/L1ShiftedClass.lean",
+    "loc": 109,
+    "secs": 12.44,
+    "elab": 0.62
+   },
+   {
+    "file": "SLT/GaussianLSI/BernoulliLSI.lean",
+    "loc": 1188,
+    "secs": 9.39,
+    "elab": 4.33
+   },
+   {
+    "file": "SLT/LeastSquares/MasterErrorBound.lean",
+    "loc": 804,
+    "secs": 15.77,
+    "elab": 3.97
+   },
+   {
+    "file": "SLT/GaussianSobolevDense/Cutoff.lean",
+    "loc": 823,
+    "secs": 9.3,
+    "elab": 4.24
+   },
+   {
+    "file": "SLT/SubGaussian.lean",
+    "loc": 834,
+    "secs": 8.01,
+    "elab": 3.03
+   }
+  ]
+ },
+ "econlib": {
+  "files": 12,
+  "timeouts": 0,
+  "loc": 2682,
+  "secs": 44.3,
+  "baseline_secs": 2.07,
+  "secs_per_kloc": 16.5,
+  "secs_per_kloc_median": 17.1,
+  "per_file": [
+   {
+    "file": "Econlib/Math/Analysis/CauchyMVT.lean",
+    "loc": 115,
+    "secs": 11.86,
+    "elab": 9.79
+   },
+   {
+    "file": "Econlib/MechanismDesign/Transfers/General/Allocation.lean",
+    "loc": 95,
+    "secs": 7.71,
+    "elab": 5.64
+   },
+   {
+    "file": "Econlib/GameTheory/Signaling/Pooling.lean",
+    "loc": 62,
+    "secs": 4.77,
+    "elab": 2.7
+   },
+   {
+    "file": "Econlib/Optimization/DynamicProgramming/Budget/OptionValueDP.lean",
+    "loc": 276,
+    "secs": 4.97,
+    "elab": 2.9
+   },
+   {
+    "file": "Econlib/GameTheory/Cooperative/Mobius.lean",
+    "loc": 34,
+    "secs": 3.97,
+    "elab": 1.9
+   },
+   {
+    "file": "Econlib/Preferences/Risk/ComparativeRiskAversion.lean",
+    "loc": 229,
+    "secs": 4.61,
+    "elab": 2.54
+   },
+   {
+    "file": "Econlib/Probability/Distributions/Uniform.lean",
+    "loc": 163,
+    "secs": 5.57,
+    "elab": 3.5
+   },
+   {
+    "file": "Econlib/Probability/ProbDist/Borel.lean",
+    "loc": 197,
+    "secs": 4.8,
+    "elab": 2.74
+   },
+   {
+    "file": "Econlib/MechanismDesign/InformationDesign/Persuasion/Moment/JointPosteriorBridge.lean",
+    "loc": 493,
+    "secs": 5.38,
+    "elab": 3.31
+   },
+   {
+    "file": "Econlib/GameTheory/Signaling/Bridge/SequentialEquilibrium.lean",
+    "loc": 443,
+    "secs": 5.29,
+    "elab": 3.22
+   },
+   {
+    "file": "Econlib/Probability/ContDist/CDFTails.lean",
+    "loc": 176,
+    "secs": 5.08,
+    "elab": 3.01
+   },
+   {
+    "file": "Econlib/MechanismDesign/InformationDesign/Persuasion/Moment/AuxiliaryOptimization/Closedness.lean",
+    "loc": 399,
+    "secs": 5.17,
+    "elab": 3.1
+   }
+  ]
+ },
+ "econcs": {
+  "files": 12,
+  "timeouts": 0,
+  "loc": 1362,
+  "secs": 9.1,
+  "baseline_secs": 5.12,
+  "secs_per_kloc": 6.7,
+  "secs_per_kloc_median": 5.2,
+  "per_file": [
+   {
+    "file": "EconCSLib/GameTheory/ExtensiveGame/ZeroSumGameTreeWithChance.lean",
+    "loc": 87,
+    "secs": 4.87,
+    "elab": 1.04
+   },
+   {
+    "file": "EconCSLib/Examples/CostM/ParSum.lean",
+    "loc": 78,
+    "secs": 3.83,
+    "elab": 0.25
+   },
+   {
+    "file": "EconCSLib/SocialChoice/Voting/VotingRules.lean",
+    "loc": 241,
+    "secs": 7.16,
+    "elab": 1.3
+   },
+   {
+    "file": "EconCSLib/GameTheory/StrategicGame/ZeroSum/Antisymmetric.lean",
+    "loc": 123,
+    "secs": 4.94,
+    "elab": 0.5
+   },
+   {
+    "file": "EconCSLib/GameTheory/ExtensiveGame/FiniteArenaExtraction.lean",
+    "loc": 63,
+    "secs": 3.72,
+    "elab": 0.21
+   },
+   {
+    "file": "EconCSLib/GameTheory/StrategicGame/Nash.lean",
+    "loc": 322,
+    "secs": 17.58,
+    "elab": 2.28
+   },
+   {
+    "file": "EconCSLib/SocialChoice/FairDivision/Indivisible/EFX.lean",
+    "loc": 138,
+    "secs": 6.16,
+    "elab": 2.28
+   },
+   {
+    "file": "EconCSLib/Math/Minimax/SkewSymmetric.lean",
+    "loc": 99,
+    "secs": 4.07,
+    "elab": 0.51
+   },
+   {
+    "file": "EconCSLib/Examples/EntryDeterrence.lean",
+    "loc": 53,
+    "secs": 4.17,
+    "elab": 0.51
+   },
+   {
+    "file": "EconCSLib/SocialChoice/FairDivision/Divisible/UnitInterval.lean",
+    "loc": 71,
+    "secs": 5.92,
+    "elab": 0.11
+   },
+   {
+    "file": "EconCSLib/GameTheory/StrategicGame/IESDS.lean",
+    "loc": 40,
+    "secs": 4.01,
+    "elab": 0.05
+   },
+   {
+    "file": "EconCSLib/Examples/CostM/MemoFib.lean",
+    "loc": 47,
+    "secs": 3.81,
+    "elab": 0.05
+   }
+  ]
+ },
+ "asympstat": {
+  "files": 12,
+  "timeouts": 0,
+  "loc": 2397,
+  "secs": 14.9,
+  "baseline_secs": 5.94,
+  "secs_per_kloc": 6.2,
+  "secs_per_kloc_median": 5.6,
+  "per_file": [
+   {
+    "file": "AsymptoticStatistics/ForMathlib/CramerWoldAux.lean",
+    "loc": 48,
+    "secs": 5.91,
+    "elab": 0.13
+   },
+   {
+    "file": "AsymptoticStatistics/LowerBounds/T6_FinDimLAN/CLTinf.lean",
+    "loc": 367,
+    "secs": 8.02,
+    "elab": 1.41
+   },
+   {
+    "file": "AsymptoticStatistics/Experiment/GaussianShiftMinimax.lean",
+    "loc": 852,
+    "secs": 12.91,
+    "elab": 6.8
+   },
+   {
+    "file": "AsymptoticStatistics/Core/CandidateIF.lean",
+    "loc": 48,
+    "secs": 5.48,
+    "elab": 0.18
+   },
+   {
+    "file": "AsymptoticStatistics/LowerBounds/RegularEstimatorNarrowReverseUncond.lean",
+    "loc": 278,
+    "secs": 8.03,
+    "elab": 1.98
+   },
+   {
+    "file": "AsymptoticStatistics/Experiment/EquivariantInLaw.lean",
+    "loc": 49,
+    "secs": 6.06,
+    "elab": 0.08
+   },
+   {
+    "file": "AsymptoticStatistics/LowerBounds/LeCamThirdAndCharFn.lean",
+    "loc": 123,
+    "secs": 6.73,
+    "elab": 0.7
+   },
+   {
+    "file": "AsymptoticStatistics/Experiment/GaussianShift.lean",
+    "loc": 183,
+    "secs": 7.3,
+    "elab": 1.05
+   },
+   {
+    "file": "AsymptoticStatistics/LowerBounds/LAM.lean",
+    "loc": 136,
+    "secs": 7.02,
+    "elab": 0.62
+   },
+   {
+    "file": "AsymptoticStatistics/LowerBounds/SubconvexApprox.lean",
+    "loc": 56,
+    "secs": 6.23,
+    "elab": 0.28
+   },
+   {
+    "file": "AsymptoticStatistics/ForMathlib/LogTaylor.lean",
+    "loc": 109,
+    "secs": 6.03,
+    "elab": 0.61
+   },
+   {
+    "file": "AsymptoticStatistics/ForMathlib/L2.lean",
+    "loc": 148,
+    "secs": 6.49,
+    "elab": 1.1
+   }
+  ]
  }
 }

@@ -168,7 +168,7 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
   <p class="sub">
     As AI-generated Lean corpora proliferate, we need statistical measures of quality that
     don't require reading the code — and that measure the artifact, not its author. This
-    study implements fourteen metric families (reuse structure, hygiene, documentation,
+    study implements fifteen metric families (reuse structure, hygiene, documentation,
     elaboration cost, and an amortization exponent that measures reuse as compression),
     extracts exact declaration-level dependency graphs from elaborated environments,
     calibrates every metric against declared high/low quality anchors, and asks which ones
@@ -178,11 +178,11 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
 </header>
 
 <nav class="toc">
-  <a href="#reuse">Reuse CCDF</a>
+  <a href="#corpus">Corpus</a>
   <a href="#amortization">Amortization</a>
+  <a href="#reuse">Reuse CCDF</a>
   <a href="#elabcost">Elab cost</a>
   <a href="#discriminate">PCA & composite</a>
-  <a href="#corpus">Corpus</a>
   <a href="#metrics">Metrics</a>
   <a href="#where">Where reuse lives</a>
   <a href="#mathlib">Standing on Mathlib</a>
@@ -193,31 +193,42 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
   <a href="#validity">Validity</a>
 </nav>
 
-<section id="reuse">
+<section id="corpus">
   <div class="secno">01</div>
-  <h2>Reuse degree: necessary, not sufficient</h2>
+  <h2>The corpus</h2>
   <div class="prose">
     <p>
-      The base metric: for each reusable declaration, how many <em>distinct</em> other
-      declarations in the same repo reference it. The tail tells the real story — every
-      corpus has hubs, but only libraries have a <em>thick middle</em>: thousands of
-      declarations each reused a handful of times across many files.
+      Twenty-five corpora — formalization projects plus a declared slop calibration set.
+      (Math&nbsp;Inc's Gauss PR against the Sphere Packing repo was measured in an earlier
+      revision and is excluded here; §12 records the lesson it taught.)
+      Compiler internals, teaching games and statements-only conjecture lists are excluded
+      by design, and so are SciLean and Tao's <i>Analysis I</i>: their
+      <code>sorry_proof</code> and exercises-for-the-reader conventions are deliberate
+      choices that hygiene checks misread. The corpus spans Mathlib and its reviewed
+      satellites (FLT, PFR, AddCombi, Carleson, PNT+, CSLib, Physlib, Equational Theories,
+      the community Sphere Packing project, and four domain libraries: Stat Learning
+      Theory, EconLib, EconCSLib, Asymptotic Statistics), mixed-authorship pools (LeanPool — 65 human /
+      38 AI / 20 mixed projects), curated AI projects (TauCeti, Math&nbsp;Inc's StrongPNT),
+      low-curation AI corpora (Meta ATLAS, Seed-Prover, DeepMind superhuman, OpenAI's
+      Erdős-90, Clawristotle), and three community-flagged slop repos
+      for calibration (Pedigree Polytopes' axiomatized P=NP, Rubik Cube Group, GBLean).
+      Provenance is shown as color, but it is <em>not</em> the analysis axis: the question
+      is what separates low-quality from high-quality corpora, whoever wrote them.
+    </p>
+    <p>
+      Where the repo could be built, metrics come from the <b>exact tier</b>: a Lean
+      metaprogram walks the elaborated environment and reads <code>getUsedConstants</code>
+      off every declaration's type and value — capturing instance uses, notation-mediated
+      references, and dot-notation that textual analysis cannot see. Repos that ship no
+      lakefile (the proof dumps) use the <b>textual tier</b>, an approximate name-resolution
+      parser validated against the exact tier in §9.
     </p>
   </div>
-  <div class="card">
-    <h4>CCDF of internal reuse degree (log–log)</h4>
-    <div class="sub">All 20 corpus repos; fraction of declarations with in-degree ≥ x. Dashed = textual tier.</div>
-    <div class="legend" id="ccdfLegend"></div>
-    <div class="chartwrap" id="ccdfChart"></div>
-    <div class="sub" style="margin-top:10px">Per-repo aggregate: average internal in-degree (distinct users per declaration), sorted:</div>
-    <div class="chips" id="ccdfAgg"></div>
-  </div>
-  <div class="card">
-    <h4>Share of declarations reused at least twice</h4>
-    <div class="sub">Distinct-user in-degree ≥ 2, as a share of reusable declarations.</div>
-    <div class="chartwrap" id="ge2Chart"></div>
-  </div>
-  <div class="prose" id="reuseProse"></div>
+  <div class="legend" id="groupLegend"></div>
+  <div class="tablewrap"><table class="data" id="corpusTable"></table></div>
+  <p class="note">Click a column header to sort. kLOC = non-blank, non-comment source lines (thousands). Decls = source-level declarations after contracting compiler-generated auxiliaries.</p>
+  <h3>The projects, briefly</h3>
+  <div class="tablewrap"><table class="data" id="descTable"></table></div>
 </section>
 <section id="amortization">
   <div class="secno">02</div>
@@ -239,10 +250,36 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
     <div class="sub">Dot = mean over declarations; tick = p90. A value of 7 means the average declaration sits on a tree 10⁷ nodes large if nothing were shared.</div>
     <div class="chartwrap" id="amortChart"></div>
   </div>
+  <div class="card">
+    <h4>Longest internal dependency chain</h4>
+    <div class="sub">Maximum depth over the declaration DAG (auxiliaries contracted). Dot = max; tick = mean.</div>
+    <div class="chartwrap" id="depthChart"></div>
+  </div>
   <div class="prose" id="amortProse"></div>
 </section>
-<section id="elabcost">
+<section id="reuse">
   <div class="secno">03</div>
+  <h2>Reuse degree: necessary, not sufficient</h2>
+  <div class="prose">
+    <p>
+      The base metric: for each reusable declaration, how many <em>distinct</em> other
+      declarations in the same repo reference it. The tail tells the real story — every
+      corpus has hubs, but only libraries have a <em>thick middle</em>: thousands of
+      declarations each reused a handful of times across many files.
+    </p>
+  </div>
+  <div class="card">
+    <h4>CCDF of internal reuse degree (log–log)</h4>
+    <div class="sub">All corpus repos; fraction of declarations with in-degree ≥ x. Dashed = textual tier.</div>
+    <div class="legend" id="ccdfLegend"></div>
+    <div class="chartwrap" id="ccdfChart"></div>
+    <div class="sub" style="margin-top:10px">Per-repo aggregate: average internal in-degree (distinct users per declaration), sorted:</div>
+    <div class="chips" id="ccdfAgg"></div>
+  </div>
+  <div class="prose" id="reuseProse"></div>
+</section>
+<section id="elabcost">
+  <div class="secno">04</div>
   <h2>Elaboration cost per kLOC</h2>
   <div class="prose">
     <p>
@@ -260,9 +297,8 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
     <div class="chartwrap" id="elabChart"></div>
   </div>
 </section>
-
 <section id="discriminate">
-  <div class="secno">04</div>
+  <div class="secno">05</div>
   <h2>The metric space, and a composite of mechanical checks</h2>
   <div class="prose">
     <p>
@@ -288,42 +324,9 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
   </div>
   <div class="prose" id="discussProse"></div>
 </section>
-<section id="corpus">
-  <div class="secno">05</div>
-  <h2>The corpus</h2>
-  <div class="prose">
-    <p>
-      Twenty-two corpora — formalization projects plus a declared slop calibration set.
-      Compiler internals, teaching games and statements-only conjecture lists are excluded
-      by design, and so are SciLean and Tao's <i>Analysis I</i>: their
-      <code>sorry_proof</code> and exercises-for-the-reader conventions are deliberate
-      choices that hygiene checks misread. The corpus spans Mathlib and its reviewed
-      satellites (FLT, PFR, AddCombi, Carleson, PNT+, CSLib, Physlib, Equational Theories,
-      the community Sphere Packing project), mixed-authorship pools (LeanPool — 65 human /
-      38 AI / 20 mixed projects), curated AI projects (TauCeti, Math&nbsp;Inc's StrongPNT),
-      low-curation AI corpora (Meta ATLAS, Seed-Prover, DeepMind superhuman, OpenAI's
-      Erdős-90, Clawristotle, and Math&nbsp;Inc's Gauss PR measured separately against the
-      community Sphere Packing repo it targeted), and three community-flagged slop repos
-      for calibration (Pedigree Polytopes' axiomatized P=NP, Rubik Cube Group, GBLean).
-      Provenance is shown as color, but it is <em>not</em> the analysis axis: the question
-      is what separates low-quality from high-quality corpora, whoever wrote them.
-    </p>
-    <p>
-      Where the repo could be built, metrics come from the <b>exact tier</b>: a Lean
-      metaprogram walks the elaborated environment and reads <code>getUsedConstants</code>
-      off every declaration's type and value — capturing instance uses, notation-mediated
-      references, and dot-notation that textual analysis cannot see. Repos that ship no
-      lakefile (the proof dumps) use the <b>textual tier</b>, an approximate name-resolution
-      parser validated against the exact tier in §9.
-    </p>
-  </div>
-  <div class="legend" id="groupLegend"></div>
-  <div class="tablewrap"><table class="data" id="corpusTable"></table></div>
-  <p class="note">Click a column header to sort. kLOC = non-blank, non-comment source lines (thousands). Decls = source-level declarations after contracting compiler-generated auxiliaries. NNG4 is listed for completeness but excluded from charts: its game-DSL macros (<code>Statement</code>/<code>World</code>) defeat both tiers.</p>
-</section>
 <section id="metrics">
   <div class="secno">06</div>
-  <h2>Fourteen ways to measure quality</h2>
+  <h2>Fifteen ways to measure quality</h2>
   <div class="mgrid" id="metricCards"></div>
 </section>
 <section id="where">
@@ -376,17 +379,17 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
   <h2>The shape of the graph</h2>
   <div class="prose">
     <p>
-      Two structural measures. <b>Depth</b>: the longest internal chain of declarations each
-      building on the previous — layered theory versus a bag of independent facts.
-      <b>Concentration</b>: how much of all reuse is absorbed by the top 1% of declarations.
-      Both discriminate, in opposite directions: real libraries are deep <em>and</em> spread
-      their reuse; dumps are shallow, or deep only inside single-file towers.
+      How broadly is reuse spread? The share of declarations reused at least twice
+      captures the thick middle of the CCDF in one number, and the top-1% share captures
+      the opposite failure mode: a few hub declarations absorbing all reuse while the rest
+      is dead weight. (The longest build-on chain now lives beside the amortization
+      exponent in §2 — depth is the chain view of the same compounding phenomenon.)
     </p>
   </div>
   <div class="card">
-    <h4>Longest internal dependency chain</h4>
-    <div class="sub">Maximum depth over the declaration DAG (auxiliaries contracted). Dot = max; tick = mean.</div>
-    <div class="chartwrap" id="depthChart"></div>
+    <h4>Share of declarations reused at least twice</h4>
+    <div class="sub">Distinct-user in-degree ≥ 2, as a share of reusable declarations.</div>
+    <div class="chartwrap" id="ge2Chart"></div>
   </div>
   <div class="card">
     <h4>Reuse concentration: share absorbed by top 1% of declarations</h4>
@@ -479,19 +482,21 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
     </p>
   </div>
   <div class="tablewrap"><table class="data" id="taxonomyTable"></table></div>
-  <h3>Forensics: what does measurably distinguish the Gauss PR?</h3>
+  <h3>The Gauss PR case</h3>
   <div class="prose">
     <p>
-      Since the Gauss PR tops the headline checks, we hunted for residual quantitative
-      tells against its own target repo and the human research projects. Two survive:
-      <b>Mathlib-vocabulary poverty per citation</b> — it draws on the narrowest set of
-      distinct Mathlib lemmas per 1,000 references in the corpus, the signature of
-      hammering workhorse lemmas instead of finding the precise API — and a
-      <b>heavier proof-length tail</b> than the community repo it targets. Statement
-      duplication, branching, and chain-shape all look clean.
+      In an earlier revision we also measured Math Inc's Gauss PR against the community
+      Sphere Packing repo (same theorem, different process). It passed — indeed topped —
+      every mechanical check in this study: sorry-free, 94% docstring coverage, low
+      duplication, well-organized cross-directory reuse. Community review nonetheless
+      rejected it, citing exactly the definition-quality and API-design axes above; the
+      only residual quantitative tells were the narrowest Mathlib vocabulary per citation
+      in the corpus and a heavier proof-length tail than its target repo. It is excluded
+      from the corpus here at the community's judgment, and it is the strongest caution
+      this study can offer: a modern AI pipeline can saturate every mechanically checkable
+      signal while failing expert review.
     </p>
   </div>
-  <div class="tablewrap"><table class="data" id="gaussTable"></table></div>
   <div class="prose">
     <p>
       The scorecard is humbling and confirms the paper's thesis: Clawristotle lands
@@ -603,6 +608,15 @@ document.getElementById('groupLegend').innerHTML = legendHTML(GROUPS);
   render();
 })();
 
+// ---------- corpus descriptions ----------
+(function() {
+  const tbl = document.getElementById('descTable');
+  if (!tbl) return;
+  tbl.innerHTML = DATA.repos.map(r =>
+    `<tr><td style="white-space:nowrap"><span class="dotb" style="background:${GCOL(r.group)}"></span>${esc(r.label)}</td>` +
+    `<td style="text-align:left; white-space:normal">${esc(r.desc || '')}</td></tr>`).join('');
+})();
+
 // ---------- metric cards ----------
 (function() {
   const M = [
@@ -620,6 +634,7 @@ document.getElementById('groupLegend').innerHTML = legendHTML(GROUPS);
     ['M12','Trust base','Declared axioms and <code>native_decide</code> reliance beyond the standard axioms.'],
     ['M13','Elaboration cost','Seconds per kLOC to re-elaborate sampled files, import baseline subtracted — the heartbeats proxy.'],
     ['M14','Amortization exponent','log₁₀ of the fully-inlined dependency-tree size: reuse measured as compression.'],
+    ['M15','Triviality & vacuity','True-typed and numerals-only statements, zero-reference statements, one-liner trivial proofs.'],
   ];
   document.getElementById('metricCards').innerHTML = M.map(([id,t,d]) =>
     `<div class="mcard"><span class="id">${id}</span><h4>${t}</h4><p>${d}</p></div>`).join('');
@@ -851,26 +866,6 @@ dotRank('elabChart', charted.filter(r => r.m13 && r.m13.secs_per_kloc != null).m
   tip: `<b>${esc(r.label)}</b><br>median: ${r.m13.secs_per_kloc_median} s/kLOC · mean: ${r.m13.secs_per_kloc}<br>${r.m13.files_sampled} files, ${fmtNum(r.m13.loc_sampled)} LOC sampled`
 })).sort((a,b) => b.value - a.value), { ticks: 5 });
 
-// gauss forensics table
-(function() {
-  const tbl = document.getElementById('gaussTable');
-  if (!tbl) return;
-  const keys = ['sphere-gauss','spherepacking','mathlib4','flt','pfr','carleson'];
-  const rows = keys.map(k => byKey[k]).filter(Boolean);
-  const cols = [
-    ['', r => r.label],
-    ['ML vocab / 1k refs', r => r.m4.vocab1k ?? '—'],
-    ['proof p90 (lines)', r => r.m8.pl_stats ? r.m8.pl_stats.p90 : '—'],
-    ['stmt p90 (lines)', r => r.m8.stmt_lines ? r.m8.stmt_lines.p90 : '—'],
-    ['reused ≥2', r => fmtPct(r.m1.ge2)],
-    ['cross-dir', r => fmtPct(r.m3.crossdir)],
-    ['doc %', r => r.m10.pct_defs_with_doc != null ? fmtPct(r.m10.pct_defs_with_doc) : '—'],
-    ['sorry', r => fmtPct(r.m8.sorry)],
-  ];
-  tbl.innerHTML = '<tr>' + cols.map(c => `<th>${c[0]}</th>`).join('') + '</tr>' +
-    rows.map(r => '<tr>' + cols.map(c => `<td>${c[1](r)}</td>`).join('') + '</tr>').join('');
-})();
-
 dotRank('trivChart', charted.filter(r => r.m15 && r.m15.pct_trivial_proofs != null).map(r => ({
   label: r.label, value: r.m15.pct_trivial_proofs, group: r.group,
   tip: `<b>${esc(r.label)}</b><br>one-liner trivial proofs: ${fmtPct(r.m15.pct_trivial_proofs)}<br>True/numeral-only statements: ${r.m15.n_trivial_statements ?? 0} (${fmtPct(r.m15.pct_trivial_statements ?? 0)})<br>statements referencing nothing: ${fmtPct(r.m15.pct_statements_no_refs ?? 0)}`
@@ -898,7 +893,8 @@ sizePanel('fileLenChart', r => r.m9.file_stats);
   document.getElementById('pcaLoadings').innerHTML =
     '<b>PC1 strongest loadings:</b> ' + P.load1.map(l => `${esc(l.m)} (${l.w > 0 ? '+' : ''}${l.w})`).join(' · ') +
     '<br><b>PC2 strongest loadings:</b> ' + P.load2.map(l => `${esc(l.m)} (${l.w > 0 ? '+' : ''}${l.w})`).join(' · ') +
-    '<br><b>Metrics included (complete coverage only):</b> ' + P.included.map(esc).join(' · ');
+    '<br><b>Metrics included (complete coverage only):</b><ol style="margin:6px 0 0 18px; padding:0">' +
+    P.included.map(m => `<li>${esc(m)}</li>`).join('') + '</ol>';
   const el = document.getElementById('pcaChart');
   const W = Math.max(640, Math.min(el.clientWidth || 900, 980)), H = 480;
   const padL = 50, padR = 40, padT = 16, padB = 36;
