@@ -17,7 +17,7 @@ import os
 GROUP_OF = {
     "mathlib4": 0, "cslib": 0, "scilean": 0, "flt": 0, "pfr": 0,
     "addcombi": 0, "pnt": 0, "carleson": 0, "analysis": 0,
-    "physlib": 1, "equational_theories": 1, "lean-pool": 1,
+    "physlib": 1, "equational_theories": 1, "lean-pool": 1, "spherepacking": 1,
     "tauceti": 2, "strongpnt": 2,
     "atlas": 3, "seed-prover": 3, "superhuman": 3, "erdos90": 3, "clawristotle": 3,
 }
@@ -25,13 +25,13 @@ GROUPS = ["Human", "Human + AI mix", "AI, curated", "AI, less curated", "—"]
 ORDER = [
     "mathlib4", "flt", "pfr", "addcombi", "carleson", "pnt", "analysis",
     "cslib", "scilean", "physlib", "equational_theories", "lean-pool",
-    "tauceti", "strongpnt", "atlas", "erdos90", "clawristotle",
+    "spherepacking", "tauceti", "strongpnt", "atlas", "erdos90", "clawristotle",
     "seed-prover", "superhuman",
 ]
 # quality anchors for calibration (declared, defensible, and clearly labeled)
 HIGH_ANCHOR = {"mathlib4", "flt", "pfr", "carleson", "addcombi"}
 LOW_ANCHOR = {"seed-prover", "superhuman", "atlas"}
-CCDF_KEYS = ["mathlib4", "physlib", "tauceti", "strongpnt", "atlas", "erdos90", "seed-prover"]
+CCDF_KEYS = None  # all repos
 VOCAB_KEYS = ["carleson", "flt", "tauceti", "strongpnt", "erdos90"]
 DISPLAY_LABEL = {}
 
@@ -43,6 +43,7 @@ COMPOSITE = [
     ("no sorries", lambda r: -r["m8"]["sorry"]),
     ("no duplication", lambda r: -r["m7"]["dup"]),
     ("doc coverage", lambda r: r["m10"].get("pct_defs_with_doc")),
+    ("amortization", lambda r: r["m14"].get("mean_log10_cost")),
     ("elab economy", lambda r: -r["m13"]["secs_per_kloc"] if r["m13"].get("secs_per_kloc") is not None else None),
 ]
 
@@ -106,6 +107,7 @@ def pack_repo(key, res, tier):
         "m11": m.get("complexity", {}),
         "m12": m.get("trust_base", {}),
         "m13": m.get("elab_cost", {"secs_per_kloc": None}),
+        "m14": m.get("amortization", {}),
     }
 
 
@@ -157,7 +159,7 @@ def main():
 
     # CCDF series with pixel-space label de-collision
     ccdf = []
-    for k in CCDF_KEYS:
+    for k in (CCDF_KEYS or [r["key"] for r in repos]):
         if k not in byk:
             continue
         r = byk[k]
@@ -209,6 +211,8 @@ def main():
         ("M5 · top-1% reuse share", lambda r: r["m5"]["top1"] or 0, False, True),
         ("M6 · max dependency depth", lambda r: r["m6"]["maxd"], True, False),
         ("M12 · axioms per 1k decls", lambda r: r["m12"].get("axioms_per_1k_decls"), False, False),
+        ("M14 · amortization: mean log10 inlined cost", lambda r: r["m14"].get("mean_log10_cost"), True, False),
+        ("M14 · amortization: p90 log10 inlined cost", lambda r: r["m14"].get("p90_log10_cost"), True, False),
     ]
     auc_rows = []
     for label, f, good_high, pct in metrics:
@@ -328,9 +332,9 @@ provenance.</p>""",
 quality. TauCeti cites {tc['m4']['ml_per_decl']:.0f} references per declaration over a
 {tc['m4']['vocab']:,}-lemma vocabulary; StrongPNT {spnt['m4']['ml_per_decl']:.0f} over
 {spnt['m4']['vocab']:,}; Erdős-90's vocabulary is {e9['m4']['vocab']:,}. LeanPool's
-{lp['m4']['vocab']:,} — the largest — partly reflects the human projects it absorbs (a large
-portion of LeanPool is not AI-written, consistent with it scoring in the human band
-throughout this study). The discriminating signal in this chart is the vertical axis:
+{lp['m4']['vocab']:,} — the largest — partly reflects the human projects it absorbs: by the
+maintainer's own count its 123 projects split 65 human / 38 AI / 20 mixed, so its
+human-band scores are expected, not surprising. The discriminating signal in this chart is the vertical axis:
 internal dead weight at comparable leverage.</p>
 <p class="note">Two hygiene asides found by the extractor itself: LeanPool redeclares
 Mathlib names (<code>LieHom.snd</code>), so it cannot be imported alongside full Mathlib;
@@ -357,8 +361,10 @@ Mathlib leverage, statement share — are <em>volume</em> metrics that a large o
 machine-generated corpus satisfies incidentally. This mirrors three decades of software
 measurement: volume-derived indices (Halstead, McCabe aggregates, the Maintainability
 Index) predict quality poorly and average away power-law tails, while process signals and
-simple hygiene risk-profiles are the robust predictors. The five-check profile here is a
-SIG-style risk profile adapted to Lean.</p>
+simple hygiene risk-profiles are the robust predictors. The check-profile here is a
+SIG-style risk profile adapted to Lean — and the amortization exponent (§8) is the
+reuse-native addition: reuse measured as compression, which unlike citation counts cannot
+be gamed by chain-splitting.</p>
 <p>Two honest surprises. First, <b>the heartbeats hypothesis fails</b>: elaboration cost
 per line does not separate the anchors (AUC 0.2, inverted) — sorried or shallow corpora are
 <em>cheap</em> to elaborate, and TauCeti's high cost reflects hard mathematics, not poor
@@ -374,6 +380,17 @@ or what — wrote them. Two low positions are genre artifacts, not quality verdi
 <i>Analysis</i> (exercise sorries by design) and SciLean (<code>sorry_proof</code>
 convention) are penalized by checks that read their conventions literally — a reminder that
 no composite substitutes for knowing what a project is.</p>""",
+        "amortProse": f"""
+<p>This is the graph-theoretic formulation under which reuse <em>does</em> discriminate —
+massively. Mathlib's average declaration would cost 10<sup>{ml['m14'].get('mean_log10_cost','?')}</sup>
+inlined nodes without sharing (its deepest: 10<sup>{ml['m14'].get('max_log10_cost','?')}</sup>);
+Seed-Prover's average is 10<sup>{sp['m14'].get('mean_log10_cost','?')}</sup> — barely above no
+sharing at all. Unlike raw in-degree, this cannot be gamed by splitting one proof into a
+chain (a chain of length k only reaches cost k); it grows only when declarations are used
+<em>by many declarations that are themselves reused</em> — compounding, exactly the Mathlib
+design philosophy. Two caveats: the exponent grows with library size (part of the point,
+but compare like-sized repos), and it measures each repo's <em>internal</em> economy —
+chains through Mathlib are credited to M4, not here.</p>""",
         "validityProse": f"""
 <p><b>Tier agreement.</b> Where both tiers exist they correlate at Spearman ρ
 {mv.get('spearman_indeg','—')} across Mathlib's {mv.get('n_joined',0):,} joined

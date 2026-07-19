@@ -134,6 +134,12 @@ table.data tr:hover td { background: color-mix(in srgb, var(--accent) 6%, transp
 }
 .chip b { color: var(--ink); font-weight: 600; }
 
+details.how { margin: 10px 0 4px; font-size: 13px; color: var(--ink2); }
+details.how summary { cursor: pointer; color: var(--accent); font-size: 12.5px;
+  font-family: var(--mono); letter-spacing: 0.03em; }
+details.how[open] { background: color-mix(in srgb, var(--accent) 4%, transparent);
+  border-radius: 6px; padding: 8px 12px; margin: 10px 0; }
+details.how p { margin: 8px 0 2px; }
 #tooltip {
   position: fixed; pointer-events: none; z-index: 99; display: none;
   background: var(--ink); color: var(--plane); font-size: 12px; line-height: 1.4;
@@ -178,6 +184,7 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
   <a href="#where">Where reuse lives</a>
   <a href="#mathlib">Standing on Mathlib</a>
   <a href="#shape">Graph shape</a>
+  <a href="#amortization">Amortization</a>
   <a href="#hygiene">Hygiene</a>
   <a href="#classic">Classic metrics</a>
   <a href="#discriminate">What discriminates</a>
@@ -251,7 +258,7 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
   </div>
   <div class="card">
     <h4>CCDF of internal reuse degree (log–log)</h4>
-    <div class="sub">Fraction of declarations with in-degree ≥ x. Exact tier where available.</div>
+    <div class="sub">All 20 corpus repos; fraction of declarations with in-degree ≥ x. Dashed = textual tier.</div>
     <div class="legend" id="ccdfLegend"></div>
     <div class="chartwrap" id="ccdfChart"></div>
   </div>
@@ -334,8 +341,31 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
   </div>
 </section>
 
-<section id="hygiene">
+<section id="amortization">
   <div class="secno">08</div>
+  <h2>Reuse as compression: the amortization exponent</h2>
+  <div class="prose">
+    <p>
+      If reuse is Mathlib's central design philosophy, the right measurement is not how
+      often a declaration is cited but <strong>how much work sharing avoids</strong>.
+      Define the fully-inlined cost of a declaration recursively —
+      <code>cost(v) = 1 + Σ cost(deps)</code>, <em>with repetition</em> — the size its
+      dependency tree would have if every lemma were re-proved at every use site. In a flat
+      corpus this is chain length; in a shared library it grows exponentially, so we report
+      <code>log₁₀ cost</code>: the number of <em>orders of magnitude of duplication that
+      sharing eliminates</em>.
+    </p>
+  </div>
+  <div class="card">
+    <h4>Amortization exponent (log₁₀ of fully-inlined dependency-tree size)</h4>
+    <div class="sub">Dot = mean over declarations; tick = p90. A value of 7 means the average declaration sits on a tree 10⁷ nodes large if nothing were shared.</div>
+    <div class="chartwrap" id="amortChart"></div>
+  </div>
+  <div class="prose" id="amortProse"></div>
+</section>
+
+<section id="hygiene">
+  <div class="secno">09</div>
   <h2>Hygiene: duplication and <code>sorry</code></h2>
   <div class="prose">
     <p>
@@ -368,7 +398,7 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
 </section>
 
 <section id="classic">
-  <div class="secno">09</div>
+  <div class="secno">10</div>
   <h2>Classical software metrics, adapted</h2>
   <div class="prose">
     <p>
@@ -392,7 +422,7 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
 </section>
 
 <section id="discriminate">
-  <div class="secno">10</div>
+  <div class="secno">11</div>
   <h2>Which metrics discriminate quality?</h2>
   <div class="prose">
     <p>
@@ -407,15 +437,44 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
   <div class="tablewrap"><table class="data" id="aucTable"></table></div>
   <div class="card">
     <h4>Composite quality score</h4>
-    <div class="sub">Mean percentile rank across the seven discriminating checks (cross-dir reuse, outside-file reuse, granular imports, sorries, duplication, doc coverage, elaboration economy). Anchors marked ▲/▼. Illustrative, not a leaderboard.</div>
+    <div class="sub">Mean percentile rank across eight checks (cross-dir reuse, outside-file reuse, granular imports, sorries, duplication, doc coverage, elaboration economy, amortization). Anchors marked ▲/▼. Illustrative, not a leaderboard.</div>
     <div class="legend" id="compLegend"></div>
     <div class="chartwrap" id="compChart"></div>
   </div>
   <div class="prose" id="discussProse"></div>
 </section>
 
+<section id="taxonomy">
+  <div class="secno">—</div>
+  <h2>What expert review sees that these metrics don't</h2>
+  <div class="prose">
+    <p>
+      Ilin &amp; Nugent's expert-review case study
+      (<a href="https://arxiv.org/abs/2606.13925">arXiv:2606.13925</a>) examined a
+      semi-autonomous formalization of Grothendieck's vanishing theorem — a project that is
+      <em>in this corpus</em> (half of Clawristotle) — and found that compiling, sorry-free
+      code still failed expert review on four axes. That gives us a rare labeled instance to
+      test against:
+    </p>
+  </div>
+  <div class="tablewrap"><table class="data" id="taxonomyTable"></table></div>
+  <div class="prose">
+    <p>
+      The scorecard is humbling and confirms the paper's thesis: Clawristotle lands
+      mid-pack on our composite — structural metrics see its clean file-level organization
+      and zero duplication, and are <em>blind</em> to the definition-quality and API-design
+      deficiencies the reviewers found. Two of four issue classes are partially visible
+      (organization; reusability via never-reused definitions), two are invisible
+      (definition quality, theorem generality). Mechanically checkable metrics bound quality
+      from below; they do not certify it. The GitClear findings on AI-assisted code — clone
+      blocks up 4–8×, cross-file calls down 35% — are the software-engineering shadow of the
+      same phenomenon, and match the two metrics this study found most discriminating.
+    </p>
+  </div>
+</section>
+
 <section id="validity">
-  <div class="secno">11</div>
+  <div class="secno">12</div>
   <h2>Validity, and what this can't see</h2>
   <div class="prose" id="validityProse"></div>
   <div class="tablewrap"><table class="data" id="valTable"></table></div>
@@ -568,7 +627,7 @@ function dotRank(elId, rows, opts = {}) {
 function ccdfChart(elId, series) {
   const el = document.getElementById(elId);
   const W = Math.max(640, Math.min(el.clientWidth || 900, 980)), H = 380;
-  const padL = 56, padR = 128, padT = 12, padB = 40;
+  const padL = 56, padR = 168, padT = 12, padB = 40;
   const xmax = 1000, ymin = 1e-4;
   const x = v => padL + Math.log10(Math.max(v,1)) / Math.log10(xmax) * (W - padL - padR);
   const y = v => padT + (1 - Math.log10(Math.max(v, ymin)) / Math.log10(ymin) * -1 - 1) * 0; // placeholder
@@ -800,6 +859,67 @@ for (const [id, html] of Object.entries(DATA.prose)) {
     rows.map(([k,v]) => `<tr><td>${byKey[k] ? byKey[k].label : k}</td><td>${fmtNum(v.n_joined)}</td>` +
       `<td>${v.spearman_indeg.toFixed(2)}</td><td>${fmtPct(v.never_textual)}</td><td>${fmtPct(v.never_env)}</td>` +
       `<td>${v.mean_deg_textual.toFixed(1)}</td><td>${v.mean_deg_env.toFixed(1)}</td></tr>`).join('');
+})();
+
+// 08 — amortization
+dotRank('amortChart', charted.filter(r => r.m14 && r.m14.mean_log10_cost != null).map(r => ({
+  label: r.label, value: r.m14.mean_log10_cost, tick: r.m14.p90_log10_cost, group: r.group,
+  tip: `<b>${esc(r.label)}</b><br>mean log₁₀ inlined cost: ${r.m14.mean_log10_cost}<br>median: ${r.m14.median_log10_cost} · p90: ${r.m14.p90_log10_cost} · max: ${r.m14.max_log10_cost}<br>total amortization exponent: ${r.m14.total_amortization_exp}`
+})).sort((a,b) => b.value - a.value), { ticks: 5 });
+
+// taxonomy mapping table
+(function() {
+  const rows = [
+    ['Definition quality (poorly designed definitions)', 'Not captured', 'bad',
+     'Requires mathematical judgment. Weak proxies only: definitions never reused (M1), axioms (M12).'],
+    ['Theorem generality (overly specific statements)', 'Not captured', 'bad',
+     'Statement length and hypothesis count are measurable but genre-confounded; no metric here detects needless specificity.'],
+    ['File organization', 'Captured', 'good',
+     'M3 cross-file/cross-directory locality and M9 import structure — the two strongest discriminators in this study.'],
+    ['API design & library reusability', 'Partially captured', 'mid',
+     'Internal reuse of own definitions (M1/M2) and the amortization exponent (M14) measure realized reuse — but only after someone reuses it; unusable-but-unused API looks identical to unused-good API.'],
+  ];
+  const cls = {good: 'verdict-good', bad: 'verdict-bad', mid: ''};
+  document.getElementById('taxonomyTable').innerHTML =
+    '<tr><th>expert-review issue (Ilin–Nugent)</th><th>status</th><th>via</th></tr>' +
+    rows.map(r => `<tr><td style="text-align:left">${r[0]}</td><td class="${cls[r[2]]}">${r[1]}</td><td style="text-align:left; white-space:normal; max-width:420px">${r[3]}</td></tr>`).join('');
+})();
+
+// per-chart computation details
+(function() {
+  const HOW = {
+    ccdfChart: 'For each reusable declaration (theorem/def/structure/…; instances and anonymous decls excluded) count distinct other declarations in the same repo that reference it — exact tier: appears in their elaborated type or value via getUsedConstants; textual tier: name resolves in their source text. Plot the fraction of declarations with in-degree ≥ x, both axes log.',
+    ge2Chart: 'Share of reusable declarations whose distinct-user in-degree (as above) is at least 2.',
+    ctxChart: 'Every resolved reference is classified by where it occurs: the declaration\u2019s type (statement), a definition\u2019s body (value), or a proof term. Shares are occurrence-weighted over all references, internal + upstream.',
+    crossChart: 'A declaration counts as "used outside its file" if at least one referencing declaration lives in a different source file. Cross-directory edges compare the first two path components of the two files.',
+    mlScatter: 'x: total references landing on Mathlib declarations divided by the repo\u2019s named declaration count (log scale). y: share of reusable declarations with internal in-degree 0.',
+    depthChart: 'Longest path in the internal declaration DAG (generated auxiliaries contracted into parents, residual cycles excluded), computed by topological peeling; depth(v) = 1 + max depth over v\u2019s internal dependencies.',
+    giniChart: 'Sort reusable declarations by in-degree; the value shown is the share of all internal reference-pairs absorbed by the top 1% of declarations.',
+    dupChart: 'Whitespace-normalized declaration bodies (value + proof, ≥ 60 chars) hashed; the rate is 1 − unique/total among named declarations.',
+    sorryChart: 'Exact tier: the proof term transitively contains sorryAx. Textual tier: a sorry/admit/sorry_proof token in the proof text.',
+    docChart: 'A declaration "has a docstring" if a /-- … -/ block ends within 4 lines above its keyword (attributes may sit between). Coverage is over public (non-private, named) defs/structures/classes/inductives.',
+    elabChart: '12 random built files per repo (≥30 LOC) re-elaborated with lake env lean, wall-clock timed; a stub containing only the file\u2019s import header is timed once per distinct import set and subtracted. Value = median over files of elaboration-seconds per 1,000 source lines.',
+    amortChart: 'cost(v) = 1 + Σ cost(u) over v\u2019s internal dependencies, with repetition — the size of the fully-inlined dependency tree. Computed in log-space (log-sum-exp) over the acyclic graph in topological order; shown as log₁₀. Mean over declarations; tick = p90.',
+    compChart: 'For each of the 8 checks (cross-dir reuse, outside-file reuse, granular imports, no sorries, no duplication, doc coverage, elaboration economy, amortization) every repo gets its percentile rank among repos where the check is measurable; the score is the mean of available ranks. Anchors are never weighted differently — the score is descriptive, not fitted.',
+  };
+  for (const [id, txt] of Object.entries(HOW)) {
+    const el = document.getElementById(id);
+    if (!el) continue;
+    const card = el.closest('.card');
+    if (!card) continue;
+    const d = document.createElement('details');
+    d.className = 'how';
+    d.innerHTML = `<summary>how this is computed</summary><p>${txt}</p>`;
+    card.insertBefore(d, el);
+  }
+  // AUC table details
+  const aucTbl = document.getElementById('aucTable');
+  if (aucTbl) {
+    const d = document.createElement('details');
+    d.className = 'how';
+    d.innerHTML = '<summary>how AUC is computed</summary><p>For every (high-anchor, low-anchor) repo pair, the metric scores a win if it orders the pair correctly, half for ties; AUC = wins / pairs (5×3 = 15 pairs, fewer where a metric is unmeasured). Equivalent to the Mann–Whitney U statistic normalized to [0,1].</p>';
+    aucTbl.parentElement.insertBefore(d, aucTbl);
+  }
 })();
 
 document.getElementById('footerText').innerHTML = DATA.footer;

@@ -49,6 +49,7 @@ ENV_SELF_PREFIXES = {
     "pnt": ("PrimeNumberTheoremAnd",),
     "carleson": ("Carleson",),
     "strongpnt": ("StrongPNT",),
+    "spherepacking": ("SpherePacking",),
 }
 
 # Auto-generated last name components. Only applied to names NOT found in the

@@ -229,6 +229,15 @@
    },
    "elab_cost": {
     "secs_per_kloc": null
+   },
+   "amortization": {
+    "mean_log10_cost": 2.26,
+    "median_log10_cost": 1.82,
+    "p90_log10_cost": 4.28,
+    "max_log10_cost": 7.53,
+    "mean_log10_cost_theorems": 2.18,
+    "total_amortization_exp": 4.8,
+    "n_scored": 32678
    }
   }
  },
@@ -454,6 +463,15 @@
    },
    "elab_cost": {
     "secs_per_kloc": null
+   },
+   "amortization": {
+    "mean_log10_cost": 0.51,
+    "median_log10_cost": 0.3,
+    "p90_log10_cost": 1.2,
+    "max_log10_cost": 3.72,
+    "mean_log10_cost_theorems": 0.61,
+    "total_amortization_exp": 1.21,
+    "n_scored": 3102
    }
   }
  },
@@ -683,6 +701,15 @@
    },
    "elab_cost": {
     "secs_per_kloc": null
+   },
+   "amortization": {
+    "mean_log10_cost": 0.62,
+    "median_log10_cost": 0.48,
+    "p90_log10_cost": 1.58,
+    "max_log10_cost": 2.49,
+    "mean_log10_cost_theorems": 0.0,
+    "total_amortization_exp": 1.15,
+    "n_scored": 1023
    }
   }
  },
@@ -920,6 +947,15 @@
     "files_sampled": 12,
     "loc_sampled": 1852,
     "import_baseline_secs": 2.21
+   },
+   "amortization": {
+    "mean_log10_cost": 0.76,
+    "median_log10_cost": 0.7,
+    "p90_log10_cost": 1.62,
+    "max_log10_cost": 3.91,
+    "mean_log10_cost_theorems": 0.77,
+    "total_amortization_exp": 1.36,
+    "n_scored": 73452
    }
   }
  },
@@ -1262,6 +1298,15 @@
     "files_sampled": 12,
     "loc_sampled": 1288,
     "import_baseline_secs": 4.44
+   },
+   "amortization": {
+    "mean_log10_cost": 0.82,
+    "median_log10_cost": 0.7,
+    "p90_log10_cost": 1.65,
+    "max_log10_cost": 4.1,
+    "mean_log10_cost_theorems": 0.95,
+    "total_amortization_exp": 1.61,
+    "n_scored": 2714
    }
   }
  },
@@ -1606,6 +1651,15 @@
     "files_sampled": 12,
     "loc_sampled": 2117,
     "import_baseline_secs": 2.17
+   },
+   "amortization": {
+    "mean_log10_cost": 1.23,
+    "median_log10_cost": 0.95,
+    "p90_log10_cost": 2.67,
+    "max_log10_cost": 7.98,
+    "mean_log10_cost_theorems": 1.37,
+    "total_amortization_exp": 4.47,
+    "n_scored": 11017
    }
   }
  },
@@ -1957,6 +2011,15 @@
    },
    "elab_cost": {
     "secs_per_kloc": null
+   },
+   "amortization": {
+    "mean_log10_cost": 0.69,
+    "median_log10_cost": 0.6,
+    "p90_log10_cost": 1.51,
+    "max_log10_cost": 2.69,
+    "mean_log10_cost_theorems": 0.75,
+    "total_amortization_exp": 1.13,
+    "n_scored": 5387
    }
   }
  },
@@ -2303,6 +2366,15 @@
     "files_sampled": 12,
     "loc_sampled": 3033,
     "import_baseline_secs": 3.56
+   },
+   "amortization": {
+    "mean_log10_cost": 0.68,
+    "median_log10_cost": 0.3,
+    "p90_log10_cost": 1.76,
+    "max_log10_cost": 5.4,
+    "mean_log10_cost_theorems": 0.8,
+    "total_amortization_exp": 2.77,
+    "n_scored": 3756
    }
   }
  },
@@ -2645,6 +2717,15 @@
     "files_sampled": 12,
     "loc_sampled": 3518,
     "import_baseline_secs": 4.5
+   },
+   "amortization": {
+    "mean_log10_cost": 1.06,
+    "median_log10_cost": 0.6,
+    "p90_log10_cost": 2.92,
+    "max_log10_cost": 4.81,
+    "mean_log10_cost_theorems": 1.25,
+    "total_amortization_exp": 3.23,
+    "n_scored": 1170
    }
   }
  },
@@ -2987,6 +3068,15 @@
     "files_sampled": 10,
     "loc_sampled": 5711,
     "import_baseline_secs": 16.18
+   },
+   "amortization": {
+    "mean_log10_cost": 0.77,
+    "median_log10_cost": 0.6,
+    "p90_log10_cost": 1.8,
+    "max_log10_cost": 4.75,
+    "mean_log10_cost_theorems": 0.91,
+    "total_amortization_exp": 2.21,
+    "n_scored": 4326
    }
   }
  },
@@ -3331,6 +3421,15 @@
     "files_sampled": 12,
     "loc_sampled": 14797,
     "import_baseline_secs": 4.63
+   },
+   "amortization": {
+    "mean_log10_cost": 0.61,
+    "median_log10_cost": 0.48,
+    "p90_log10_cost": 0.95,
+    "max_log10_cost": 3.76,
+    "mean_log10_cost_theorems": 0.63,
+    "total_amortization_exp": 0.97,
+    "n_scored": 15940
    }
   }
  },
@@ -3669,6 +3768,15 @@
    },
    "elab_cost": {
     "secs_per_kloc": null
+   },
+   "amortization": {
+    "mean_log10_cost": 0.35,
+    "median_log10_cost": 0.3,
+    "p90_log10_cost": 0.78,
+    "max_log10_cost": 2.62,
+    "mean_log10_cost_theorems": 0.42,
+    "total_amortization_exp": 0.65,
+    "n_scored": 5074
    }
   }
  },
@@ -3940,6 +4048,15 @@
    },
    "elab_cost": {
     "secs_per_kloc": null
+   },
+   "amortization": {
+    "mean_log10_cost": 0.3,
+    "median_log10_cost": 0.3,
+    "p90_log10_cost": 0.6,
+    "max_log10_cost": 1.7,
+    "mean_log10_cost_theorems": 0.52,
+    "total_amortization_exp": 0.49,
+    "n_scored": 98
    }
   }
  },
@@ -4282,6 +4399,15 @@
     "files_sampled": 12,
     "loc_sampled": 973,
     "import_baseline_secs": 4.42
+   },
+   "amortization": {
+    "mean_log10_cost": 0.92,
+    "median_log10_cost": 0.78,
+    "p90_log10_cost": 1.89,
+    "max_log10_cost": 4.19,
+    "mean_log10_cost_theorems": 0.96,
+    "total_amortization_exp": 1.82,
+    "n_scored": 7083
    }
   }
  },
@@ -4624,6 +4750,15 @@
     "files_sampled": 12,
     "loc_sampled": 2109,
     "import_baseline_secs": 3.18
+   },
+   "amortization": {
+    "mean_log10_cost": 0.55,
+    "median_log10_cost": 0.48,
+    "p90_log10_cost": 1.26,
+    "max_log10_cost": 4.38,
+    "mean_log10_cost_theorems": 0.64,
+    "total_amortization_exp": 1.15,
+    "n_scored": 16001
    }
   }
  },
@@ -4969,6 +5104,15 @@
     "files_sampled": 12,
     "loc_sampled": 3854,
     "import_baseline_secs": 4.97
+   },
+   "amortization": {
+    "mean_log10_cost": 0.77,
+    "median_log10_cost": 0.48,
+    "p90_log10_cost": 1.89,
+    "max_log10_cost": 6.21,
+    "mean_log10_cost_theorems": 0.91,
+    "total_amortization_exp": 2.91,
+    "n_scored": 36204
    }
   }
  },
@@ -5307,6 +5451,15 @@
    },
    "elab_cost": {
     "secs_per_kloc": null
+   },
+   "amortization": {
+    "mean_log10_cost": 0.49,
+    "median_log10_cost": 0.48,
+    "p90_log10_cost": 1.08,
+    "max_log10_cost": 2.77,
+    "mean_log10_cost_theorems": 0.53,
+    "total_amortization_exp": 0.81,
+    "n_scored": 12330
    }
   }
  },
@@ -5645,6 +5798,15 @@
    },
    "elab_cost": {
     "secs_per_kloc": null
+   },
+   "amortization": {
+    "mean_log10_cost": 0.84,
+    "median_log10_cost": 0.7,
+    "p90_log10_cost": 1.81,
+    "max_log10_cost": 4.18,
+    "mean_log10_cost_theorems": 0.88,
+    "total_amortization_exp": 1.88,
+    "n_scored": 2481
    }
   }
  },
@@ -5987,6 +6149,15 @@
    },
    "elab_cost": {
     "secs_per_kloc": null
+   },
+   "amortization": {
+    "mean_log10_cost": 1.75,
+    "median_log10_cost": 1.3,
+    "p90_log10_cost": 4.08,
+    "max_log10_cost": 10.86,
+    "mean_log10_cost_theorems": 1.87,
+    "total_amortization_exp": 6.99,
+    "n_scored": 52714
    }
   }
  },
@@ -6325,6 +6496,15 @@
    },
    "elab_cost": {
     "secs_per_kloc": null
+   },
+   "amortization": {
+    "mean_log10_cost": 0.94,
+    "median_log10_cost": 0.78,
+    "p90_log10_cost": 2.11,
+    "max_log10_cost": 3.84,
+    "mean_log10_cost_theorems": 0.98,
+    "total_amortization_exp": 2.11,
+    "n_scored": 506
    }
   }
  },
@@ -6667,6 +6847,15 @@
     "files_sampled": 6,
     "loc_sampled": 906,
     "import_baseline_secs": 4.48
+   },
+   "amortization": {
+    "mean_log10_cost": 0.49,
+    "median_log10_cost": 0.48,
+    "p90_log10_cost": 0.95,
+    "max_log10_cost": 2.03,
+    "mean_log10_cost_theorems": 0.5,
+    "total_amortization_exp": 0.78,
+    "n_scored": 187
    }
   }
  },
@@ -7009,6 +7198,15 @@
     "files_sampled": 11,
     "loc_sampled": 4771,
     "import_baseline_secs": 4.02
+   },
+   "amortization": {
+    "mean_log10_cost": 0.98,
+    "median_log10_cost": 0.6,
+    "p90_log10_cost": 2.53,
+    "max_log10_cost": 4.93,
+    "mean_log10_cost_theorems": 1.06,
+    "total_amortization_exp": 2.21,
+    "n_scored": 6174
    }
   }
  },
@@ -7351,6 +7549,15 @@
     "files_sampled": 12,
     "loc_sampled": 2987,
     "import_baseline_secs": 1.87
+   },
+   "amortization": {
+    "mean_log10_cost": 0.49,
+    "median_log10_cost": 0.3,
+    "p90_log10_cost": 1.15,
+    "max_log10_cost": 2.59,
+    "mean_log10_cost_theorems": 0.52,
+    "total_amortization_exp": 0.82,
+    "n_scored": 1415
    }
   }
  },
@@ -7693,6 +7900,366 @@
     "files_sampled": 7,
     "loc_sampled": 21580,
     "import_baseline_secs": 3.69
+   },
+   "amortization": {
+    "mean_log10_cost": 0.75,
+    "median_log10_cost": 0.3,
+    "p90_log10_cost": 1.98,
+    "max_log10_cost": 6.08,
+    "mean_log10_cost_theorems": 0.77,
+    "total_amortization_exp": 4.1,
+    "n_scored": 1133
+   }
+  }
+ },
+ "spherepacking": {
+  "meta": {
+   "tier": "textual",
+   "join_rate": null,
+   "label": "Sphere Packing",
+   "category": "AI-completed formalization",
+   "provenance": "human+AI (Gauss)",
+   "stars": 80,
+   "url": "https://github.com/thefundamentaltheor3m/Sphere-Packing-Lean",
+   "files": 80,
+   "loc": 12930,
+   "decls": 1418,
+   "edges": 12686,
+   "dotted_coverage": 0.6915,
+   "parse_errors": 0
+  },
+  "metrics": {
+   "reuse_degree": {
+    "n_reusable_decls": 1368,
+    "degree": {
+     "mean": 2.802,
+     "median": 1.0,
+     "p90": 5.0,
+     "p99": 31.979999999999563,
+     "max": 124
+    },
+    "pct_never_reused": 0.2288,
+    "pct_reused_ge2": 0.3765,
+    "ccdf": {
+     "1": 0.7712,
+     "2": 0.37646,
+     "3": 0.22368,
+     "5": 0.11404,
+     "10": 0.05044,
+     "20": 0.01681,
+     "50": 0.00731,
+     "100": 0.00146,
+     "200": 0.0,
+     "500": 0.0,
+     "1000": 0.0
+    },
+    "top": [
+     {
+      "name": "h",
+      "deg": 124
+     },
+     {
+      "name": "F",
+      "deg": 114
+     },
+     {
+      "name": "D",
+      "deg": 87
+     },
+     {
+      "name": "H\u2082",
+      "deg": 81
+     },
+     {
+      "name": "H\u2084",
+      "deg": 76
+     },
+     {
+      "name": "g",
+      "deg": 73
+     },
+     {
+      "name": "\u03b1",
+      "deg": 65
+     },
+     {
+      "name": "serre_D",
+      "deg": 55
+     },
+     {
+      "name": "\u03c6\u2080''",
+      "deg": 53
+     },
+     {
+      "name": "E\u2082",
+      "deg": 52
+     },
+     {
+      "name": "G",
+      "deg": 47
+     },
+     {
+      "name": "ResToImagAxis",
+      "deg": 42
+     },
+     {
+      "name": "H\u2083",
+      "deg": 38
+     },
+     {
+      "name": "ResToImagAxis.Real",
+      "deg": 36
+     },
+     {
+      "name": "Function.resToImagAxis",
+      "deg": 30
+     },
+     {
+      "name": "E\u2084",
+      "deg": 27
+     },
+     {
+      "name": "PeriodicSpherePacking",
+      "deg": 26
+     },
+     {
+      "name": "\u0394",
+      "deg": 26
+     },
+     {
+      "name": "\u03c8S'",
+      "deg": 23
+     },
+     {
+      "name": "E8Matrix",
+      "deg": 23
+     }
+    ]
+   },
+   "statement_vs_proof": {
+    "share_signature": 0.253,
+    "share_value": 0.0526,
+    "share_proof": 0.6944,
+    "load_bearing_share": 0.3056,
+    "mean_stmt_indeg": 1.402,
+    "mean_proof_indeg": 1.787,
+    "internal_refs_to_theorems": 1690,
+    "internal_refs_to_defs": 4920,
+    "thm_def_ref_ratio": 0.343,
+    "pct_theorems_used_in_statements": 0.0088
+   },
+   "cross_file": {
+    "pct_edges_cross_file": 0.4729,
+    "pct_edges_cross_dir": 0.1388,
+    "pct_decls_used_outside_file": 0.2478,
+    "pct_decls_used_in_5plus_external_files": 0.0117,
+    "mean_user_files_per_used_decl": 1.438,
+    "n_dirs": 7
+   },
+   "external_reuse": {
+    "external_refs_total": 11890,
+    "external_refs_per_decl": 8.616,
+    "external_internal_ratio": 1.799,
+    "per_dep": {
+     "mathlib4": {
+      "refs": 9413,
+      "distinct_decls_used": 1528
+     },
+     "batteries": {
+      "refs": 16,
+      "distinct_decls_used": 2
+     },
+     "aesop": {
+      "refs": 0,
+      "distinct_decls_used": 0
+     },
+     "core": {
+      "refs": 2461,
+      "distinct_decls_used": 152
+     }
+    },
+    "mathlib_refs_per_decl": 6.821,
+    "mathlib_vocab": 1528,
+    "mathlib_vocab_per_1k_refs": 162.3,
+    "top_mathlib": [
+     {
+      "name": "Complex.I",
+      "refs": 668
+     },
+     {
+      "name": "UpperHalfPlane.I",
+      "refs": 293
+     },
+     {
+      "name": "EuclideanSpace",
+      "refs": 234
+     },
+     {
+      "name": "ModularGroup.S",
+      "refs": 144
+     },
+     {
+      "name": "Filter.Tendsto",
+      "refs": 123
+     },
+     {
+      "name": "Metric.ball",
+      "refs": 121
+     },
+     {
+      "name": "UpperHalfPlane.atImInfty",
+      "refs": 114
+     },
+     {
+      "name": "Set",
+      "refs": 106
+     },
+     {
+      "name": "positivity",
+      "refs": 106
+     },
+     {
+      "name": "ModularGroup.T",
+      "refs": 105
+     },
+     {
+      "name": "UpperHalfPlane.im",
+      "refs": 100
+     },
+     {
+      "name": "norm_num",
+      "refs": 98
+     },
+     {
+      "name": "UpperHalfPlane.re",
+      "refs": 97
+     },
+     {
+      "name": "ModularForm.E\u2084",
+      "refs": 97
+     },
+     {
+      "name": "Real.norm",
+      "refs": 89
+     },
+     {
+      "name": "UpperHalfPlane.ofComplex",
+      "refs": 86
+     },
+     {
+      "name": "deriv",
+      "refs": 76
+     },
+     {
+      "name": "Set.Ioc",
+      "refs": 72
+     },
+     {
+      "name": "UpperHalfPlane.denom",
+      "refs": 69
+     },
+     {
+      "name": "smul_eq_mul",
+      "refs": 68
+     },
+     {
+      "name": "Real.pi",
+      "refs": 68
+     },
+     {
+      "name": "linarith",
+      "refs": 67
+     },
+     {
+      "name": "Pi.mul_apply",
+      "refs": 64
+     },
+     {
+      "name": "mul_assoc",
+      "refs": 64
+     },
+     {
+      "name": "Complex",
+      "refs": 64
+     }
+    ]
+   },
+   "concentration": {
+    "gini": 0.6912,
+    "top1pct_share": 0.2366,
+    "top10pct_share": 0.5901
+   },
+   "dependency_depth": {
+    "max_depth": 13,
+    "mean_depth": 3.525,
+    "p90_depth": 7.0,
+    "pct_in_cycles": 0.4577
+   },
+   "duplication": {
+    "body_dup_rate": 0.0215,
+    "body_dup_n": 883,
+    "body_max_cluster": 3,
+    "stmt_dup_rate": 0.0258,
+    "stmt_dup_n": 853,
+    "stmt_max_cluster": 3
+   },
+   "proof_economy": {
+    "n_theorems": 1133,
+    "proof_lines": {
+     "mean": 10.242,
+     "median": 6.0,
+     "p90": 23.0,
+     "p99": 61.690000000000055,
+     "max": 181
+    },
+    "refs_per_proof": 11.348,
+    "refs_per_proof_line": 1.108,
+    "sorry_rate": 0.0485,
+    "n_sorried_theorems": 55,
+    "n_examples": 2
+   },
+   "import_graph": {
+    "n_files": 80,
+    "mean_internal_imports_per_file": 0.0,
+    "median_fan_in": 0.0,
+    "pct_files_fan_in_ge2": 0.0,
+    "max_fan_in": 0,
+    "pct_files_importing_all_mathlib": 0.0,
+    "n_distinct_external_modules": 0
+   },
+   "doc_coverage": {
+    "pct_defs_with_doc": 0.192,
+    "pct_theorems_with_doc": 0.2702,
+    "pct_public_decls_with_doc": 0.256,
+    "comment_density": 0.177
+   },
+   "complexity": {
+    "branch_per_proof": 0.239,
+    "branch_per_100_lines": 2.34,
+    "pct_proofs_branchy": 0.0088,
+    "p90_branch": 1.0
+   },
+   "trust_base": {
+    "n_axioms_declared": 0,
+    "axioms_per_1k_decls": 0.0,
+    "axiom_names": [],
+    "n_native_decide_users": null
+   },
+   "elab_cost": {
+    "secs_per_kloc": 13.5,
+    "secs_per_kloc_median": 19.8,
+    "files_sampled": 12,
+    "loc_sampled": 3299,
+    "import_baseline_secs": 1.72
+   },
+   "amortization": {
+    "mean_log10_cost": 0.68,
+    "median_log10_cost": 0.6,
+    "p90_log10_cost": 1.54,
+    "max_log10_cost": 2.74,
+    "mean_log10_cost_theorems": 0.73,
+    "total_amortization_exp": 1.15,
+    "n_scored": 769
    }
   }
  }

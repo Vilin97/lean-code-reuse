@@ -1091,5 +1091,88 @@
     "elab": 2.05
    }
   ]
+ },
+ "spherepacking": {
+  "files": 12,
+  "timeouts": 0,
+  "loc": 3299,
+  "secs": 44.5,
+  "baseline_secs": 1.72,
+  "secs_per_kloc": 13.5,
+  "secs_per_kloc_median": 19.8,
+  "per_file": [
+   {
+    "file": "SpherePacking/MagicFunction/a/IntegralEstimates/I4.lean",
+    "loc": 154,
+    "secs": 4.46,
+    "elab": 2.74
+   },
+   {
+    "file": "SpherePacking/CohnElkies/LPBound.lean",
+    "loc": 514,
+    "secs": 7.64,
+    "elab": 5.92
+   },
+   {
+    "file": "SpherePacking/MagicFunction/b/Basic.lean",
+    "loc": 132,
+    "secs": 4.34,
+    "elab": 2.62
+   },
+   {
+    "file": "SpherePacking/MagicFunction/a/Integrability/RealIntegrands.lean",
+    "loc": 80,
+    "secs": 4.4,
+    "elab": 2.68
+   },
+   {
+    "file": "SpherePacking/MagicFunction/a/Schwartz.lean",
+    "loc": 132,
+    "secs": 4.55,
+    "elab": 2.83
+   },
+   {
+    "file": "SpherePacking/ModularForms/SlashActionAuxil.lean",
+    "loc": 251,
+    "secs": 4.68,
+    "elab": 2.96
+   },
+   {
+    "file": "SpherePacking/ModularForms/FG.lean",
+    "loc": 896,
+    "secs": 6.16,
+    "elab": 4.44
+   },
+   {
+    "file": "SpherePacking/CohnElkies/Prereqs.lean",
+    "loc": 167,
+    "secs": 5.13,
+    "elab": 3.41
+   },
+   {
+    "file": "SpherePacking/ModularForms/ResToImagAxis.lean",
+    "loc": 407,
+    "secs": 4.9,
+    "elab": 3.17
+   },
+   {
+    "file": "SpherePacking/MagicFunction/a/IntegralEstimates/I6.lean",
+    "loc": 132,
+    "secs": 4.35,
+    "elab": 2.63
+   },
+   {
+    "file": "SpherePacking/Tactic/TendstoCont.lean",
+    "loc": 310,
+    "secs": 3.15,
+    "elab": 1.42
+   },
+   {
+    "file": "SpherePacking/MagicFunction/IntegralParametrisations.lean",
+    "loc": 124,
+    "secs": 11.43,
+    "elab": 9.71
+   }
+  ]
  }
 }

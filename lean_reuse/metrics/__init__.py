@@ -30,6 +30,7 @@ MODULES = [
     "complexity",
     "trust_base",
     "elab_cost",
+    "amortization",
 ]
 
 

@@ -179,6 +179,18 @@
   "textual_zero_env_nonzero": 0.0297,
   "env_zero_textual_nonzero": 0.0039
  },
+ "spherepacking": {
+  "n_joined": 1368,
+  "join_rate_env": 0.9194,
+  "spearman_indeg": 0.855,
+  "pearson_log1p": 0.872,
+  "never_textual": 0.231,
+  "never_env": 0.1769,
+  "mean_deg_textual": 2.799,
+  "mean_deg_env": 3.185,
+  "textual_zero_env_nonzero": 0.0694,
+  "env_zero_textual_nonzero": 0.0154
+ },
  "strongpnt": {
   "n_joined": 1121,
   "join_rate_env": 0.9929,

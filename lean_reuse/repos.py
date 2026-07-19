@@ -237,6 +237,16 @@ REPOS = {
         stars=319,
         provenance="AI",
     ),
+    "spherepacking": dict(
+        label="Sphere Packing",
+        url="https://github.com/thefundamentaltheor3m/Sphere-Packing-Lean",
+        dir="spherepacking",
+        roots=["SpherePacking"],
+        deps=["mathlib4", "batteries", "aesop", "core"],
+        category="AI-completed formalization",
+        stars=80,
+        provenance="human+AI (Gauss)",
+    ),
     "clawristotle": dict(
         label="Clawristotle",
         url="https://github.com/Vilin97/Clawristotle",
@@ -256,6 +266,7 @@ BUILD_ORDER = [
     "equational_theories", "formal-conjectures", "nng4",
     "tauceti", "lean-pool", "atlas", "seed-prover", "superhuman",
     "erdos90", "clawristotle", "addcombi", "pnt", "carleson", "strongpnt",
+    "spherepacking",
 ]
 
 EXCLUDED_DIR_PARTS = {
