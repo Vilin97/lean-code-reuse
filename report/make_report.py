@@ -270,8 +270,8 @@ VERDICTS = [
      "text": "The strongest structural separator against the low anchors: high-quality libraries interweave their directories; dumps and archipelagos don't. LeanPool's 93 directories with 0.1% cross-dir reuse reflect its pool-of-projects design, not its authorship."},
     {"good": True, "title": "Docstring coverage (M10)",
      "text": "A process signal: Mathlib's linter enforces docstrings on definitions and the habit propagates through reviewed projects; unreviewed corpora rarely fake it. Mirrors the SE finding that process metrics out-predict product metrics."},
-    {"good": True, "title": "Elaboration cost per LOC (M13)",
-     "text": "The heartbeats hypothesis: brute-force tactics make the elaborator grind. Measured by re-elaborating sampled files with import-load baselines subtracted — see §8 for which corpora pay more per line."},
+    {"good": False, "title": "Elaboration cost per LOC (M13) — refuted",
+     "text": "The heartbeats hypothesis inverts: sorried or shallow content elaborates cheaply (ATLAS: 12 s/kLOC), while TauCeti's 73 s/kLOC reflects genuinely hard mathematics being worked. Cost per line measures mathematical effort, not quality — high cost with low reuse is the actual smell."},
     {"good": True, "title": "Hygiene profile (M7/M8/M9)",
      "text": "Sorries, duplicate bodies, wholesale imports: each catches a different failure mode; jointly with locality they separate the anchors completely. Cheap to compute, hard to fail accidentally."},
     {"good": False, "title": "Raw reuse counts (M1)",
@@ -332,8 +332,12 @@ quality. TauCeti cites {tc['m4']['ml_per_decl']:.0f} references per declaration 
 portion of LeanPool is not AI-written, consistent with it scoring in the human band
 throughout this study). The discriminating signal in this chart is the vertical axis:
 internal dead weight at comparable leverage.</p>
-<p class="note">Hygiene aside: LeanPool redeclares Mathlib names (<code>LieHom.snd</code>),
-so it cannot be imported alongside full Mathlib — found when the extractor tried.</p>""",
+<p class="note">Two hygiene asides found by the extractor itself: LeanPool redeclares
+Mathlib names (<code>LieHom.snd</code>), so it cannot be imported alongside full Mathlib;
+and Meta ATLAS's own modules collide with each other (<code>jacobianMatrix</code> is defined
+in two files), so its 2,653 modules cannot be loaded as one environment at all — it is a
+collection of files that compile, not a library. That is why ATLAS carries textual-tier
+numbers.</p>""",
         "hygieneProse": f"""
 <p>Seed-Prover's {pct(sp['m7']['dup'])} duplicate-body rate and Meta ATLAS's
 {at['m8']['nsorry']:,} sorried theorems ({pct(at['m8']['sorry'])}) are the extreme cases;
@@ -355,10 +359,21 @@ measurement: volume-derived indices (Halstead, McCabe aggregates, the Maintainab
 Index) predict quality poorly and average away power-law tails, while process signals and
 simple hygiene risk-profiles are the robust predictors. The five-check profile here is a
 SIG-style risk profile adapted to Lean.</p>
+<p>Two honest surprises. First, <b>the heartbeats hypothesis fails</b>: elaboration cost
+per line does not separate the anchors (AUC 0.2, inverted) — sorried or shallow corpora are
+<em>cheap</em> to elaborate, and TauCeti's high cost reflects hard mathematics, not poor
+quality. Cost is a measure of mathematical effort; only the combination "expensive per line
+<em>and</em> nothing reused" is a smell. Second, <b>Mathlib-leverage discriminates against
+the anchors</b> (AUC 1.0) after failing the provenance split — low-quality corpora cite
+Mathlib shallowly per declaration — though part of that gap is the textual tier
+undercounting references for the unbuildable dumps.</p>
 <p>The composite percentile score below makes the quality ordering explicit — and it is
-visibly <em>not</em> a provenance ordering: LeanPool (mixed authorship) and the curated AI
-projects sit inside the human band, while the lowest positions are held by unreviewed
-corpora regardless of who — or what — wrote them.</p>""",
+visibly <em>not</em> a provenance ordering: TauCeti ranks third, LeanPool (mixed authorship)
+sits inside the human band, and the bottom is held by unreviewed corpora regardless of who —
+or what — wrote them. Two low positions are genre artifacts, not quality verdicts: Tao's
+<i>Analysis</i> (exercise sorries by design) and SciLean (<code>sorry_proof</code>
+convention) are penalized by checks that read their conventions literally — a reminder that
+no composite substitutes for knowing what a project is.</p>""",
         "validityProse": f"""
 <p><b>Tier agreement.</b> Where both tiers exist they correlate at Spearman ρ
 {mv.get('spearman_indeg','—')} across Mathlib's {mv.get('n_joined',0):,} joined

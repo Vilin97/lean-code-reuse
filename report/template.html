@@ -468,7 +468,7 @@ function svgEl(tag, attrs, parent) {
 
 // ---------- group legend ----------
 function legendHTML(groups) {
-  return groups.map((g,i) => `<span><span class="sw" style="background:${GCOL(i)}"></span>${g}</span>`).join('');
+  return groups.map((g,i) => g === '—' ? '' : `<span><span class="sw" style="background:${GCOL(i)}"></span>${g}</span>`).join('');
 }
 document.getElementById('groupLegend').innerHTML = legendHTML(GROUPS);
 
@@ -484,8 +484,9 @@ document.getElementById('groupLegend').innerHTML = legendHTML(GROUPS);
     ['med deg', r => r.m1.median, r => r.m1.median],
     ['reused ≥2', r => fmtPct(r.m1.ge2), r => r.m1.ge2],
     ['x-file', r => fmtPct(r.m3.outside), r => r.m3.outside],
-    ['stmt share', r => fmtPct(r.m2.sig), r => r.m2.sig],
+    ['doc %', r => r.m10 && r.m10.pct_defs_with_doc != null ? fmtPct(r.m10.pct_defs_with_doc) : '—', r => (r.m10 && r.m10.pct_defs_with_doc) || 0],
     ['ML refs/decl', r => r.m4.ml_per_decl ? r.m4.ml_per_decl.toFixed(1) : '—', r => r.m4.ml_per_decl||0],
+    ['s/kLOC', r => r.m13 && r.m13.secs_per_kloc_median != null ? r.m13.secs_per_kloc_median : '—', r => (r.m13 && r.m13.secs_per_kloc_median) || 0],
     ['depth', r => r.m6.maxd, r => r.m6.maxd],
     ['dup', r => fmtPct(r.m7.dup), r => r.m7.dup],
     ['sorry', r => fmtPct(r.m8.sorry), r => r.m8.sorry],

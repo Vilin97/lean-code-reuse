@@ -1,9 +1,14 @@
 # lean-code-reuse
 
-Macroscopic **code-reuse metrics for Lean 4 libraries**, built to test the
-hypothesis that *high internal reuse is the main statistical signature of a
-high-quality, lean (pun intended) library* — and to see which candidate
-metrics actually separate mature human libraries from AI-generated corpora.
+Macroscopic **quality metrics for Lean 4 formalization projects**. The study
+began with the hypothesis that *internal reuse is the main statistical
+signature of a high-quality library*; it ended somewhere more precise: raw
+reuse volume is a coin flip, while **organization** (cross-directory reuse),
+**process discipline** (docstrings, granular imports, sorry hygiene) and
+**economy** (duplication, elaboration cost per line) discriminate low- from
+high-quality corpora — regardless of whether a human or an AI wrote them.
+Metrics are calibrated against declared quality anchors (maintainer-reviewed
+projects vs unreviewed dumps), not against provenance.
 
 ## Two measurement tiers
 
@@ -49,6 +54,10 @@ The env tier is primary. The textual tier covers repos that cannot be built
 | M7 | `duplication` | Exact-duplicate bodies and statements (the failure mode reuse should punish) |
 | M8 | `proof_economy` | Proof length, distinct lemmas per proof, `sorry` rate |
 | M9 | `import_graph` | File-level fan-in, granular vs wholesale `import Mathlib` |
+| M10 | `doc_coverage` | Docstring coverage on public defs, comment density (SE comment-ratio analog) |
+| M11 | `complexity` | Branching tactic tokens per proof (McCabe cyclomatic adaptation) |
+| M12 | `trust_base` | Declared axioms, `native_decide` reliance |
+| M13 | `elab_cost` | Elaboration seconds per kLOC — heartbeats proxy, fed by `elab_bench.py` |
 
 ## Usage
 
@@ -67,7 +76,16 @@ python3 -m lean_reuse.run_all --repos-dir . --cache-dir cache_env \
     --out results_env.json --skip-build
 ```
 
-Repo registry (18 repos: Mathlib, core, Batteries, Aesop, CSLib, Physlib,
-SciLean, FLT, PFR, Tao's Analysis, Equational Theories, Formal Conjectures,
-NNG4, TauCeti, LeanPool, Meta ATLAS, Seed-Prover, DeepMind superhuman) lives
-in `lean_reuse/repos.py`.
+Repo registry lives in `lean_reuse/repos.py` (24 repos; core/Batteries/Aesop/
+Formal-Conjectures/NNG4 are kept only as name-resolution upstreams — the
+analysis corpus is 19 formalization projects: Mathlib, CSLib, Physlib,
+SciLean, FLT, PFR, AddCombi, PNT+, Carleson, Tao's Analysis, Equational
+Theories, LeanPool, TauCeti, StrongPNT, Meta ATLAS, Erdős-90, Clawristotle,
+Seed-Prover, DeepMind superhuman).
+
+Elaboration-cost benchmark:
+```bash
+python3 -m lean_reuse.elab_bench --config bench_config.json \
+    --cache-dir cache --out bench.json --scratch /tmp
+# then: python3 -m lean_reuse.run_all ... --bench bench.json
+```
