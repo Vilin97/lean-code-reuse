@@ -15,22 +15,23 @@ import os
 
 # provenance groups (colors only — the analysis axis is quality, not authorship)
 GROUP_OF = {
-    "mathlib4": 0, "cslib": 0, "scilean": 0, "flt": 0, "pfr": 0,
-    "addcombi": 0, "pnt": 0, "carleson": 0, "analysis": 0,
-    "physlib": 1, "equational_theories": 1, "lean-pool": 1, "spherepacking": 1,
+    "mathlib4": 0, "cslib": 0, "flt": 0, "pfr": 0,
+    "addcombi": 0, "pnt": 0, "carleson": 0, "spherepacking": 0,
+    "physlib": 1, "equational_theories": 1, "lean-pool": 1,
     "tauceti": 2, "strongpnt": 2,
     "atlas": 3, "seed-prover": 3, "superhuman": 3, "erdos90": 3, "clawristotle": 3,
+    "sphere-gauss": 3, "pedigree": 3, "rubik": 3, "gblean": 3,
 }
 GROUPS = ["Human", "Human + AI mix", "AI, curated", "AI, less curated", "—"]
 ORDER = [
-    "mathlib4", "flt", "pfr", "addcombi", "carleson", "pnt", "analysis",
-    "cslib", "scilean", "physlib", "equational_theories", "lean-pool",
-    "spherepacking", "tauceti", "strongpnt", "atlas", "erdos90", "clawristotle",
-    "seed-prover", "superhuman",
+    "mathlib4", "flt", "pfr", "addcombi", "carleson", "pnt", "spherepacking",
+    "cslib", "physlib", "equational_theories", "lean-pool",
+    "tauceti", "strongpnt", "sphere-gauss", "atlas", "erdos90", "clawristotle",
+    "seed-prover", "superhuman", "pedigree", "rubik", "gblean",
 ]
 # quality anchors for calibration (declared, defensible, and clearly labeled)
 HIGH_ANCHOR = {"mathlib4", "flt", "pfr", "carleson", "addcombi"}
-LOW_ANCHOR = {"seed-prover", "superhuman", "atlas"}
+LOW_ANCHOR = {"seed-prover", "superhuman", "atlas", "pedigree", "rubik", "gblean"}
 CCDF_KEYS = None  # all repos
 VOCAB_KEYS = ["carleson", "flt", "tauceti", "strongpnt", "erdos90"]
 DISPLAY_LABEL = {}
@@ -97,11 +98,14 @@ def pack_repo(key, res, tier):
         "m8": {
             "sorry": m["proof_economy"]["sorry_rate"], "nsorry": m["proof_economy"]["n_sorried_theorems"],
             "pl_med": m["proof_economy"]["proof_lines"]["median"],
+            "pl_p90": m["proof_economy"]["proof_lines"]["p90"],
+            "stmt_med": m["proof_economy"].get("stmt_chars_median"),
             "rpp": m["proof_economy"]["refs_per_proof"],
         },
         "m9": {
             "whole_ml": m["import_graph"]["pct_files_importing_all_mathlib"],
             "fanin2": m["import_graph"]["pct_files_fan_in_ge2"],
+            "file_med": m["import_graph"].get("median_file_loc"),
         },
         "m10": m.get("doc_coverage", {}),
         "m11": m.get("complexity", {}),
@@ -213,6 +217,10 @@ def main():
         ("M12 · axioms per 1k decls", lambda r: r["m12"].get("axioms_per_1k_decls"), False, False),
         ("M14 · amortization: mean log10 inlined cost", lambda r: r["m14"].get("mean_log10_cost"), True, False),
         ("M14 · amortization: p90 log10 inlined cost", lambda r: r["m14"].get("p90_log10_cost"), True, False),
+        ("M8 · median proof length (lines)", lambda r: r["m8"]["pl_med"], False, False),
+        ("M8 · p90 proof length (lines)", lambda r: r["m8"]["pl_p90"], False, False),
+        ("M8 · median statement length (chars)", lambda r: r["m8"].get("stmt_med"), False, False),
+        ("M9 · median file length (LOC)", lambda r: r["m9"].get("file_med"), False, False),
     ]
     auc_rows = []
     for label, f, good_high, pct in metrics:
@@ -258,7 +266,7 @@ def main():
         "composite": comp,
         "validation": validation,
         "verdicts": VERDICTS,
-        "prose": build_prose(byk, validation),
+        "prose": build_prose(byk, validation, {c["key"]: c["score"] for c in comp}),
         "footer": FOOTER,
     }
 
@@ -297,7 +305,8 @@ FOOTER = (
 )
 
 
-def build_prose(byk, validation):
+def build_prose(byk, validation, comp=None):
+    comp = comp or {}
     ml = byk["mathlib4"]
     sp = byk.get("seed-prover")
     sh = byk.get("superhuman")
@@ -307,6 +316,8 @@ def build_prose(byk, validation):
     e9 = byk.get("erdos90")
     cw = byk.get("clawristotle")
     spnt = byk.get("strongpnt")
+    sg = byk.get("sphere-gauss") or {}
+    spc = byk.get("spherepacking") or {}
     mv = validation.get("mathlib4", {})
 
     def pct(v):
@@ -348,42 +359,55 @@ collection of files that compile, not a library. That is why ATLAS carries textu
 numbers.</p>""",
         "hygieneProse": f"""
 <p>Seed-Prover's {pct(sp['m7']['dup'])} duplicate-body rate and Meta ATLAS's
-{at['m8']['nsorry']:,} sorried theorems ({pct(at['m8']['sorry'])}) are the extreme cases;
-Erdős-90 still duplicates {pct(e9['m7']['dup'])} of bodies in its submission tree. Two
-readings need context before judging: Tao's <i>Analysis</i> shows
-{pct(byk['analysis']['m8']['sorry'])} sorries because exercises are deliberately left to
-the reader, and SciLean's {pct(byk['scilean']['m8']['sorry'])} reflects its explicit
-<code>sorry_proof</code> convention for numerical facts. The curated AI projects are clean
-on both counts (TauCeti: {pct(tc['m7']['dup'])} duplicates, zero sorries; StrongPNT:
-{pct(spnt['m7']['dup'])} duplicates, {pct(spnt['m8']['sorry'])} sorries), while the
-Gauss-completed Sphere Packing ships {pct(byk['spherepacking']['m8']['sorry'])} sorried
-theorems and {pct(byk['spherepacking']['m7']['dup'])} duplicate bodies despite its
-sorry-free headline milestone — the headline was about the blueprint's main theorem, not
-the whole tree.</p>""",
-        "discussProse": """
+{at['m8']['nsorry']:,} sorried theorems ({pct(at['m8']['sorry'])}) anchor the low end, and
+the slop calibration set behaves as expected — Rubik Cube Group:
+{pct(byk['rubik']['m8']['sorry']) if 'rubik' in byk else '—'} sorried theorems; GBLean:
+{pct(byk['gblean']['m8']['sorry']) if 'gblean' in byk else '—'}; Pedigree Polytopes proves
+P=NP from {byk['pedigree']['m12'].get('n_axioms_declared','—') if 'pedigree' in byk else '—'}
+declared axioms (M12 catches what the sorry counter cannot: axiomatizing your way to a
+headline). The curated AI projects are clean on both counts (TauCeti:
+{pct(tc['m7']['dup'])} duplicates, zero sorries; StrongPNT: {pct(spnt['m7']['dup'])}
+duplicates, {pct(spnt['m8']['sorry'])} sorries). The two Sphere Packing rows are compared
+directly in §11.</p>""",
+        "discussProse": f"""
 <p>Calibrated against the declared anchors, the discriminating metrics form a coherent
 family: <b>compounding reuse</b> (the amortization exponent), <b>organization</b>
 (cross-directory and outside-file reuse), <b>process discipline</b> (docstring coverage,
 granular imports, sorry hygiene) and <b>economy</b> (duplication). The failures are all
 <em>volume</em> metrics — raw citation counts, depth, Mathlib leverage, statement share,
 elaboration cost — that a large or machine-generated corpus satisfies incidentally. This
-mirrors three decades of software measurement: volume-derived indices (Halstead, McCabe
-aggregates, the Maintainability Index) predict quality poorly, while process signals and
-threshold risk-profiles hold up. The check-profile here is a SIG-style risk profile
-adapted to Lean.</p>
-<p><b>Sphere Packing is the out-of-sample test.</b> Added after the community's cool
-reception of its Gauss-completed expansion (20k → 80k lines in five days), with the
-prediction that the metrics should rank it low — they do: composite 41/100, fourteenth of
-twenty, directly beside StrongPNT, the other Gauss artifact, with the same signature (9%
-cross-directory reuse, 17% docstring coverage, 4.7% sorries). The metrics reproduced the
-community's judgment without being told it.</p>
-<p>The composite score below is visibly <em>not</em> a provenance ordering: TauCeti and
-LeanPool (65 human / 38 AI / 20 mixed projects) sit inside the human band, while the
-bottom is held by unreviewed or low-curation corpora regardless of who — or what — wrote
-them. Two low positions are genre artifacts, not quality verdicts: Tao's <i>Analysis</i>
-(exercise sorries by design) and SciLean (<code>sorry_proof</code> convention) are
-penalized by checks that read their conventions literally — no composite substitutes for
-knowing what a project is.</p>""",
+mirrors three decades of software measurement: volume-derived indices predict quality
+poorly, while process signals and threshold risk-profiles hold up. The check-profile here
+is a SIG-style risk profile adapted to Lean, with the amortization exponent as the
+reuse-native addition.</p>
+<p><b>The Sphere Packing A/B is the study's most important result — and it is a
+warning, not a victory lap.</b> The corpus contains both the community formalization
+(blueprint-led, maintainer-reviewed, still in progress) and Math Inc's Gauss PR against it:
+same theorem, same target repo. The PR <em>wins every mechanically checkable axis</em> —
+composite {comp.get('sphere-gauss', 0)*100:.0f} (top of the corpus) versus the community's
+{comp.get('spherepacking', 0)*100:.0f}: sorry-free, docstrings on
+{pct(sg.get('m10', {}).get('pct_defs_with_doc'))} of definitions versus
+{pct(spc.get('m10', {}).get('pct_defs_with_doc'))}, cross-directory reuse
+{pct(sg.get('m3', {}).get('crossdir'))} versus {pct(spc.get('m3', {}).get('crossdir'))},
+lower duplication, higher amortization. Yet the community declined to merge it, for reasons
+that live precisely in the quadrant §12 shows no metric here can see: definition quality,
+statement generality, API design. A modern AI pipeline already produces artifacts that
+pass — indeed top — every structural and hygiene check in this study. These metrics are a
+floor, and the floor has been crossed; they remain useful for catching unforced errors
+(dumps, sorries, clones, archipelagos), not for certifying quality. Optimizing them
+directly is now demonstrably Goodhartable.</p>
+<p>The slop calibration set (Pedigree Polytopes, Rubik Cube Group, GBLean — flagged as
+crank or majority-sorry scaffolding during LeanPool's candidate triage) lands in the lower
+band: {comp.get('pedigree',0)*100:.0f}, {comp.get('rubik',0)*100:.0f} and
+{comp.get('gblean',0)*100:.0f} — though not at the very bottom, a reminder that the
+composite is descriptive: textual-tier repos carry only partial checks, and
+organized-but-empty corpora are punished harder than sorry-heavy scaffolds. The calibrated
+instrument is the anchor-AUC table above; the composite is a summary. The
+composite is visibly <em>not</em> a provenance ordering — TauCeti and LeanPool
+(65 human / 38 AI / 20 mixed projects) sit inside the human band — and SciLean and Tao's
+<i>Analysis</i> are excluded from the corpus entirely: their <code>sorry_proof</code> and
+exercises-left-to-the-reader conventions are deliberate design choices the hygiene checks
+misread, a reminder that no metric substitutes for knowing what a project is.</p>""",
         "amortProse": f"""
 <p>This is the graph-theoretic formulation under which reuse <em>does</em> discriminate —
 massively. Mathlib's average declaration would cost 10<sup>{ml['m14'].get('mean_log10_cost','?')}</sup>

@@ -45,18 +45,18 @@ TARGET_KINDS = {
     "axiom", "opaque", "alias",
 }
 
-_MODS = r"(?:(?:private|protected|noncomputable|unsafe|partial|nonrec|scoped|local)\s+)*"
+_MODS = r"(?:(?:public|private|protected|noncomputable|unsafe|partial|nonrec|scoped|local|meta)\s+)*"
 _KINDS_ALT = "|".join(DECL_KINDS).replace("class", r"class(?:\s+inductive|\s+abbrev)?", 1)
 DECL_RE = re.compile(rf"^(?P<mods>{_MODS})(?P<kind>{_KINDS_ALT})(?![\w'])\s*(?P<rest>.*)$")
 
 NAMESPACE_RE = re.compile(r"^namespace\s+([^\s]+)\s*$")
-SECTION_RE = re.compile(r"^(?:noncomputable\s+)?section(?:\s+([^\s]+))?\s*$")
+SECTION_RE = re.compile(r"^(?:noncomputable\s+|public\s+)*section(?:\s+([^\s]+))?\s*$")
 END_RE = re.compile(r"^end(?:\s+([^\s]+))?\s*$")
 OPEN_RE = re.compile(r"^open\s+(.*)$")
-IMPORT_RE = re.compile(r"^import\s+([\w.«»\-]+)")
+IMPORT_RE = re.compile(r"^(?:public\s+|meta\s+)?import\s+(?:all\s+)?([\w.«»\-]+)")
 MUTUAL_RE = re.compile(r"^mutual\b")
 SKIP_RE = re.compile(
-    r"^(?:variable[s]?\b|universe\b|set_option\b|attribute\b|export\b|include\b|omit\b|"
+    r"^(?:module\b|variable[s]?\b|universe\b|set_option\b|attribute\b|export\b|include\b|omit\b|"
     r"recall\b|#\w|run_cmd\b|initialize\b|builtin_initialize\b|deriving\s+instance\b|"
     r"recommended_spelling\b|register_\w+\b|declare_\w+\b|add_decl_doc\b|assert_not_exists\b|"
     r"library_note\b)"
@@ -297,7 +297,7 @@ def parse_file(path: str, rel: str, text: str) -> FileData:
                 i += 1
                 continue
             m = SECTION_RE.match(s)
-            if m and s.split()[0] in ("section", "noncomputable"):
+            if m and s.split()[0] in ("section", "noncomputable", "public"):
                 close_current(lineno - 1)
                 frames.append(_Frame("section", []))
                 i += 1

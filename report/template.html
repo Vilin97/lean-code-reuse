@@ -207,9 +207,12 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
       granular imports, sorry hygiene) and <strong>economy</strong> (duplication). Raw reuse
       counts stay a coin flip, and the heartbeats hypothesis inverts — elaboration cost
       tracks mathematical effort, not quality. The ranking these checks produce is not an
-      authorship ranking: TauCeti and LeanPool land inside the human band, while the
-      Gauss-completed Sphere Packing — added as an out-of-sample test after the community's
-      cool reception — scores next to StrongPNT near the bottom of the project band.
+      authorship ranking: TauCeti and LeanPool land inside the human band and the dumps at
+      the bottom. And the corpus's natural A/B experiment cuts the other way: Math Inc's
+      Gauss PR against the community Sphere Packing project <em>tops every mechanical
+      check</em> — sorry-free, documented, deduplicated, organized — while community review
+      still rejected it on definition quality and API design. These metrics are a floor,
+      not a certificate, and modern AI pipelines have crossed the floor (§11–12).
     </p>
   </div>
   <div id="verdictCards" class="mgrid"></div>
@@ -220,17 +223,20 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
   <h2>The corpus</h2>
   <div class="prose">
     <p>
-      Twenty <b>formalization projects</b> — compiler internals, teaching games and
-      statements-only conjecture lists are excluded by design (Lean core, Batteries and
-      Aesop remain in the pipeline only as name-resolution upstreams). The corpus spans
-      Mathlib and its reviewed satellites (FLT, PFR, AddCombi, Carleson, PNT+, Tao's
-      <i>Analysis I</i>, CSLib, SciLean, Physlib, Equational Theories), mixed-authorship
-      projects (LeanPool — 65 human / 38 AI / 20 mixed projects by the maintainer's count —
-      and the Gauss-completed Sphere Packing formalization), curated AI projects (TauCeti,
-      Math&nbsp;Inc's StrongPNT), and low-curation AI corpora (Meta ATLAS, Seed-Prover,
-      DeepMind superhuman, OpenAI's Erdős-90, Clawristotle). Provenance is shown as color,
-      but it is <em>not</em> the analysis axis: the question is what separates low-quality
-      from high-quality corpora, whoever wrote them.
+      Twenty-two corpora — formalization projects plus a declared slop calibration set.
+      Compiler internals, teaching games and statements-only conjecture lists are excluded
+      by design, and so are SciLean and Tao's <i>Analysis I</i>: their
+      <code>sorry_proof</code> and exercises-for-the-reader conventions are deliberate
+      choices that hygiene checks misread. The corpus spans Mathlib and its reviewed
+      satellites (FLT, PFR, AddCombi, Carleson, PNT+, CSLib, Physlib, Equational Theories,
+      the community Sphere Packing project), mixed-authorship pools (LeanPool — 65 human /
+      38 AI / 20 mixed projects), curated AI projects (TauCeti, Math&nbsp;Inc's StrongPNT),
+      low-curation AI corpora (Meta ATLAS, Seed-Prover, DeepMind superhuman, OpenAI's
+      Erdős-90, Clawristotle, and Math&nbsp;Inc's Gauss PR measured separately against the
+      community Sphere Packing repo it targeted), and three community-flagged slop repos
+      for calibration (Pedigree Polytopes' axiomatized P=NP, Rubik Cube Group, GBLean).
+      Provenance is shown as color, but it is <em>not</em> the analysis axis: the question
+      is what separates low-quality from high-quality corpora, whoever wrote them.
     </p>
     <p>
       Where the repo could be built, metrics come from the <b>exact tier</b>: a Lean
@@ -268,6 +274,8 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
     <div class="sub">All 20 corpus repos; fraction of declarations with in-degree ≥ x. Dashed = textual tier.</div>
     <div class="legend" id="ccdfLegend"></div>
     <div class="chartwrap" id="ccdfChart"></div>
+    <div class="sub" style="margin-top:10px">Per-repo aggregates (share of declarations reused ≥ 2, median in-degree), sorted:</div>
+    <div class="chips" id="ccdfAgg"></div>
   </div>
   <div class="card">
     <h4>Share of declarations reused at least twice</h4>
@@ -746,6 +754,15 @@ const byKey = {}; DATA.repos.forEach(r => byKey[r.key] = r);
 ccdfChart('ccdfChart', DATA.ccdf);
 document.getElementById('ccdfLegend').innerHTML = legendHTML(GROUPS) +
   '<span class="note" style="margin-left:8px">dashed = textual tier (unbuildable repo)</span>';
+// aggregate readout: one chip per repo, sorted by share reused >=2
+(function() {
+  const el = document.getElementById('ccdfAgg');
+  if (!el) return;
+  const rows = [...charted].sort((a,b) => b.m1.ge2 - a.m1.ge2);
+  el.innerHTML = rows.map(r =>
+    `<span class="chip" title="${esc(r.label)}"><span class="sw" style="background:${GCOL(r.group)};display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px"></span>` +
+    `${esc(r.label)} <b>${fmtPct(r.m1.ge2)}</b> ≥2 · med ${r.m1.median}</span>`).join('');
+})();
 
 // 04 — reused >= 2
 dotRank('ge2Chart', charted.map(r => ({

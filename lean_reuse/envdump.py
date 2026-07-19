@@ -50,6 +50,10 @@ ENV_SELF_PREFIXES = {
     "carleson": ("Carleson",),
     "strongpnt": ("StrongPNT",),
     "spherepacking": ("SpherePacking",),
+    "sphere-gauss": ("SpherePacking",),
+    "pedigree": ("MembershipProject", "Backup"),
+    "rubik": ("RubiksCube",),
+    "gblean": ("GB",),
 }
 
 # Auto-generated last name components. Only applied to names NOT found in the

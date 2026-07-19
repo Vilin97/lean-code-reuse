@@ -36,7 +36,9 @@ def compute(data, prep, ctx) -> dict:
                     whole = True
         if whole:
             whole_lib_files += 1
+    locs = np.array([l for l in data.get("file_loc", [])]) if n else np.zeros(0)
     return {
+        "median_file_loc": float(np.median(locs)) if len(locs) else None,
         "n_files": n,
         "mean_internal_imports_per_file": round(float(internal_out.mean()), 3) if n else 0.0,
         "median_fan_in": float(np.median(fan_in)) if n else 0.0,

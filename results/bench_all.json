@@ -1174,5 +1174,208 @@
     "elab": 9.71
    }
   ]
+ },
+ "sphere-gauss": {
+  "files": 12,
+  "timeouts": 0,
+  "loc": 2447,
+  "secs": 23.7,
+  "baseline_secs": 2.99,
+  "secs_per_kloc": 9.7,
+  "secs_per_kloc_median": 11.1,
+  "per_file": [
+   {
+    "file": "SpherePacking/MagicFunction/a/IntegralEstimates/I4.lean",
+    "loc": 159,
+    "secs": 5.73,
+    "elab": 1.77
+   },
+   {
+    "file": "SpherePacking/CohnElkies/PoissonSummationLattices/PoissonSummation.lean",
+    "loc": 241,
+    "secs": 5.28,
+    "elab": 3.88
+   },
+   {
+    "file": "SpherePacking/MagicFunction/b/Eigenfunction/GaussianFourier.lean",
+    "loc": 36,
+    "secs": 4.36,
+    "elab": 2.96
+   },
+   {
+    "file": "SpherePacking/MagicFunction/a/Eigenfunction/PermI12ContourAux.lean",
+    "loc": 55,
+    "secs": 4.46,
+    "elab": 0.05
+   },
+   {
+    "file": "SpherePacking/MagicFunction/a/SpecialValues.lean",
+    "loc": 914,
+    "secs": 6.83,
+    "elab": 2.29
+   },
+   {
+    "file": "SpherePacking/ModularForms/ThetaDerivIdentities.lean",
+    "loc": 413,
+    "secs": 5.63,
+    "elab": 1.89
+   },
+   {
+    "file": "SpherePacking/MagicFunction/g/CohnElkies/IntegralReductions.lean",
+    "loc": 43,
+    "secs": 4.35,
+    "elab": 2.94
+   },
+   {
+    "file": "SpherePacking/CohnElkies/PoissonSummationLattices/UnitAddTorus.lean",
+    "loc": 100,
+    "secs": 3.64,
+    "elab": 2.24
+   },
+   {
+    "file": "SpherePacking/ModularForms/SummableLemmas/Basic.lean",
+    "loc": 71,
+    "secs": 4.57,
+    "elab": 3.17
+   },
+   {
+    "file": "SpherePacking/MagicFunction/a/Schwartz/SmoothI1.lean",
+    "loc": 117,
+    "secs": 5.15,
+    "elab": 0.62
+   },
+   {
+    "file": "SpherePacking/CohnElkies/LPBoundSwapSums.lean",
+    "loc": 145,
+    "secs": 5.59,
+    "elab": 1.54
+   },
+   {
+    "file": "SpherePacking/ForMathlib/IteratedDeriv.lean",
+    "loc": 153,
+    "secs": 3.76,
+    "elab": 0.32
+   }
+  ]
+ },
+ "pedigree": {
+  "files": 3,
+  "timeouts": 9,
+  "loc": 674,
+  "secs": 2.6,
+  "baseline_secs": 3.07,
+  "secs_per_kloc": 3.8,
+  "secs_per_kloc_median": 3.4,
+  "per_file": [
+   {
+    "file": "MembershipProject/Core/N_LayeredNetworkTypes.lean",
+    "loc": 123,
+    "secs": null
+   },
+   {
+    "file": "Backup/M3PFrameworkTillMCFVer1.lean",
+    "loc": 367,
+    "secs": null
+   },
+   {
+    "file": "MembershipProject/Core/N_UptoF5.lean",
+    "loc": 158,
+    "secs": 4.08,
+    "elab": 1.62
+   },
+   {
+    "file": "Backup/Edge_In_k_Tour.lean",
+    "loc": 78,
+    "secs": null
+   },
+   {
+    "file": "MembershipProject/Core/Case1Proof.lean",
+    "loc": 103,
+    "secs": null
+   },
+   {
+    "file": "Backup/Lemma7.lean",
+    "loc": 89,
+    "secs": null
+   },
+   {
+    "file": "Backup/TreeDefRandomTest.lean",
+    "loc": 143,
+    "secs": 4.69,
+    "elab": 0.48
+   },
+   {
+    "file": "Backup/Lemma_For_Singleton.lean",
+    "loc": 86,
+    "secs": null
+   },
+   {
+    "file": "Backup/Tiru_Defines_Triples.lean",
+    "loc": 373,
+    "secs": 3.03,
+    "elab": 0.47
+   },
+   {
+    "file": "MembershipProject/Core/N_Discords.lean",
+    "loc": 243,
+    "secs": null
+   },
+   {
+    "file": "Backup/N_RestrictionAll.lean",
+    "loc": 74,
+    "secs": null
+   },
+   {
+    "file": "Backup/N_PedigreeStepD.lean",
+    "loc": 176,
+    "secs": null
+   }
+  ]
+ },
+ "gblean": {
+  "files": 5,
+  "timeouts": 1,
+  "loc": 1724,
+  "secs": 12.9,
+  "baseline_secs": 1.01,
+  "secs_per_kloc": 7.5,
+  "secs_per_kloc_median": 5.4,
+  "per_file": [
+   {
+    "file": "GB/Groebner.lean",
+    "loc": 295,
+    "secs": 5.63,
+    "elab": 4.6
+   },
+   {
+    "file": "GB/S_Poly.lean",
+    "loc": 488,
+    "secs": 4.81,
+    "elab": 3.79
+   },
+   {
+    "file": "GB/Buchberger.lean",
+    "loc": 511,
+    "secs": null
+   },
+   {
+    "file": "GB/Polynomial.lean",
+    "loc": 109,
+    "secs": 1.47,
+    "elab": 0.46
+   },
+   {
+    "file": "GB/Reduction.lean",
+    "loc": 320,
+    "secs": 2.28,
+    "elab": 1.27
+   },
+   {
+    "file": "GB/Monomial.lean",
+    "loc": 512,
+    "secs": 3.79,
+    "elab": 2.79
+   }
+  ]
  }
 }

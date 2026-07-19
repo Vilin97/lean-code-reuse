@@ -10,137 +10,137 @@
    "url": "https://github.com/leanprover/lean4",
    "files": 2322,
    "loc": 454766,
-   "decls": 77315,
-   "edges": 385406,
-   "dotted_coverage": 0.429,
+   "decls": 79646,
+   "edges": 400200,
+   "dotted_coverage": 0.4344,
    "parse_errors": 0
   },
   "metrics": {
    "reuse_degree": {
-    "n_reusable_decls": 71229,
+    "n_reusable_decls": 73242,
     "degree": {
-     "mean": 5.188,
+     "mean": 5.244,
      "median": 1.0,
      "p90": 5.0,
-     "p99": 54.0,
-     "max": 16202
+     "p99": 55.0,
+     "max": 16777
     },
-    "pct_never_reused": 0.4683,
-    "pct_reused_ge2": 0.2809,
+    "pct_never_reused": 0.461,
+    "pct_reused_ge2": 0.2855,
     "ccdf": {
-     "1": 0.53175,
-     "2": 0.2809,
-     "3": 0.17856,
-     "5": 0.10842,
-     "10": 0.05715,
-     "20": 0.02936,
-     "50": 0.01109,
-     "100": 0.00483,
+     "1": 0.53895,
+     "2": 0.28553,
+     "3": 0.18088,
+     "5": 0.10968,
+     "10": 0.05793,
+     "20": 0.03,
+     "50": 0.01117,
+     "100": 0.00494,
      "200": 0.00233,
      "500": 0.00091,
-     "1000": 0.00041
+     "1000": 0.00044
     },
     "top": [
      {
       "name": "simp",
-      "deg": 16202
+      "deg": 16777
      },
      {
       "name": "Nat",
-      "deg": 9401
+      "deg": 9749
      },
      {
       "name": "List",
-      "deg": 7540
+      "deg": 7621
      },
      {
       "name": "Std.TransCmp",
-      "deg": 7442
+      "deg": 7494
      },
      {
       "name": "Bool",
-      "deg": 6965
+      "deg": 7052
      },
      {
       "name": "rfl",
-      "deg": 6710
+      "deg": 6845
      },
      {
       "name": "Array",
-      "deg": 5188
+      "deg": 5447
      },
      {
       "name": "Lean.Expr",
-      "deg": 4992
+      "deg": 5210
      },
      {
       "name": "EquivBEq",
-      "deg": 4922
+      "deg": 4945
      },
      {
       "name": "LawfulHashable",
-      "deg": 4610
+      "deg": 4633
      },
      {
       "name": "Inhabited",
-      "deg": 4448
+      "deg": 4475
      },
      {
       "name": "Int",
-      "deg": 3364
-     },
-     {
-      "name": "BEq",
-      "deg": 3197
+      "deg": 3386
      },
      {
       "name": "Lean.Name",
-      "deg": 3132
+      "deg": 3302
+     },
+     {
+      "name": "BEq",
+      "deg": 3248
      },
      {
       "name": "String",
-      "deg": 2950
-     },
-     {
-      "name": "Option",
-      "deg": 2883
+      "deg": 3037
      },
      {
       "name": "Unit",
-      "deg": 2864
+      "deg": 2949
+     },
+     {
+      "name": "Option",
+      "deg": 2912
      },
      {
       "name": "Monad",
-      "deg": 2789
+      "deg": 2902
      },
      {
       "name": "Lean.Option",
-      "deg": 2725
+      "deg": 2838
      },
      {
       "name": "Std.TransOrd",
-      "deg": 2234
+      "deg": 2264
      }
     ]
    },
    "statement_vs_proof": {
-    "share_signature": 0.5194,
-    "share_value": 0.2221,
-    "share_proof": 0.2584,
-    "load_bearing_share": 0.7415,
-    "mean_stmt_indeg": 3.97,
-    "mean_proof_indeg": 1.43,
-    "internal_refs_to_theorems": 79890,
-    "internal_refs_to_defs": 390227,
+    "share_signature": 0.5204,
+    "share_value": 0.2244,
+    "share_proof": 0.2552,
+    "load_bearing_share": 0.7448,
+    "mean_stmt_indeg": 4.026,
+    "mean_proof_indeg": 1.427,
+    "internal_refs_to_theorems": 82830,
+    "internal_refs_to_defs": 403889,
     "thm_def_ref_ratio": 0.205,
-    "pct_theorems_used_in_statements": 0.0291
+    "pct_theorems_used_in_statements": 0.0294
    },
    "cross_file": {
-    "pct_edges_cross_file": 0.8011,
-    "pct_edges_cross_dir": 0.2975,
-    "pct_decls_used_outside_file": 0.3,
-    "pct_decls_used_in_5plus_external_files": 0.0327,
-    "mean_user_files_per_used_decl": 2.577,
+    "pct_edges_cross_file": 0.8021,
+    "pct_edges_cross_dir": 0.2956,
+    "pct_decls_used_outside_file": 0.3049,
+    "pct_decls_used_in_5plus_external_files": 0.0336,
+    "mean_user_files_per_used_decl": 2.597,
     "n_dirs": 3
    },
    "external_reuse": {
@@ -154,57 +154,59 @@
     "top_mathlib": []
    },
    "concentration": {
-    "gini": 0.9074,
-    "top1pct_share": 0.6129,
-    "top10pct_share": 0.8585
+    "gini": 0.9058,
+    "top1pct_share": 0.61,
+    "top10pct_share": 0.8568
    },
    "dependency_depth": {
     "max_depth": 43,
-    "mean_depth": 14.011,
+    "mean_depth": 13.917,
     "p90_depth": 31.0,
-    "pct_in_cycles": 0.5773
+    "pct_in_cycles": 0.5864
    },
    "duplication": {
-    "body_dup_rate": 0.0621,
-    "body_dup_n": 32071,
+    "body_dup_rate": 0.0619,
+    "body_dup_n": 33252,
     "body_max_cluster": 18,
-    "stmt_dup_rate": 0.1471,
-    "stmt_dup_n": 39393,
+    "stmt_dup_rate": 0.1446,
+    "stmt_dup_n": 40210,
     "stmt_max_cluster": 10
    },
    "proof_economy": {
-    "n_theorems": 44033,
+    "stmt_chars_median": 96.0,
+    "n_theorems": 44870,
     "proof_lines": {
-     "mean": 4.179,
+     "mean": 4.174,
      "median": 3.0,
      "p90": 7.0,
      "p99": 22.0,
      "max": 262
     },
-    "refs_per_proof": 2.805,
-    "refs_per_proof_line": 0.671,
+    "refs_per_proof": 2.814,
+    "refs_per_proof_line": 0.674,
     "sorry_rate": 0.0,
     "n_sorried_theorems": 0,
     "n_examples": 119
    },
    "import_graph": {
+    "median_file_loc": 73.0,
     "n_files": 2322,
     "mean_internal_imports_per_file": 0.0,
     "median_fan_in": 0.0,
     "pct_files_fan_in_ge2": 0.0,
     "max_fan_in": 0,
     "pct_files_importing_all_mathlib": 0.0,
-    "n_distinct_external_modules": 744
+    "n_distinct_external_modules": 2303
    },
    "doc_coverage": {
-    "pct_defs_with_doc": 0.5293,
-    "pct_theorems_with_doc": 0.0278,
-    "pct_public_decls_with_doc": 0.2046,
+    "pct_defs_with_doc": 0.5326,
+    "pct_theorems_with_doc": 0.0286,
+    "pct_public_decls_with_doc": 0.2094,
     "comment_density": 0.2329
    },
    "complexity": {
-    "branch_per_proof": 0.241,
-    "branch_per_100_lines": 5.78,
+    "branch_per_proof": 0.24,
+    "branch_per_100_lines": 5.74,
     "pct_proofs_branchy": 0.0037,
     "p90_branch": 1.0
    },
@@ -231,13 +233,13 @@
     "secs_per_kloc": null
    },
    "amortization": {
-    "mean_log10_cost": 2.26,
-    "median_log10_cost": 1.82,
-    "p90_log10_cost": 4.28,
+    "mean_log10_cost": 2.25,
+    "median_log10_cost": 1.83,
+    "p90_log10_cost": 4.27,
     "max_log10_cost": 7.53,
-    "mean_log10_cost_theorems": 2.18,
-    "total_amortization_exp": 4.8,
-    "n_scored": 32678
+    "mean_log10_cost_theorems": 2.16,
+    "total_amortization_exp": 4.79,
+    "n_scored": 32938
    }
   }
  },
@@ -252,31 +254,31 @@
    "url": "https://github.com/leanprover-community/batteries",
    "files": 187,
    "loc": 16530,
-   "decls": 3316,
-   "edges": 14991,
-   "dotted_coverage": 0.3865,
+   "decls": 3337,
+   "edges": 15113,
+   "dotted_coverage": 0.386,
    "parse_errors": 0
   },
   "metrics": {
    "reuse_degree": {
-    "n_reusable_decls": 3034,
+    "n_reusable_decls": 3052,
     "degree": {
-     "mean": 1.556,
+     "mean": 1.552,
      "median": 0.0,
      "p90": 3.0,
-     "p99": 22.670000000000073,
+     "p99": 22.48999999999978,
      "max": 224
     },
-    "pct_never_reused": 0.5933,
-    "pct_reused_ge2": 0.205,
+    "pct_never_reused": 0.5934,
+    "pct_reused_ge2": 0.2048,
     "ccdf": {
-     "1": 0.40672,
-     "2": 0.20501,
-     "3": 0.12228,
-     "5": 0.07152,
-     "10": 0.02999,
-     "20": 0.01252,
-     "50": 0.00231,
+     "1": 0.40662,
+     "2": 0.20478,
+     "3": 0.12254,
+     "5": 0.07143,
+     "10": 0.02982,
+     "20": 0.01245,
+     "50": 0.00229,
      "100": 0.00066,
      "200": 0.00033,
      "500": 0.0,
@@ -340,11 +342,11 @@
       "deg": 34
      },
      {
-      "name": "Fin.findSome",
+      "name": "Substring.Raw.ValidFor",
       "deg": 32
      },
      {
-      "name": "Substring.Raw.ValidFor",
+      "name": "Fin.findSome",
       "deg": 32
      },
      {
@@ -366,33 +368,33 @@
     ]
    },
    "statement_vs_proof": {
-    "share_signature": 0.529,
-    "share_value": 0.163,
-    "share_proof": 0.308,
-    "load_bearing_share": 0.692,
-    "mean_stmt_indeg": 1.163,
-    "mean_proof_indeg": 0.527,
+    "share_signature": 0.5285,
+    "share_value": 0.1636,
+    "share_proof": 0.3079,
+    "load_bearing_share": 0.6921,
+    "mean_stmt_indeg": 1.162,
+    "mean_proof_indeg": 0.524,
     "internal_refs_to_theorems": 1346,
-    "internal_refs_to_defs": 4869,
-    "thm_def_ref_ratio": 0.276,
+    "internal_refs_to_defs": 4888,
+    "thm_def_ref_ratio": 0.275,
     "pct_theorems_used_in_statements": 0.0295
    },
    "cross_file": {
-    "pct_edges_cross_file": 0.3522,
-    "pct_edges_cross_dir": 0.0123,
-    "pct_decls_used_outside_file": 0.1094,
+    "pct_edges_cross_file": 0.3512,
+    "pct_edges_cross_dir": 0.0124,
+    "pct_decls_used_outside_file": 0.1091,
     "pct_decls_used_in_5plus_external_files": 0.0,
-    "mean_user_files_per_used_decl": 1.191,
+    "mean_user_files_per_used_decl": 1.19,
     "n_dirs": 10
    },
    "external_reuse": {
-    "external_refs_total": 12187,
-    "external_refs_per_decl": 3.962,
-    "external_internal_ratio": 1.954,
+    "external_refs_total": 12322,
+    "external_refs_per_decl": 3.983,
+    "external_internal_ratio": 1.97,
     "per_dep": {
      "core": {
-      "refs": 12187,
-      "distinct_decls_used": 1445
+      "refs": 12322,
+      "distinct_decls_used": 1463
      }
     },
     "mathlib_refs_per_decl": 0.0,
@@ -401,57 +403,59 @@
     "top_mathlib": []
    },
    "concentration": {
-    "gini": 0.8391,
-    "top1pct_share": 0.2978,
-    "top10pct_share": 0.7208
+    "gini": 0.8388,
+    "top1pct_share": 0.2967,
+    "top10pct_share": 0.7203
    },
    "dependency_depth": {
     "max_depth": 16,
-    "mean_depth": 2.881,
+    "mean_depth": 2.871,
     "p90_depth": 5.0,
-    "pct_in_cycles": 0.0645
+    "pct_in_cycles": 0.0641
    },
    "duplication": {
-    "body_dup_rate": 0.0176,
-    "body_dup_n": 1193,
+    "body_dup_rate": 0.0175,
+    "body_dup_n": 1198,
     "body_max_cluster": 4,
     "stmt_dup_rate": 0.0052,
-    "stmt_dup_n": 1715,
+    "stmt_dup_n": 1716,
     "stmt_max_cluster": 4
    },
    "proof_economy": {
-    "n_theorems": 1862,
+    "stmt_chars_median": 83.0,
+    "n_theorems": 1863,
     "proof_lines": {
-     "mean": 4.461,
+     "mean": 4.46,
      "median": 3.0,
      "p90": 9.0,
      "p99": 21.0,
      "max": 61
     },
-    "refs_per_proof": 3.274,
-    "refs_per_proof_line": 0.734,
+    "refs_per_proof": 3.299,
+    "refs_per_proof_line": 0.74,
     "sorry_rate": 0.0,
     "n_sorried_theorems": 0,
     "n_examples": 1
    },
    "import_graph": {
+    "median_file_loc": 35.0,
     "n_files": 187,
-    "mean_internal_imports_per_file": 0.043,
-    "median_fan_in": 0.0,
-    "pct_files_fan_in_ge2": 0.0107,
-    "max_fan_in": 2,
+    "mean_internal_imports_per_file": 1.171,
+    "median_fan_in": 1.0,
+    "pct_files_fan_in_ge2": 0.262,
+    "max_fan_in": 13,
     "pct_files_importing_all_mathlib": 0.0,
-    "n_distinct_external_modules": 3
+    "n_distinct_external_modules": 46
    },
    "doc_coverage": {
-    "pct_defs_with_doc": 0.9768,
-    "pct_theorems_with_doc": 0.0695,
-    "pct_public_decls_with_doc": 0.398,
+    "pct_defs_with_doc": 0.9772,
+    "pct_theorems_with_doc": 0.07,
+    "pct_public_decls_with_doc": 0.4016,
     "comment_density": 0.3045
    },
    "complexity": {
     "branch_per_proof": 0.464,
-    "branch_per_100_lines": 10.41,
+    "branch_per_100_lines": 10.4,
     "pct_proofs_branchy": 0.0121,
     "p90_branch": 1.0
    },
@@ -470,8 +474,8 @@
     "p90_log10_cost": 1.2,
     "max_log10_cost": 3.72,
     "mean_log10_cost_theorems": 0.61,
-    "total_amortization_exp": 1.21,
-    "n_scored": 3102
+    "total_amortization_exp": 1.2,
+    "n_scored": 3123
    }
   }
  },
@@ -486,32 +490,32 @@
    "url": "https://github.com/leanprover-community/aesop",
    "files": 137,
    "loc": 12374,
-   "decls": 1658,
-   "edges": 7520,
-   "dotted_coverage": 0.2098,
+   "decls": 1684,
+   "edges": 7728,
+   "dotted_coverage": 0.2114,
    "parse_errors": 0
   },
   "metrics": {
    "reuse_degree": {
-    "n_reusable_decls": 1384,
+    "n_reusable_decls": 1410,
     "degree": {
-     "mean": 2.479,
+     "mean": 2.485,
      "median": 1.0,
      "p90": 5.0,
-     "p99": 31.170000000000073,
+     "p99": 31.910000000000082,
      "max": 104
     },
-    "pct_never_reused": 0.448,
-    "pct_reused_ge2": 0.2847,
+    "pct_never_reused": 0.4397,
+    "pct_reused_ge2": 0.2809,
     "ccdf": {
-     "1": 0.55202,
-     "2": 0.28468,
-     "3": 0.18353,
-     "5": 0.11416,
-     "10": 0.06286,
-     "20": 0.02818,
-     "50": 0.00434,
-     "100": 0.00072,
+     "1": 0.56028,
+     "2": 0.28085,
+     "3": 0.18156,
+     "5": 0.11418,
+     "10": 0.0617,
+     "20": 0.02837,
+     "50": 0.00426,
+     "100": 0.00071,
      "200": 0.0,
      "500": 0.0,
      "1000": 0.0
@@ -534,12 +538,12 @@
       "deg": 57
      },
      {
-      "name": "Aesop.Substitution",
-      "deg": 54
+      "name": "Aesop.BaseM",
+      "deg": 56
      },
      {
-      "name": "Aesop.BaseM",
-      "deg": 53
+      "name": "Aesop.Substitution",
+      "deg": 54
      },
      {
       "name": "Aesop.RuleName",
@@ -558,27 +562,35 @@
       "deg": 44
      },
      {
-      "name": "Aesop.ForwardRuleMatch",
-      "deg": 39
-     },
-     {
       "name": "Aesop.Percent",
       "deg": 39
      },
      {
+      "name": "Aesop.ForwardRuleMatch",
+      "deg": 39
+     },
+     {
+      "name": "Aesop.RuleTac",
+      "deg": 37
+     },
+     {
       "name": "Aesop.withConstAesopTraceNode",
-      "deg": 33
+      "deg": 34
      },
      {
       "name": "Aesop.MVarCluster",
       "deg": 32
      },
      {
-      "name": "Aesop.TreeM",
+      "name": "Aesop.ScriptM",
       "deg": 31
      },
      {
       "name": "Aesop.RuleSetName",
+      "deg": 31
+     },
+     {
+      "name": "Aesop.TreeM",
       "deg": 31
      },
      {
@@ -588,49 +600,41 @@
      {
       "name": "Aesop.RappRef",
       "deg": 29
-     },
-     {
-      "name": "Aesop.ForwardRule",
-      "deg": 28
-     },
-     {
-      "name": "Aesop.RuleTac",
-      "deg": 28
      }
     ]
    },
    "statement_vs_proof": {
-    "share_signature": 0.6279,
-    "share_value": 0.3719,
+    "share_signature": 0.6204,
+    "share_value": 0.3794,
     "share_proof": 0.0002,
     "load_bearing_share": 0.9998,
-    "mean_stmt_indeg": 2.582,
+    "mean_stmt_indeg": 2.587,
     "mean_proof_indeg": 0.0,
     "internal_refs_to_theorems": 0,
-    "internal_refs_to_defs": 4141,
+    "internal_refs_to_defs": 4219,
     "thm_def_ref_ratio": 0.0,
     "pct_theorems_used_in_statements": 0.0
    },
    "cross_file": {
-    "pct_edges_cross_file": 0.4795,
-    "pct_edges_cross_dir": 0.2732,
-    "pct_decls_used_outside_file": 0.2442,
-    "pct_decls_used_in_5plus_external_files": 0.034,
-    "mean_user_files_per_used_decl": 1.874,
+    "pct_edges_cross_file": 0.4849,
+    "pct_edges_cross_dir": 0.2818,
+    "pct_decls_used_outside_file": 0.2468,
+    "pct_decls_used_in_5plus_external_files": 0.0369,
+    "mean_user_files_per_used_decl": 1.89,
     "n_dirs": 16
    },
    "external_reuse": {
-    "external_refs_total": 4812,
-    "external_refs_per_decl": 3.452,
-    "external_internal_ratio": 1.15,
+    "external_refs_total": 4996,
+    "external_refs_per_decl": 3.518,
+    "external_internal_ratio": 1.172,
     "per_dep": {
      "batteries": {
-      "refs": 19,
-      "distinct_decls_used": 10
+      "refs": 20,
+      "distinct_decls_used": 11
      },
      "core": {
-      "refs": 4793,
-      "distinct_decls_used": 355
+      "refs": 4976,
+      "distinct_decls_used": 376
      }
     },
     "mathlib_refs_per_decl": 0.0,
@@ -639,25 +643,26 @@
     "top_mathlib": []
    },
    "concentration": {
-    "gini": 0.7964,
-    "top1pct_share": 0.2034,
-    "top10pct_share": 0.6881
+    "gini": 0.7946,
+    "top1pct_share": 0.2109,
+    "top10pct_share": 0.6892
    },
    "dependency_depth": {
     "max_depth": 13,
-    "mean_depth": 3.327,
+    "mean_depth": 3.323,
     "p90_depth": 7.0,
-    "pct_in_cycles": 0.383
+    "pct_in_cycles": 0.3895
    },
    "duplication": {
     "body_dup_rate": 0.0027,
-    "body_dup_n": 730,
+    "body_dup_n": 753,
     "body_max_cluster": 2,
     "stmt_dup_rate": 0.0,
     "stmt_dup_n": 0,
     "stmt_max_cluster": 0
    },
    "proof_economy": {
+    "stmt_chars_median": 22.5,
     "n_theorems": 4,
     "proof_lines": {
      "mean": 2.25,
@@ -673,18 +678,19 @@
     "n_examples": 0
    },
    "import_graph": {
+    "median_file_loc": 55.0,
     "n_files": 137,
-    "mean_internal_imports_per_file": 0.387,
-    "median_fan_in": 0.0,
-    "pct_files_fan_in_ge2": 0.0949,
-    "max_fan_in": 3,
+    "mean_internal_imports_per_file": 1.942,
+    "median_fan_in": 2.0,
+    "pct_files_fan_in_ge2": 0.5255,
+    "max_fan_in": 9,
     "pct_files_importing_all_mathlib": 0.0,
-    "n_distinct_external_modules": 32
+    "n_distinct_external_modules": 55
    },
    "doc_coverage": {
-    "pct_defs_with_doc": 0.1736,
+    "pct_defs_with_doc": 0.1706,
     "pct_theorems_with_doc": 0.0,
-    "pct_public_decls_with_doc": 0.1725,
+    "pct_public_decls_with_doc": 0.1695,
     "comment_density": 0.2335
    },
    "complexity": {
@@ -709,7 +715,7 @@
     "max_log10_cost": 2.49,
     "mean_log10_cost_theorems": 0.0,
     "total_amortization_exp": 1.15,
-    "n_scored": 1023
+    "n_scored": 1028
    }
   }
  },
@@ -724,52 +730,52 @@
    "url": "https://github.com/leanprover-community/mathlib4",
    "files": 8274,
    "loc": 1493382,
-   "decls": 260644,
-   "edges": 1350840,
-   "dotted_coverage": 0.5185,
+   "decls": 261205,
+   "edges": 1354575,
+   "dotted_coverage": 0.5188,
    "parse_errors": 0
   },
   "metrics": {
    "reuse_degree": {
-    "n_reusable_decls": 231184,
+    "n_reusable_decls": 231722,
     "degree": {
-     "mean": 4.624,
+     "mean": 4.625,
      "median": 1.0,
      "p90": 6.0,
      "p99": 58.0,
-     "max": 21100
+     "max": 21125
     },
-    "pct_never_reused": 0.4079,
+    "pct_never_reused": 0.4074,
     "pct_reused_ge2": 0.3457,
     "ccdf": {
-     "1": 0.59211,
-     "2": 0.34566,
-     "3": 0.23076,
-     "5": 0.13677,
-     "10": 0.06726,
-     "20": 0.03295,
+     "1": 0.5926,
+     "2": 0.34569,
+     "3": 0.23082,
+     "5": 0.1367,
+     "10": 0.06727,
+     "20": 0.03296,
      "50": 0.0119,
      "100": 0.00552,
-     "200": 0.00231,
+     "200": 0.0023,
      "500": 0.00071,
      "1000": 0.00029
     },
     "top": [
      {
       "name": "Set",
-      "deg": 21100
+      "deg": 21125
      },
      {
       "name": "symm",
-      "deg": 10631
+      "deg": 10650
      },
      {
       "name": "Finset",
-      "deg": 6742
+      "deg": 6753
      },
      {
       "name": "trans",
-      "deg": 4976
+      "deg": 4981
      },
      {
       "name": "Polynomial.X",
@@ -777,102 +783,102 @@
      },
      {
       "name": "Set.range",
-      "deg": 3457
+      "deg": 3463
      },
      {
       "name": "TopologicalSpace",
-      "deg": 3152
+      "deg": 3155
      },
      {
       "name": "Filter.Tendsto",
-      "deg": 3119
+      "deg": 3121
      },
      {
       "name": "CategoryTheory.inv",
-      "deg": 2998
+      "deg": 3000
      },
      {
       "name": "MeasureTheory.Measure",
-      "deg": 2760
+      "deg": 2762
      },
      {
       "name": "Set.univ",
-      "deg": 2734
+      "deg": 2735
      },
      {
       "name": "CategoryTheory.Category",
-      "deg": 2731
+      "deg": 2732
      },
      {
       "name": "Matrix",
-      "deg": 2648
+      "deg": 2651
      },
      {
       "name": "Submodule",
-      "deg": 2594
+      "deg": 2598
      },
      {
       "name": "MvPolynomial.R",
-      "deg": 2499
-     },
-     {
-      "name": "Fintype",
-      "deg": 2485
+      "deg": 2506
      },
      {
       "name": "Module",
-      "deg": 2483
+      "deg": 2491
+     },
+     {
+      "name": "Fintype",
+      "deg": 2487
      },
      {
       "name": "Filter",
-      "deg": 2468
+      "deg": 2469
      },
      {
       "name": "Algebra",
-      "deg": 2234
+      "deg": 2240
      },
      {
       "name": "Continuous",
-      "deg": 2224
+      "deg": 2227
      }
     ]
    },
    "statement_vs_proof": {
-    "share_signature": 0.3921,
-    "share_value": 0.1511,
-    "share_proof": 0.4568,
-    "load_bearing_share": 0.5432,
-    "mean_stmt_indeg": 2.709,
-    "mean_proof_indeg": 2.102,
-    "internal_refs_to_theorems": 523209,
-    "internal_refs_to_defs": 824162,
+    "share_signature": 0.3918,
+    "share_value": 0.152,
+    "share_proof": 0.4562,
+    "load_bearing_share": 0.5438,
+    "mean_stmt_indeg": 2.71,
+    "mean_proof_indeg": 2.1,
+    "internal_refs_to_theorems": 524338,
+    "internal_refs_to_defs": 826221,
     "thm_def_ref_ratio": 0.635,
     "pct_theorems_used_in_statements": 0.0167
    },
    "cross_file": {
-    "pct_edges_cross_file": 0.7131,
-    "pct_edges_cross_dir": 0.3925,
-    "pct_decls_used_outside_file": 0.3083,
+    "pct_edges_cross_file": 0.713,
+    "pct_edges_cross_dir": 0.3924,
+    "pct_decls_used_outside_file": 0.3084,
     "pct_decls_used_in_5plus_external_files": 0.0551,
-    "mean_user_files_per_used_decl": 3.464,
+    "mean_user_files_per_used_decl": 3.462,
     "n_dirs": 32
    },
    "external_reuse": {
-    "external_refs_total": 301876,
-    "external_refs_per_decl": 1.239,
+    "external_refs_total": 303299,
+    "external_refs_per_decl": 1.242,
     "external_internal_ratio": 0.221,
     "per_dep": {
      "batteries": {
-      "refs": 3798,
-      "distinct_decls_used": 164
+      "refs": 3806,
+      "distinct_decls_used": 165
      },
      "aesop": {
-      "refs": 8,
-      "distinct_decls_used": 5
+      "refs": 16,
+      "distinct_decls_used": 11
      },
      "core": {
-      "refs": 298070,
-      "distinct_decls_used": 4374
+      "refs": 299477,
+      "distinct_decls_used": 4436
      }
     },
     "mathlib_refs_per_decl": 0.0,
@@ -881,57 +887,59 @@
     "top_mathlib": []
    },
    "concentration": {
-    "gini": 0.8598,
+    "gini": 0.8597,
     "top1pct_share": 0.4737,
-    "top10pct_share": 0.7859
+    "top10pct_share": 0.7858
    },
    "dependency_depth": {
-    "max_depth": 18,
-    "mean_depth": 3.954,
+    "max_depth": 19,
+    "mean_depth": 4.091,
     "p90_depth": 8.0,
-    "pct_in_cycles": 0.7182
+    "pct_in_cycles": 0.7181
    },
    "duplication": {
     "body_dup_rate": 0.0179,
-    "body_dup_n": 118114,
+    "body_dup_n": 118536,
     "body_max_cluster": 36,
     "stmt_dup_rate": 0.0082,
-    "stmt_dup_n": 157593,
+    "stmt_dup_n": 157726,
     "stmt_max_cluster": 7
    },
    "proof_economy": {
-    "n_theorems": 186026,
+    "stmt_chars_median": 75.0,
+    "n_theorems": 186173,
     "proof_lines": {
-     "mean": 5.291,
+     "mean": 5.294,
      "median": 3.0,
      "p90": 10.0,
      "p99": 31.0,
      "max": 253
     },
-    "refs_per_proof": 4.127,
+    "refs_per_proof": 4.13,
     "refs_per_proof_line": 0.78,
     "sorry_rate": 0.0,
     "n_sorried_theorems": 0,
     "n_examples": 533
    },
    "import_graph": {
+    "median_file_loc": 114.0,
     "n_files": 8274,
-    "mean_internal_imports_per_file": 0.068,
-    "median_fan_in": 0.0,
-    "pct_files_fan_in_ge2": 0.0092,
-    "max_fan_in": 19,
+    "mean_internal_imports_per_file": 3.097,
+    "median_fan_in": 2.0,
+    "pct_files_fan_in_ge2": 0.5412,
+    "max_fan_in": 194,
     "pct_files_importing_all_mathlib": 0.0,
-    "n_distinct_external_modules": 9
+    "n_distinct_external_modules": 153
    },
    "doc_coverage": {
-    "pct_defs_with_doc": 0.9939,
-    "pct_theorems_with_doc": 0.1712,
-    "pct_public_decls_with_doc": 0.3095,
+    "pct_defs_with_doc": 0.9938,
+    "pct_theorems_with_doc": 0.1715,
+    "pct_public_decls_with_doc": 0.3107,
     "comment_density": 0.2207
    },
    "complexity": {
-    "branch_per_proof": 0.206,
-    "branch_per_100_lines": 3.9,
+    "branch_per_proof": 0.207,
+    "branch_per_100_lines": 3.91,
     "pct_proofs_branchy": 0.0044,
     "p90_branch": 1.0
    },
@@ -949,13 +957,13 @@
     "import_baseline_secs": 2.21
    },
    "amortization": {
-    "mean_log10_cost": 0.76,
+    "mean_log10_cost": 0.77,
     "median_log10_cost": 0.7,
-    "p90_log10_cost": 1.62,
+    "p90_log10_cost": 1.65,
     "max_log10_cost": 3.91,
-    "mean_log10_cost_theorems": 0.77,
-    "total_amortization_exp": 1.36,
-    "n_scored": 73452
+    "mean_log10_cost_theorems": 0.78,
+    "total_amortization_exp": 1.42,
+    "n_scored": 73639
    }
   }
  },
@@ -970,30 +978,30 @@
    "url": "https://github.com/leanprover/cslib",
    "files": 164,
    "loc": 16143,
-   "decls": 2733,
-   "edges": 11425,
-   "dotted_coverage": 0.4795,
+   "decls": 2735,
+   "edges": 11430,
+   "dotted_coverage": 0.4792,
    "parse_errors": 0
   },
   "metrics": {
    "reuse_degree": {
-    "n_reusable_decls": 2509,
+    "n_reusable_decls": 2511,
     "degree": {
-     "mean": 2.614,
+     "mean": 2.612,
      "median": 1.0,
      "p90": 5.0,
-     "p99": 26.920000000000073,
+     "p99": 26.90000000000009,
      "max": 214
     },
-    "pct_never_reused": 0.383,
-    "pct_reused_ge2": 0.3316,
+    "pct_never_reused": 0.3835,
+    "pct_reused_ge2": 0.3313,
     "ccdf": {
-     "1": 0.61698,
-     "2": 0.33161,
-     "3": 0.20765,
-     "5": 0.12156,
-     "10": 0.05699,
-     "20": 0.01913,
+     "1": 0.61649,
+     "2": 0.33134,
+     "3": 0.20749,
+     "5": 0.12147,
+     "10": 0.05695,
+     "20": 0.01912,
      "50": 0.00478,
      "100": 0.00159,
      "200": 0.0004,
@@ -1084,11 +1092,11 @@
     ]
    },
    "statement_vs_proof": {
-    "share_signature": 0.5022,
-    "share_value": 0.0973,
-    "share_proof": 0.4005,
-    "load_bearing_share": 0.5995,
-    "mean_stmt_indeg": 1.804,
+    "share_signature": 0.5021,
+    "share_value": 0.0975,
+    "share_proof": 0.4004,
+    "load_bearing_share": 0.5996,
+    "mean_stmt_indeg": 1.803,
     "mean_proof_indeg": 0.945,
     "internal_refs_to_theorems": 1909,
     "internal_refs_to_defs": 6909,
@@ -1098,13 +1106,13 @@
    "cross_file": {
     "pct_edges_cross_file": 0.437,
     "pct_edges_cross_dir": 0.0605,
-    "pct_decls_used_outside_file": 0.212,
+    "pct_decls_used_outside_file": 0.2119,
     "pct_decls_used_in_5plus_external_files": 0.0108,
     "mean_user_files_per_used_decl": 1.458,
     "n_dirs": 9
    },
    "external_reuse": {
-    "external_refs_total": 5592,
+    "external_refs_total": 5597,
     "external_refs_per_decl": 2.2,
     "external_internal_ratio": 0.634,
     "per_dep": {
@@ -1113,16 +1121,16 @@
       "distinct_decls_used": 550
      },
      "batteries": {
-      "refs": 4,
-      "distinct_decls_used": 2
+      "refs": 6,
+      "distinct_decls_used": 4
      },
      "aesop": {
       "refs": 0,
       "distinct_decls_used": 0
      },
      "core": {
-      "refs": 2750,
-      "distinct_decls_used": 329
+      "refs": 2753,
+      "distinct_decls_used": 333
      }
     },
     "mathlib_refs_per_decl": 1.116,
@@ -1190,11 +1198,11 @@
       "refs": 29
      },
      {
-      "name": "Set.Finite",
+      "name": "StrictMono",
       "refs": 26
      },
      {
-      "name": "StrictMono",
+      "name": "Set.Finite",
       "refs": 26
      },
      {
@@ -1218,11 +1226,11 @@
       "refs": 18
      },
      {
-      "name": "IsRegular",
+      "name": "SetLike",
       "refs": 17
      },
      {
-      "name": "SetLike",
+      "name": "IsRegular",
       "refs": 17
      },
      {
@@ -1232,25 +1240,26 @@
     ]
    },
    "concentration": {
-    "gini": 0.765,
+    "gini": 0.7651,
     "top1pct_share": 0.2565,
-    "top10pct_share": 0.6435
+    "top10pct_share": 0.6443
    },
    "dependency_depth": {
     "max_depth": 22,
-    "mean_depth": 3.874,
+    "mean_depth": 3.872,
     "p90_depth": 7.0,
-    "pct_in_cycles": 0.007
+    "pct_in_cycles": 0.0069
    },
    "duplication": {
     "body_dup_rate": 0.0083,
-    "body_dup_n": 1080,
+    "body_dup_n": 1081,
     "body_max_cluster": 2,
     "stmt_dup_rate": 0.0035,
     "stmt_dup_n": 1410,
     "stmt_max_cluster": 2
    },
    "proof_economy": {
+    "stmt_chars_median": 75.0,
     "n_theorems": 1692,
     "proof_lines": {
      "mean": 6.761,
@@ -1266,18 +1275,19 @@
     "n_examples": 1
    },
    "import_graph": {
+    "median_file_loc": 73.0,
     "n_files": 164,
-    "mean_internal_imports_per_file": 0.006,
-    "median_fan_in": 0.0,
-    "pct_files_fan_in_ge2": 0.0,
-    "max_fan_in": 1,
+    "mean_internal_imports_per_file": 1.659,
+    "median_fan_in": 1.0,
+    "pct_files_fan_in_ge2": 0.3415,
+    "max_fan_in": 34,
     "pct_files_importing_all_mathlib": 0.0,
-    "n_distinct_external_modules": 1
+    "n_distinct_external_modules": 84
    },
    "doc_coverage": {
     "pct_defs_with_doc": 1.0,
     "pct_theorems_with_doc": 0.5563,
-    "pct_public_decls_with_doc": 0.7,
+    "pct_public_decls_with_doc": 0.7002,
     "comment_density": 0.3179
    },
    "complexity": {
@@ -1306,7 +1316,7 @@
     "max_log10_cost": 4.1,
     "mean_log10_cost_theorems": 0.95,
     "total_amortization_exp": 1.61,
-    "n_scored": 2714
+    "n_scored": 2716
    }
   }
  },
@@ -1321,31 +1331,31 @@
    "url": "https://github.com/leanprover-community/physlib",
    "files": 588,
    "loc": 112723,
-   "decls": 11815,
-   "edges": 98463,
-   "dotted_coverage": 0.6531,
+   "decls": 11850,
+   "edges": 98609,
+   "dotted_coverage": 0.6524,
    "parse_errors": 0
   },
   "metrics": {
    "reuse_degree": {
-    "n_reusable_decls": 10993,
+    "n_reusable_decls": 11028,
     "degree": {
-     "mean": 3.413,
+     "mean": 3.406,
      "median": 1.0,
      "p90": 6.0,
-     "p99": 38.07999999999993,
+     "p99": 38.0,
      "max": 891
     },
-    "pct_never_reused": 0.3001,
-    "pct_reused_ge2": 0.3729,
+    "pct_never_reused": 0.2998,
+    "pct_reused_ge2": 0.3724,
     "ccdf": {
-     "1": 0.6999,
-     "2": 0.37287,
-     "3": 0.24752,
-     "5": 0.14091,
-     "10": 0.06613,
-     "20": 0.02784,
-     "50": 0.00737,
+     "1": 0.70022,
+     "2": 0.37242,
+     "3": 0.24692,
+     "5": 0.14064,
+     "10": 0.06592,
+     "20": 0.02775,
+     "50": 0.00734,
      "100": 0.00227,
      "200": 0.00091,
      "500": 0.00027,
@@ -1410,7 +1420,7 @@
      },
      {
       "name": "HermitianMat.mat",
-      "deg": 170
+      "deg": 171
      },
      {
       "name": "PureU1",
@@ -1435,33 +1445,33 @@
     ]
    },
    "statement_vs_proof": {
-    "share_signature": 0.3069,
-    "share_value": 0.1076,
-    "share_proof": 0.5856,
-    "load_bearing_share": 0.4145,
-    "mean_stmt_indeg": 2.131,
-    "mean_proof_indeg": 1.633,
-    "internal_refs_to_theorems": 14895,
-    "internal_refs_to_defs": 42416,
+    "share_signature": 0.3068,
+    "share_value": 0.1084,
+    "share_proof": 0.5848,
+    "load_bearing_share": 0.4152,
+    "mean_stmt_indeg": 2.129,
+    "mean_proof_indeg": 1.628,
+    "internal_refs_to_theorems": 14919,
+    "internal_refs_to_defs": 42444,
     "thm_def_ref_ratio": 0.351,
     "pct_theorems_used_in_statements": 0.0203
    },
    "cross_file": {
-    "pct_edges_cross_file": 0.526,
-    "pct_edges_cross_dir": 0.1344,
-    "pct_decls_used_outside_file": 0.3169,
-    "pct_decls_used_in_5plus_external_files": 0.0256,
-    "mean_user_files_per_used_decl": 1.706,
+    "pct_edges_cross_file": 0.5256,
+    "pct_edges_cross_dir": 0.1342,
+    "pct_decls_used_outside_file": 0.3164,
+    "pct_decls_used_in_5plus_external_files": 0.0255,
+    "mean_user_files_per_used_decl": 1.704,
     "n_dirs": 28
    },
    "external_reuse": {
-    "external_refs_total": 85149,
-    "external_refs_per_decl": 7.624,
-    "external_internal_ratio": 1.481,
+    "external_refs_total": 85272,
+    "external_refs_per_decl": 7.611,
+    "external_internal_ratio": 1.482,
     "per_dep": {
      "mathlib4": {
-      "refs": 49880,
-      "distinct_decls_used": 5297
+      "refs": 49900,
+      "distinct_decls_used": 5300
      },
      "batteries": {
       "refs": 222,
@@ -1472,12 +1482,12 @@
       "distinct_decls_used": 1
      },
      "core": {
-      "refs": 35046,
-      "distinct_decls_used": 744
+      "refs": 35149,
+      "distinct_decls_used": 755
      }
     },
-    "mathlib_refs_per_decl": 4.466,
-    "mathlib_vocab": 5297,
+    "mathlib_refs_per_decl": 4.454,
+    "mathlib_vocab": 5300,
     "mathlib_vocab_per_1k_refs": 106.2,
     "top_mathlib": [
      {
@@ -1583,25 +1593,26 @@
     ]
    },
    "concentration": {
-    "gini": 0.7634,
-    "top1pct_share": 0.295,
-    "top10pct_share": 0.6605
+    "gini": 0.7632,
+    "top1pct_share": 0.2958,
+    "top10pct_share": 0.6603
    },
    "dependency_depth": {
     "max_depth": 27,
-    "mean_depth": 5.499,
+    "mean_depth": 5.491,
     "p90_depth": 11.0,
-    "pct_in_cycles": 0.0675
+    "pct_in_cycles": 0.0674
    },
    "duplication": {
-    "body_dup_rate": 0.029,
-    "body_dup_n": 6965,
+    "body_dup_rate": 0.0289,
+    "body_dup_n": 6994,
     "body_max_cluster": 8,
     "stmt_dup_rate": 0.0088,
     "stmt_dup_n": 7704,
     "stmt_max_cluster": 4
    },
    "proof_economy": {
+    "stmt_chars_median": 101.0,
     "n_theorems": 8552,
     "proof_lines": {
      "mean": 10.836,
@@ -1610,25 +1621,26 @@
      "p99": 71.0,
      "max": 650
     },
-    "refs_per_proof": 9.822,
+    "refs_per_proof": 9.821,
     "refs_per_proof_line": 0.906,
     "sorry_rate": 0.002,
     "n_sorried_theorems": 17,
     "n_examples": 48
    },
    "import_graph": {
+    "median_file_loc": 121.0,
     "n_files": 588,
-    "mean_internal_imports_per_file": 0.0,
-    "median_fan_in": 0.0,
-    "pct_files_fan_in_ge2": 0.0,
-    "max_fan_in": 0,
-    "pct_files_importing_all_mathlib": 0.0,
-    "n_distinct_external_modules": 2
+    "mean_internal_imports_per_file": 1.665,
+    "median_fan_in": 1.0,
+    "pct_files_fan_in_ge2": 0.3435,
+    "max_fan_in": 46,
+    "pct_files_importing_all_mathlib": 0.0051,
+    "n_distinct_external_modules": 304
    },
    "doc_coverage": {
-    "pct_defs_with_doc": 0.9721,
+    "pct_defs_with_doc": 0.9725,
     "pct_theorems_with_doc": 0.2407,
-    "pct_public_decls_with_doc": 0.4077,
+    "pct_public_decls_with_doc": 0.4098,
     "comment_density": 0.2348
    },
    "complexity": {
@@ -1638,11 +1650,9 @@
     "p90_branch": 1.0
    },
    "trust_base": {
-    "n_axioms_declared": 1,
-    "axioms_per_1k_decls": 0.08,
-    "axiom_names": [
-     "helper"
-    ],
+    "n_axioms_declared": 0,
+    "axioms_per_1k_decls": 0.0,
+    "axiom_names": [],
     "n_native_decide_users": null
    },
    "elab_cost": {
@@ -1659,7 +1669,7 @@
     "max_log10_cost": 7.98,
     "mean_log10_cost_theorems": 1.37,
     "total_amortization_exp": 4.47,
-    "n_scored": 11017
+    "n_scored": 11051
    }
   }
  },
@@ -1675,8 +1685,8 @@
    "files": 452,
    "loc": 44019,
    "decls": 6011,
-   "edges": 21595,
-   "dotted_coverage": 0.3666,
+   "edges": 21598,
+   "dotted_coverage": 0.3667,
    "parse_errors": 0
   },
   "metrics": {
@@ -1788,10 +1798,10 @@
     ]
    },
    "statement_vs_proof": {
-    "share_signature": 0.5742,
+    "share_signature": 0.5741,
     "share_value": 0.3106,
     "share_proof": 0.1153,
-    "load_bearing_share": 0.8848,
+    "load_bearing_share": 0.8847,
     "mean_stmt_indeg": 2.246,
     "mean_proof_indeg": 0.28,
     "internal_refs_to_theorems": 642,
@@ -1808,9 +1818,9 @@
     "n_dirs": 19
    },
    "external_reuse": {
-    "external_refs_total": 14433,
+    "external_refs_total": 14436,
     "external_refs_per_decl": 3.144,
-    "external_internal_ratio": 0.848,
+    "external_internal_ratio": 0.849,
     "per_dep": {
      "mathlib4": {
       "refs": 4140,
@@ -1825,8 +1835,8 @@
       "distinct_decls_used": 2
      },
      "core": {
-      "refs": 10284,
-      "distinct_decls_used": 494
+      "refs": 10287,
+      "distinct_decls_used": 497
      }
     },
     "mathlib_refs_per_decl": 0.902,
@@ -1955,6 +1965,7 @@
     "stmt_max_cluster": 3
    },
    "proof_economy": {
+    "stmt_chars_median": 100.0,
     "n_theorems": 1943,
     "proof_lines": {
      "mean": 5.261,
@@ -1970,6 +1981,7 @@
     "n_examples": 142
    },
    "import_graph": {
+    "median_file_loc": 61.5,
     "n_files": 452,
     "mean_internal_imports_per_file": 2.104,
     "median_fan_in": 1.0,
@@ -2035,7 +2047,7 @@
    "files": 258,
    "loc": 40833,
    "decls": 3821,
-   "edges": 36415,
+   "edges": 36371,
    "dotted_coverage": 0.703,
    "parse_errors": 0
   },
@@ -2148,10 +2160,10 @@
     ]
    },
    "statement_vs_proof": {
-    "share_signature": 0.2956,
+    "share_signature": 0.2954,
     "share_value": 0.1444,
-    "share_proof": 0.56,
-    "load_bearing_share": 0.44,
+    "share_proof": 0.5602,
+    "load_bearing_share": 0.4398,
     "mean_stmt_indeg": 1.311,
     "mean_proof_indeg": 1.097,
     "internal_refs_to_theorems": 3102,
@@ -2168,13 +2180,13 @@
     "n_dirs": 23
    },
    "external_reuse": {
-    "external_refs_total": 42474,
-    "external_refs_per_decl": 13.488,
-    "external_internal_ratio": 4.091,
+    "external_refs_total": 42415,
+    "external_refs_per_decl": 13.469,
+    "external_internal_ratio": 4.085,
     "per_dep": {
      "mathlib4": {
-      "refs": 34046,
-      "distinct_decls_used": 4862
+      "refs": 33988,
+      "distinct_decls_used": 4863
      },
      "batteries": {
       "refs": 177,
@@ -2185,13 +2197,13 @@
       "distinct_decls_used": 0
      },
      "core": {
-      "refs": 8251,
+      "refs": 8250,
       "distinct_decls_used": 435
      }
     },
-    "mathlib_refs_per_decl": 10.812,
-    "mathlib_vocab": 4862,
-    "mathlib_vocab_per_1k_refs": 142.8,
+    "mathlib_refs_per_decl": 10.793,
+    "mathlib_vocab": 4863,
+    "mathlib_vocab_per_1k_refs": 143.1,
     "top_mathlib": [
      {
       "name": "Nat.card",
@@ -2315,6 +2327,7 @@
     "stmt_max_cluster": 2
    },
    "proof_economy": {
+    "stmt_chars_median": 119.0,
     "n_theorems": 2241,
     "proof_lines": {
      "mean": 11.954,
@@ -2323,20 +2336,21 @@
      "p99": 79.0,
      "max": 253
     },
-    "refs_per_proof": 13.188,
-    "refs_per_proof_line": 1.103,
+    "refs_per_proof": 13.178,
+    "refs_per_proof_line": 1.102,
     "sorry_rate": 0.0152,
     "n_sorried_theorems": 34,
     "n_examples": 19
    },
    "import_graph": {
+    "median_file_loc": 64.0,
     "n_files": 258,
-    "mean_internal_imports_per_file": 0.333,
-    "median_fan_in": 0.0,
-    "pct_files_fan_in_ge2": 0.0659,
-    "max_fan_in": 5,
-    "pct_files_importing_all_mathlib": 0.0,
-    "n_distinct_external_modules": 147
+    "mean_internal_imports_per_file": 1.531,
+    "median_fan_in": 1.0,
+    "pct_files_fan_in_ge2": 0.3527,
+    "max_fan_in": 7,
+    "pct_files_importing_all_mathlib": 0.0078,
+    "n_distinct_external_modules": 406
    },
    "doc_coverage": {
     "pct_defs_with_doc": 1.0,
@@ -2389,31 +2403,31 @@
    "url": "https://github.com/teorth/pfr",
    "files": 71,
    "loc": 18122,
-   "decls": 1170,
-   "edges": 12585,
+   "decls": 1171,
+   "edges": 12587,
    "dotted_coverage": 0.5284,
    "parse_errors": 0
   },
   "metrics": {
    "reuse_degree": {
-    "n_reusable_decls": 998,
+    "n_reusable_decls": 999,
     "degree": {
-     "mean": 2.533,
+     "mean": 2.534,
      "median": 1.0,
      "p90": 5.0,
-     "p99": 19.059999999999945,
+     "p99": 19.039999999999964,
      "max": 152
     },
-    "pct_never_reused": 0.2204,
-    "pct_reused_ge2": 0.4158,
+    "pct_never_reused": 0.2212,
+    "pct_reused_ge2": 0.4154,
     "ccdf": {
-     "1": 0.77956,
-     "2": 0.41583,
-     "3": 0.24649,
-     "5": 0.12725,
-     "10": 0.03607,
-     "20": 0.01002,
-     "50": 0.00401,
+     "1": 0.77878,
+     "2": 0.41542,
+     "3": 0.24725,
+     "5": 0.12813,
+     "10": 0.03604,
+     "20": 0.01001,
+     "50": 0.004,
      "100": 0.001,
      "200": 0.0,
      "500": 0.0,
@@ -2426,7 +2440,7 @@
      },
      {
       "name": "ProbabilityTheory.FiniteSupport",
-      "deg": 81
+      "deg": 82
      },
      {
       "name": "ProbabilityTheory.Kernel.AEFiniteKernelSupport",
@@ -2465,11 +2479,11 @@
       "deg": 19
      },
      {
-      "name": "MeasurableFinGroup",
+      "name": "ProbabilityTheory.entropy_def",
       "deg": 18
      },
      {
-      "name": "ProbabilityTheory.entropy_def",
+      "name": "MeasurableFinGroup",
       "deg": 18
      },
      {
@@ -2489,47 +2503,47 @@
       "deg": 15
      },
      {
-      "name": "rdist_triangle",
-      "deg": 14
-     },
-     {
       "name": "multiRefPackage",
       "deg": 14
      },
      {
-      "name": "ProbabilityTheory.Kernel.mutualInfo",
+      "name": "rdist_triangle",
+      "deg": 14
+     },
+     {
+      "name": "ProbabilityTheory.measure_compl_support",
       "deg": 13
      }
     ]
    },
    "statement_vs_proof": {
     "share_signature": 0.2631,
-    "share_value": 0.0194,
-    "share_proof": 0.7175,
-    "load_bearing_share": 0.2825,
-    "mean_stmt_indeg": 0.662,
-    "mean_proof_indeg": 1.94,
-    "internal_refs_to_theorems": 2296,
-    "internal_refs_to_defs": 1211,
-    "thm_def_ref_ratio": 1.896,
+    "share_value": 0.0197,
+    "share_proof": 0.7172,
+    "load_bearing_share": 0.2828,
+    "mean_stmt_indeg": 0.665,
+    "mean_proof_indeg": 1.938,
+    "internal_refs_to_theorems": 2297,
+    "internal_refs_to_defs": 1213,
+    "thm_def_ref_ratio": 1.894,
     "pct_theorems_used_in_statements": 0.0011
    },
    "cross_file": {
-    "pct_edges_cross_file": 0.4878,
-    "pct_edges_cross_dir": 0.2441,
-    "pct_decls_used_outside_file": 0.3808,
+    "pct_edges_cross_file": 0.4872,
+    "pct_edges_cross_dir": 0.2438,
+    "pct_decls_used_outside_file": 0.3804,
     "pct_decls_used_in_5plus_external_files": 0.014,
-    "mean_user_files_per_used_decl": 1.632,
+    "mean_user_files_per_used_decl": 1.634,
     "n_dirs": 4
    },
    "external_reuse": {
-    "external_refs_total": 17796,
-    "external_refs_per_decl": 17.396,
-    "external_internal_ratio": 5.046,
+    "external_refs_total": 17794,
+    "external_refs_per_decl": 17.377,
+    "external_internal_ratio": 5.041,
     "per_dep": {
      "mathlib4": {
-      "refs": 13484,
-      "distinct_decls_used": 1292
+      "refs": 13481,
+      "distinct_decls_used": 1291
      },
      "batteries": {
       "refs": 11,
@@ -2540,12 +2554,12 @@
       "distinct_decls_used": 0
      },
      "core": {
-      "refs": 4301,
+      "refs": 4302,
       "distinct_decls_used": 179
      }
     },
-    "mathlib_refs_per_decl": 13.181,
-    "mathlib_vocab": 1292,
+    "mathlib_refs_per_decl": 13.165,
+    "mathlib_vocab": 1291,
     "mathlib_vocab_per_1k_refs": 95.8,
     "top_mathlib": [
      {
@@ -2598,7 +2612,7 @@
      },
      {
       "name": "MeasurableSingletonClass",
-      "refs": 201
+      "refs": 203
      },
      {
       "name": "symm",
@@ -2651,25 +2665,26 @@
     ]
    },
    "concentration": {
-    "gini": 0.6394,
-    "top1pct_share": 0.1863,
-    "top10pct_share": 0.5099
+    "gini": 0.6399,
+    "top1pct_share": 0.1865,
+    "top10pct_share": 0.5097
    },
    "dependency_depth": {
     "max_depth": 36,
-    "mean_depth": 5.782,
+    "mean_depth": 5.783,
     "p90_depth": 15.0,
     "pct_in_cycles": 0.0
    },
    "duplication": {
     "body_dup_rate": 0.0013,
-    "body_dup_n": 788,
+    "body_dup_n": 789,
     "body_max_cluster": 2,
     "stmt_dup_rate": 0.0071,
     "stmt_dup_n": 851,
     "stmt_max_cluster": 2
    },
    "proof_economy": {
+    "stmt_chars_median": 163.0,
     "n_theorems": 911,
     "proof_lines": {
      "mean": 16.899,
@@ -2678,25 +2693,26 @@
      "p99": 138.99999999999977,
      "max": 318
     },
-    "refs_per_proof": 16.75,
+    "refs_per_proof": 16.743,
     "refs_per_proof_line": 0.991,
     "sorry_rate": 0.0,
     "n_sorried_theorems": 0,
     "n_examples": 37
    },
    "import_graph": {
+    "median_file_loc": 113.0,
     "n_files": 71,
-    "mean_internal_imports_per_file": 0.07,
-    "median_fan_in": 0.0,
-    "pct_files_fan_in_ge2": 0.0,
-    "max_fan_in": 1,
+    "mean_internal_imports_per_file": 1.324,
+    "median_fan_in": 1.0,
+    "pct_files_fan_in_ge2": 0.2676,
+    "max_fan_in": 5,
     "pct_files_importing_all_mathlib": 0.0,
-    "n_distinct_external_modules": 1
+    "n_distinct_external_modules": 64
    },
    "doc_coverage": {
-    "pct_defs_with_doc": 0.9474,
+    "pct_defs_with_doc": 0.9481,
     "pct_theorems_with_doc": 0.481,
-    "pct_public_decls_with_doc": 0.5153,
+    "pct_public_decls_with_doc": 0.5158,
     "comment_density": 0.1011
    },
    "complexity": {
@@ -2725,7 +2741,7 @@
     "max_log10_cost": 4.81,
     "mean_log10_cost_theorems": 1.25,
     "total_amortization_exp": 3.23,
-    "n_scored": 1170
+    "n_scored": 1171
    }
   }
  },
@@ -2996,7 +3012,7 @@
       "refs": 66
      },
      {
-      "name": "interior",
+      "name": "le_antisymm",
       "refs": 65
      }
     ]
@@ -3021,6 +3037,7 @@
     "stmt_max_cluster": 4
    },
    "proof_economy": {
+    "stmt_chars_median": 76.0,
     "n_theorems": 2666,
     "proof_lines": {
      "mean": 11.443,
@@ -3036,6 +3053,7 @@
     "n_examples": 613
    },
    "import_graph": {
+    "median_file_loc": 154.0,
     "n_files": 107,
     "mean_internal_imports_per_file": 1.056,
     "median_fan_in": 1.0,
@@ -3372,6 +3390,7 @@
     "stmt_max_cluster": 12
    },
    "proof_economy": {
+    "stmt_chars_median": 61.0,
     "n_theorems": 14297,
     "proof_lines": {
      "mean": 7.46,
@@ -3387,6 +3406,7 @@
     "n_examples": 6
    },
    "import_graph": {
+    "median_file_loc": 13.0,
     "n_files": 1298,
     "mean_internal_imports_per_file": 4.639,
     "median_fan_in": 1.0,
@@ -3444,14 +3464,14 @@
    "url": "https://github.com/google-deepmind/formal-conjectures",
    "files": 984,
    "loc": 31716,
-   "decls": 5132,
-   "edges": 19643,
+   "decls": 5134,
+   "edges": 19647,
    "dotted_coverage": 0.5956,
    "parse_errors": 0
   },
   "metrics": {
    "reuse_degree": {
-    "n_reusable_decls": 4896,
+    "n_reusable_decls": 4898,
     "degree": {
      "mean": 1.047,
      "median": 0.0,
@@ -3459,14 +3479,14 @@
      "p99": 10.0,
      "max": 56
     },
-    "pct_never_reused": 0.6291,
-    "pct_reused_ge2": 0.1926,
+    "pct_never_reused": 0.629,
+    "pct_reused_ge2": 0.1927,
     "ccdf": {
-     "1": 0.37092,
-     "2": 0.19261,
-     "3": 0.12316,
-     "5": 0.06434,
-     "10": 0.01144,
+     "1": 0.37097,
+     "2": 0.19273,
+     "3": 0.12311,
+     "5": 0.06431,
+     "10": 0.01164,
      "20": 0.00184,
      "50": 0.00061,
      "100": 0.0,
@@ -3500,16 +3520,20 @@
       "deg": 32
      },
      {
-      "name": "OpenQuantumProblem35.Config",
+      "name": "OpenQuantumProblem35.ExistsAME",
       "deg": 29
      },
      {
-      "name": "OpenQuantumProblem35.ExistsAME",
+      "name": "OpenQuantumProblem35.Config",
       "deg": 29
      },
      {
       "name": "OpenQuantumProblem13.UMat",
       "deg": 20
+     },
+     {
+      "name": "AdditiveCombinatorics.sumRep",
+      "deg": 17
      },
      {
       "name": "WrittenOnTheWallII.Test.Star5",
@@ -3520,11 +3544,15 @@
       "deg": 17
      },
      {
-      "name": "AdditiveCombinatorics.sumRep",
-      "deg": 17
+      "name": "WrittenOnTheWallII.Test.K4",
+      "deg": 16
      },
      {
-      "name": "WrittenOnTheWallII.Test.K4",
+      "name": "WrittenOnTheWallII.Test.PetersenGraph",
+      "deg": 16
+     },
+     {
+      "name": "Finset.greedySidon",
       "deg": 16
      },
      {
@@ -3536,10 +3564,6 @@
       "deg": 16
      },
      {
-      "name": "Finset.greedySidon",
-      "deg": 16
-     },
-     {
       "name": "WrittenOnTheWallII.Test.C6",
       "deg": 16
      },
@@ -3548,43 +3572,39 @@
       "deg": 16
      },
      {
-      "name": "WrittenOnTheWallII.Test.PetersenGraph",
-      "deg": 16
-     },
-     {
-      "name": "Powerfree",
+      "name": "OpenQuantumProblem23.StateVector",
       "deg": 15
      }
     ]
    },
    "statement_vs_proof": {
-    "share_signature": 0.4919,
-    "share_value": 0.1348,
-    "share_proof": 0.3734,
+    "share_signature": 0.4917,
+    "share_value": 0.135,
+    "share_proof": 0.3733,
     "load_bearing_share": 0.6267,
     "mean_stmt_indeg": 0.893,
     "mean_proof_indeg": 0.258,
     "internal_refs_to_theorems": 770,
-    "internal_refs_to_defs": 6047,
+    "internal_refs_to_defs": 6050,
     "thm_def_ref_ratio": 0.127,
     "pct_theorems_used_in_statements": 0.0106
    },
    "cross_file": {
     "pct_edges_cross_file": 0.2039,
-    "pct_edges_cross_dir": 0.1951,
-    "pct_decls_used_outside_file": 0.0862,
+    "pct_edges_cross_dir": 0.195,
+    "pct_decls_used_outside_file": 0.0864,
     "pct_decls_used_in_5plus_external_files": 0.0041,
     "mean_user_files_per_used_decl": 1.185,
     "n_dirs": 38
    },
    "external_reuse": {
-    "external_refs_total": 18148,
-    "external_refs_per_decl": 3.682,
-    "external_internal_ratio": 2.66,
+    "external_refs_total": 18147,
+    "external_refs_per_decl": 3.68,
+    "external_internal_ratio": 2.659,
     "per_dep": {
      "mathlib4": {
-      "refs": 13149,
-      "distinct_decls_used": 1975
+      "refs": 13148,
+      "distinct_decls_used": 1974
      },
      "batteries": {
       "refs": 18,
@@ -3599,9 +3619,9 @@
       "distinct_decls_used": 440
      }
     },
-    "mathlib_refs_per_decl": 2.668,
-    "mathlib_vocab": 1975,
-    "mathlib_vocab_per_1k_refs": 150.2,
+    "mathlib_refs_per_decl": 2.666,
+    "mathlib_vocab": 1974,
+    "mathlib_vocab_per_1k_refs": 150.1,
     "top_mathlib": [
      {
       "name": "Filter.atTop",
@@ -3707,8 +3727,8 @@
    },
    "concentration": {
     "gini": 0.8028,
-    "top1pct_share": 0.1721,
-    "top10pct_share": 0.6302
+    "top1pct_share": 0.1722,
+    "top10pct_share": 0.6301
    },
    "dependency_depth": {
     "max_depth": 11,
@@ -3717,14 +3737,15 @@
     "pct_in_cycles": 0.0113
    },
    "duplication": {
-    "body_dup_rate": 0.0134,
-    "body_dup_n": 1497,
+    "body_dup_rate": 0.0133,
+    "body_dup_n": 1499,
     "body_max_cluster": 5,
     "stmt_dup_rate": 0.0011,
     "stmt_dup_n": 2738,
     "stmt_max_cluster": 2
    },
    "proof_economy": {
+    "stmt_chars_median": 76.0,
     "n_theorems": 3503,
     "proof_lines": {
      "mean": 7.358,
@@ -3740,18 +3761,19 @@
     "n_examples": 116
    },
    "import_graph": {
+    "median_file_loc": 19.0,
     "n_files": 984,
-    "mean_internal_imports_per_file": 0.059,
+    "mean_internal_imports_per_file": 0.101,
     "median_fan_in": 0.0,
-    "pct_files_fan_in_ge2": 0.0071,
-    "max_fan_in": 2,
-    "pct_files_importing_all_mathlib": 0.0,
-    "n_distinct_external_modules": 150
+    "pct_files_fan_in_ge2": 0.0102,
+    "max_fan_in": 4,
+    "pct_files_importing_all_mathlib": 0.002,
+    "n_distinct_external_modules": 321
    },
    "doc_coverage": {
-    "pct_defs_with_doc": 0.909,
+    "pct_defs_with_doc": 0.9084,
     "pct_theorems_with_doc": 0.8426,
-    "pct_public_decls_with_doc": 0.8615,
+    "pct_public_decls_with_doc": 0.8613,
     "comment_density": 0.592
    },
    "complexity": {
@@ -3776,7 +3798,7 @@
     "max_log10_cost": 2.62,
     "mean_log10_cost_theorems": 0.42,
     "total_amortization_exp": 0.65,
-    "n_scored": 5074
+    "n_scored": 5076
    }
   }
  },
@@ -3996,6 +4018,7 @@
     "stmt_max_cluster": 1
    },
    "proof_economy": {
+    "stmt_chars_median": 28.0,
     "n_theorems": 27,
     "proof_lines": {
      "mean": 6.37,
@@ -4011,6 +4034,7 @@
     "n_examples": 10
    },
    "import_graph": {
+    "median_file_loc": 16.0,
     "n_files": 173,
     "mean_internal_imports_per_file": 1.832,
     "median_fan_in": 1.0,
@@ -4071,32 +4095,32 @@
    "url": "https://github.com/TauCetiProject/TauCeti",
    "files": 560,
    "loc": 61092,
-   "decls": 7083,
-   "edges": 45210,
-   "dotted_coverage": 0.5705,
+   "decls": 7144,
+   "edges": 45763,
+   "dotted_coverage": 0.57,
    "parse_errors": 0
   },
   "metrics": {
    "reuse_degree": {
-    "n_reusable_decls": 6908,
+    "n_reusable_decls": 6966,
     "degree": {
-     "mean": 2.305,
+     "mean": 2.327,
      "median": 1.0,
-     "p90": 4.300000000000182,
-     "p99": 27.93000000000029,
+     "p90": 5.0,
+     "p99": 28.0,
      "max": 337
     },
-    "pct_never_reused": 0.4528,
-    "pct_reused_ge2": 0.2915,
+    "pct_never_reused": 0.4503,
+    "pct_reused_ge2": 0.2929,
     "ccdf": {
-     "1": 0.54719,
-     "2": 0.29155,
-     "3": 0.1782,
-     "5": 0.10003,
-     "10": 0.0443,
-     "20": 0.01636,
-     "50": 0.00536,
-     "100": 0.00145,
+     "1": 0.54967,
+     "2": 0.29285,
+     "3": 0.17973,
+     "5": 0.10135,
+     "10": 0.04522,
+     "20": 0.0168,
+     "50": 0.00546,
+     "100": 0.00144,
      "200": 0.00043,
      "500": 0.0,
      "1000": 0.0
@@ -4144,7 +4168,7 @@
      },
      {
       "name": "TauCeti.Semigroups.StronglyContinuousSemigroup",
-      "deg": 86
+      "deg": 87
      },
      {
       "name": "TauCeti.GridRectangleBetween",
@@ -4185,33 +4209,33 @@
     ]
    },
    "statement_vs_proof": {
-    "share_signature": 0.433,
-    "share_value": 0.0616,
-    "share_proof": 0.5055,
-    "load_bearing_share": 0.4946,
-    "mean_stmt_indeg": 1.401,
-    "mean_proof_indeg": 1.084,
-    "internal_refs_to_theorems": 6934,
-    "internal_refs_to_defs": 14702,
-    "thm_def_ref_ratio": 0.472,
-    "pct_theorems_used_in_statements": 0.0084
+    "share_signature": 0.435,
+    "share_value": 0.0611,
+    "share_proof": 0.5039,
+    "load_bearing_share": 0.4961,
+    "mean_stmt_indeg": 1.421,
+    "mean_proof_indeg": 1.086,
+    "internal_refs_to_theorems": 6991,
+    "internal_refs_to_defs": 15073,
+    "thm_def_ref_ratio": 0.464,
+    "pct_theorems_used_in_statements": 0.0083
    },
    "cross_file": {
-    "pct_edges_cross_file": 0.4513,
-    "pct_edges_cross_dir": 0.0173,
-    "pct_decls_used_outside_file": 0.2167,
-    "pct_decls_used_in_5plus_external_files": 0.0143,
-    "mean_user_files_per_used_decl": 1.595,
+    "pct_edges_cross_file": 0.4474,
+    "pct_edges_cross_dir": 0.0174,
+    "pct_decls_used_outside_file": 0.2173,
+    "pct_decls_used_in_5plus_external_files": 0.0142,
+    "mean_user_files_per_used_decl": 1.592,
     "n_dirs": 15
    },
    "external_reuse": {
-    "external_refs_total": 37319,
-    "external_refs_per_decl": 5.321,
-    "external_internal_ratio": 1.724,
+    "external_refs_total": 37619,
+    "external_refs_per_decl": 5.319,
+    "external_internal_ratio": 1.705,
     "per_dep": {
      "mathlib4": {
-      "refs": 29882,
-      "distinct_decls_used": 3835
+      "refs": 30114,
+      "distinct_decls_used": 3853
      },
      "batteries": {
       "refs": 35,
@@ -4222,21 +4246,21 @@
       "distinct_decls_used": 0
      },
      "core": {
-      "refs": 7402,
-      "distinct_decls_used": 236
+      "refs": 7470,
+      "distinct_decls_used": 238
      }
     },
-    "mathlib_refs_per_decl": 4.261,
-    "mathlib_vocab": 3835,
-    "mathlib_vocab_per_1k_refs": 128.3,
+    "mathlib_refs_per_decl": 4.258,
+    "mathlib_vocab": 3853,
+    "mathlib_vocab_per_1k_refs": 127.9,
     "top_mathlib": [
      {
       "name": "Set",
-      "refs": 858
+      "refs": 876
      },
      {
       "name": "symm",
-      "refs": 611
+      "refs": 613
      },
      {
       "name": "Finset",
@@ -4271,12 +4295,12 @@
       "refs": 282
      },
      {
-      "name": "Subgroup",
-      "refs": 258
+      "name": "Set.range",
+      "refs": 263
      },
      {
-      "name": "Set.range",
-      "refs": 246
+      "name": "Subgroup",
+      "refs": 258
      },
      {
       "name": "Filter.Tendsto",
@@ -4287,16 +4311,16 @@
       "refs": 228
      },
      {
+      "name": "trans",
+      "refs": 216
+     },
+     {
       "name": "IntermediateField.adjoin",
       "refs": 216
      },
      {
       "name": "EuclideanSpace",
       "refs": 215
-     },
-     {
-      "name": "trans",
-      "refs": 213
      },
      {
       "name": "Set.uIcc",
@@ -4316,7 +4340,7 @@
      },
      {
       "name": "Real.exp",
-      "refs": 194
+      "refs": 196
      },
      {
       "name": "ContinuousOn",
@@ -4333,58 +4357,60 @@
     ]
    },
    "concentration": {
-    "gini": 0.7956,
-    "top1pct_share": 0.2976,
-    "top10pct_share": 0.6758
+    "gini": 0.7951,
+    "top1pct_share": 0.294,
+    "top10pct_share": 0.6757
    },
    "dependency_depth": {
     "max_depth": 22,
-    "mean_depth": 4.49,
+    "mean_depth": 4.492,
     "p90_depth": 9.0,
     "pct_in_cycles": 0.0
    },
    "duplication": {
     "body_dup_rate": 0.0071,
-    "body_dup_n": 4367,
+    "body_dup_n": 4393,
     "body_max_cluster": 2,
-    "stmt_dup_rate": 0.0072,
-    "stmt_dup_n": 5868,
+    "stmt_dup_rate": 0.0071,
+    "stmt_dup_n": 5908,
     "stmt_max_cluster": 5
    },
    "proof_economy": {
-    "n_theorems": 6081,
+    "stmt_chars_median": 121.0,
+    "n_theorems": 6124,
     "proof_lines": {
-     "mean": 8.067,
+     "mean": 8.073,
      "median": 5.0,
      "p90": 15.0,
-     "p99": 45.210000000000036,
-     "max": 153
+     "p99": 45.0,
+     "max": 108
     },
-    "refs_per_proof": 4.884,
-    "refs_per_proof_line": 0.605,
+    "refs_per_proof": 4.894,
+    "refs_per_proof_line": 0.606,
     "sorry_rate": 0.0,
     "n_sorried_theorems": 0,
     "n_examples": 11
    },
    "import_graph": {
+    "median_file_loc": 81.5,
     "n_files": 560,
-    "mean_internal_imports_per_file": 0.212,
-    "median_fan_in": 0.0,
-    "pct_files_fan_in_ge2": 0.0518,
-    "max_fan_in": 6,
+    "mean_internal_imports_per_file": 1.395,
+    "median_fan_in": 1.0,
+    "pct_files_fan_in_ge2": 0.3411,
+    "max_fan_in": 12,
     "pct_files_importing_all_mathlib": 0.0,
-    "n_distinct_external_modules": 85
+    "n_distinct_external_modules": 449
    },
    "doc_coverage": {
     "pct_defs_with_doc": 0.9987,
-    "pct_theorems_with_doc": 0.9301,
-    "pct_public_decls_with_doc": 0.9385,
+    "pct_theorems_with_doc": 0.9296,
+    "pct_public_decls_with_doc": 0.9381,
     "comment_density": 0.4088
    },
    "complexity": {
-    "branch_per_proof": 0.177,
-    "branch_per_100_lines": 2.2,
-    "pct_proofs_branchy": 0.0033,
+    "branch_per_proof": 0.178,
+    "branch_per_100_lines": 2.21,
+    "pct_proofs_branchy": 0.0029,
     "p90_branch": 1.0
    },
    "trust_base": {
@@ -4405,9 +4431,9 @@
     "median_log10_cost": 0.78,
     "p90_log10_cost": 1.89,
     "max_log10_cost": 4.19,
-    "mean_log10_cost_theorems": 0.96,
+    "mean_log10_cost_theorems": 0.97,
     "total_amortization_exp": 1.82,
-    "n_scored": 7083
+    "n_scored": 7144
    }
   }
  },
@@ -4422,29 +4448,29 @@
    "url": "https://github.com/Vilin97/lean-pool",
    "files": 2642,
    "loc": 674530,
-   "decls": 55569,
-   "edges": 550133,
-   "dotted_coverage": 0.6928,
+   "decls": 55575,
+   "edges": 550204,
+   "dotted_coverage": 0.6929,
    "parse_errors": 0
   },
   "metrics": {
    "reuse_degree": {
-    "n_reusable_decls": 51365,
+    "n_reusable_decls": 51371,
     "degree": {
      "mean": 4.455,
      "median": 1.0,
      "p90": 7.0,
      "p99": 40.0,
-     "max": 13370
+     "max": 13372
     },
     "pct_never_reused": 0.2186,
     "pct_reused_ge2": 0.3967,
     "ccdf": {
-     "1": 0.78145,
-     "2": 0.39671,
-     "3": 0.25876,
-     "5": 0.14652,
-     "10": 0.06446,
+     "1": 0.78139,
+     "2": 0.3967,
+     "3": 0.25878,
+     "5": 0.14654,
+     "10": 0.06445,
      "20": 0.02587,
      "50": 0.00724,
      "100": 0.00226,
@@ -4455,15 +4481,15 @@
     "top": [
      {
       "name": "x",
-      "deg": 13370
+      "deg": 13372
      },
      {
       "name": "y",
-      "deg": 5658
+      "deg": 5660
      },
      {
       "name": "\u03b1",
-      "deg": 4749
+      "deg": 4750
      },
      {
       "name": "X",
@@ -4475,7 +4501,7 @@
      },
      {
       "name": "z",
-      "deg": 3877
+      "deg": 3878
      },
      {
       "name": "d",
@@ -4487,11 +4513,11 @@
      },
      {
       "name": "T",
-      "deg": 2887
+      "deg": 2888
      },
      {
       "name": "S",
-      "deg": 2777
+      "deg": 2778
      },
      {
       "name": "B",
@@ -4507,7 +4533,7 @@
      },
      {
       "name": "\u03bc",
-      "deg": 1570
+      "deg": 1571
      },
      {
       "name": "\u03b2",
@@ -4531,38 +4557,38 @@
      },
      {
       "name": "MisereGames.Player",
-      "deg": 411
+      "deg": 413
      }
     ]
    },
    "statement_vs_proof": {
     "share_signature": 0.3051,
-    "share_value": 0.1034,
-    "share_proof": 0.5915,
-    "load_bearing_share": 0.4085,
+    "share_value": 0.1035,
+    "share_proof": 0.5914,
+    "load_bearing_share": 0.4086,
     "mean_stmt_indeg": 2.942,
     "mean_proof_indeg": 2.296,
-    "internal_refs_to_theorems": 83861,
-    "internal_refs_to_defs": 537462,
+    "internal_refs_to_theorems": 83862,
+    "internal_refs_to_defs": 537514,
     "thm_def_ref_ratio": 0.156,
     "pct_theorems_used_in_statements": 0.0101
    },
    "cross_file": {
     "pct_edges_cross_file": 0.5744,
     "pct_edges_cross_dir": 0.2658,
-    "pct_decls_used_outside_file": 0.2363,
+    "pct_decls_used_outside_file": 0.2364,
     "pct_decls_used_in_5plus_external_files": 0.0207,
     "mean_user_files_per_used_decl": 1.726,
     "n_dirs": 121
    },
    "external_reuse": {
-    "external_refs_total": 471742,
+    "external_refs_total": 471805,
     "external_refs_per_decl": 8.954,
     "external_internal_ratio": 0.758,
     "per_dep": {
      "mathlib4": {
-      "refs": 325266,
-      "distinct_decls_used": 16063
+      "refs": 325280,
+      "distinct_decls_used": 16067
      },
      "batteries": {
       "refs": 710,
@@ -4573,12 +4599,12 @@
       "distinct_decls_used": 1
      },
      "core": {
-      "refs": 145760,
-      "distinct_decls_used": 2129
+      "refs": 145809,
+      "distinct_decls_used": 2134
      }
     },
-    "mathlib_refs_per_decl": 6.174,
-    "mathlib_vocab": 16063,
+    "mathlib_refs_per_decl": 6.173,
+    "mathlib_vocab": 16067,
     "mathlib_vocab_per_1k_refs": 49.4,
     "top_mathlib": [
      {
@@ -4591,7 +4617,7 @@
      },
      {
       "name": "Set",
-      "refs": 7274
+      "refs": 7276
      },
      {
       "name": "norm_num",
@@ -4684,7 +4710,7 @@
     ]
    },
    "concentration": {
-    "gini": 0.7853,
+    "gini": 0.7854,
     "top1pct_share": 0.4363,
     "top10pct_share": 0.71
    },
@@ -4696,13 +4722,14 @@
    },
    "duplication": {
     "body_dup_rate": 0.0149,
-    "body_dup_n": 34143,
+    "body_dup_n": 34148,
     "body_max_cluster": 16,
     "stmt_dup_rate": 0.0178,
     "stmt_dup_n": 34251,
     "stmt_max_cluster": 8
    },
    "proof_economy": {
+    "stmt_chars_median": 99.0,
     "n_theorems": 38815,
     "proof_lines": {
      "mean": 14.0,
@@ -4711,20 +4738,21 @@
      "p99": 119.0,
      "max": 287
     },
-    "refs_per_proof": 16.692,
+    "refs_per_proof": 16.693,
     "refs_per_proof_line": 1.192,
     "sorry_rate": 0.0,
     "n_sorried_theorems": 0,
     "n_examples": 87
    },
    "import_graph": {
+    "median_file_loc": 118.0,
     "n_files": 2642,
-    "mean_internal_imports_per_file": 2.129,
+    "mean_internal_imports_per_file": 2.285,
     "median_fan_in": 2.0,
-    "pct_files_fan_in_ge2": 0.55,
-    "max_fan_in": 50,
+    "pct_files_fan_in_ge2": 0.5882,
+    "max_fan_in": 59,
     "pct_files_importing_all_mathlib": 0.0,
-    "n_distinct_external_modules": 1505
+    "n_distinct_external_modules": 1550
    },
    "doc_coverage": {
     "pct_defs_with_doc": 0.9962,
@@ -4758,7 +4786,7 @@
     "max_log10_cost": 4.38,
     "mean_log10_cost_theorems": 0.64,
     "total_amortization_exp": 1.15,
-    "n_scored": 16001
+    "n_scored": 16002
    }
   }
  },
@@ -4774,7 +4802,7 @@
    "files": 2653,
    "loc": 483917,
    "decls": 37055,
-   "edges": 326539,
+   "edges": 326477,
    "dotted_coverage": 0.555,
    "parse_errors": 0
   },
@@ -4907,13 +4935,13 @@
     "n_dirs": 26
    },
    "external_reuse": {
-    "external_refs_total": 377702,
-    "external_refs_per_decl": 10.356,
-    "external_internal_ratio": 2.89,
+    "external_refs_total": 377588,
+    "external_refs_per_decl": 10.353,
+    "external_internal_ratio": 2.889,
     "per_dep": {
      "mathlib4": {
-      "refs": 290027,
-      "distinct_decls_used": 13687
+      "refs": 289913,
+      "distinct_decls_used": 13695
      },
      "batteries": {
       "refs": 1206,
@@ -4928,8 +4956,8 @@
       "distinct_decls_used": 919
      }
     },
-    "mathlib_refs_per_decl": 7.952,
-    "mathlib_vocab": 13687,
+    "mathlib_refs_per_decl": 7.949,
+    "mathlib_vocab": 13695,
     "mathlib_vocab_per_1k_refs": 47.2,
     "top_mathlib": [
      {
@@ -5054,6 +5082,7 @@
     "stmt_max_cluster": 11
    },
    "proof_economy": {
+    "stmt_chars_median": 166.0,
     "n_theorems": 23296,
     "proof_lines": {
      "mean": 15.352,
@@ -5062,13 +5091,14 @@
      "p99": 117.0,
      "max": 522
     },
-    "refs_per_proof": 11.457,
+    "refs_per_proof": 11.455,
     "refs_per_proof_line": 0.746,
     "sorry_rate": 0.1251,
     "n_sorried_theorems": 2914,
     "n_examples": 274
    },
    "import_graph": {
+    "median_file_loc": 66.0,
     "n_files": 2653,
     "mean_internal_imports_per_file": 1.925,
     "median_fan_in": 1.0,
@@ -5266,7 +5296,7 @@
     "external_internal_ratio": 1.337,
     "per_dep": {
      "mathlib4": {
-      "refs": 42788,
+      "refs": 42614,
       "distinct_decls_used": 2629
      },
      "batteries": {
@@ -5278,13 +5308,13 @@
       "distinct_decls_used": 1
      },
      "core": {
-      "refs": 21144,
-      "distinct_decls_used": 587
+      "refs": 21318,
+      "distinct_decls_used": 588
      }
     },
-    "mathlib_refs_per_decl": 2.838,
+    "mathlib_refs_per_decl": 2.827,
     "mathlib_vocab": 2629,
-    "mathlib_vocab_per_1k_refs": 61.4,
+    "mathlib_vocab_per_1k_refs": 61.7,
     "top_mathlib": [
      {
       "name": "Set",
@@ -5408,6 +5438,7 @@
     "stmt_max_cluster": 60
    },
    "proof_economy": {
+    "stmt_chars_median": 76.0,
     "n_theorems": 12220,
     "proof_lines": {
      "mean": 6.786,
@@ -5423,6 +5454,7 @@
     "n_examples": 12
    },
    "import_graph": {
+    "median_file_loc": 108.0,
     "n_files": 553,
     "mean_internal_imports_per_file": 0.0,
     "median_fan_in": 0.0,
@@ -5755,6 +5787,7 @@
     "stmt_max_cluster": 3
    },
    "proof_economy": {
+    "stmt_chars_median": 86.0,
     "n_theorems": 2328,
     "proof_lines": {
      "mean": 17.655,
@@ -5770,6 +5803,7 @@
     "n_examples": 0
    },
    "import_graph": {
+    "median_file_loc": 456.0,
     "n_files": 58,
     "mean_internal_imports_per_file": 0.0,
     "median_fan_in": 0.0,
@@ -5822,7 +5856,7 @@
    "files": 2638,
    "loc": 976264,
    "decls": 54198,
-   "edges": 497388,
+   "edges": 497149,
    "dotted_coverage": 0.5918,
    "parse_errors": 0
   },
@@ -5955,12 +5989,12 @@
     "n_dirs": 1
    },
    "external_reuse": {
-    "external_refs_total": 423744,
-    "external_refs_per_decl": 8.191,
-    "external_internal_ratio": 1.364,
+    "external_refs_total": 423442,
+    "external_refs_per_decl": 8.185,
+    "external_internal_ratio": 1.363,
     "per_dep": {
      "mathlib4": {
-      "refs": 322945,
+      "refs": 322643,
       "distinct_decls_used": 9783
      },
      "batteries": {
@@ -5976,7 +6010,7 @@
       "distinct_decls_used": 840
      }
     },
-    "mathlib_refs_per_decl": 6.242,
+    "mathlib_refs_per_decl": 6.236,
     "mathlib_vocab": 9783,
     "mathlib_vocab_per_1k_refs": 30.3,
     "top_mathlib": [
@@ -6066,7 +6100,7 @@
      },
      {
       "name": "IsGalois",
-      "refs": 2407
+      "refs": 2354
      },
      {
       "name": "FiniteDimensional",
@@ -6102,6 +6136,7 @@
     "stmt_max_cluster": 11
    },
    "proof_economy": {
+    "stmt_chars_median": 192.0,
     "n_theorems": 35519,
     "proof_lines": {
      "mean": 14.562,
@@ -6110,13 +6145,14 @@
      "p99": 100.0,
      "max": 1063
     },
-    "refs_per_proof": 9.531,
-    "refs_per_proof_line": 0.655,
+    "refs_per_proof": 9.529,
+    "refs_per_proof_line": 0.654,
     "sorry_rate": 0.0,
     "n_sorried_theorems": 1,
     "n_examples": 6
    },
    "import_graph": {
+    "median_file_loc": 139.5,
     "n_files": 2638,
     "mean_internal_imports_per_file": 0.0,
     "median_fan_in": 0.0,
@@ -6453,6 +6489,7 @@
     "stmt_max_cluster": 1
    },
    "proof_economy": {
+    "stmt_chars_median": 203.5,
     "n_theorems": 378,
     "proof_lines": {
      "mean": 27.526,
@@ -6468,6 +6505,7 @@
     "n_examples": 0
    },
    "import_graph": {
+    "median_file_loc": 193.0,
     "n_files": 51,
     "mean_internal_imports_per_file": 0.0,
     "median_fan_in": 0.0,
@@ -6519,29 +6557,29 @@
    "url": "https://github.com/leanprover-community/add-combi",
    "files": 13,
    "loc": 1003,
-   "decls": 187,
-   "edges": 951,
-   "dotted_coverage": 0.5095,
+   "decls": 191,
+   "edges": 968,
+   "dotted_coverage": 0.464,
    "parse_errors": 0
   },
   "metrics": {
    "reuse_degree": {
-    "n_reusable_decls": 186,
+    "n_reusable_decls": 190,
     "degree": {
-     "mean": 1.129,
+     "mean": 1.126,
      "median": 1.0,
      "p90": 2.0,
-     "p99": 10.450000000000017,
+     "p99": 10.329999999999956,
      "max": 13
     },
-    "pct_never_reused": 0.4194,
-    "pct_reused_ge2": 0.2043,
+    "pct_never_reused": 0.4158,
+    "pct_reused_ge2": 0.2053,
     "ccdf": {
-     "1": 0.58065,
-     "2": 0.2043,
-     "3": 0.09677,
-     "5": 0.04839,
-     "10": 0.01613,
+     "1": 0.58421,
+     "2": 0.20526,
+     "3": 0.09474,
+     "5": 0.04737,
+     "10": 0.01579,
      "20": 0.0,
      "50": 0.0,
      "100": 0.0,
@@ -6567,11 +6605,11 @@
       "deg": 7
      },
      {
-      "name": "dconv_apply",
+      "name": "Finset.mulEnergy'",
       "deg": 7
      },
      {
-      "name": "Finset.mulEnergy'",
+      "name": "dconv_apply",
       "deg": 7
      },
      {
@@ -6599,19 +6637,19 @@
       "deg": 3
      },
      {
-      "name": "conv_assoc",
-      "deg": 3
-     },
-     {
       "name": "conjneg_conv",
       "deg": 3
      },
      {
-      "name": "indicator_one_dconv_indicator_one_eq_dens",
+      "name": "Set.indicator_one_nonneg",
       "deg": 3
      },
      {
-      "name": "Set.indicator_one_nonneg",
+      "name": "conv_assoc",
+      "deg": 3
+     },
+     {
+      "name": "indicator_one_dconv_indicator_one_eq_dens",
       "deg": 3
      },
      {
@@ -6627,39 +6665,39 @@
       "deg": 2
      },
      {
-      "name": "conv_conv_conv_comm",
+      "name": "Set.conj_indicator_one_apply",
       "deg": 2
      }
     ]
    },
    "statement_vs_proof": {
-    "share_signature": 0.1918,
-    "share_value": 0.0127,
-    "share_proof": 0.7955,
-    "load_bearing_share": 0.2045,
-    "mean_stmt_indeg": 0.129,
-    "mean_proof_indeg": 1.048,
-    "internal_refs_to_theorems": 194,
+    "share_signature": 0.1913,
+    "share_value": 0.0125,
+    "share_proof": 0.7963,
+    "load_bearing_share": 0.2038,
+    "mean_stmt_indeg": 0.126,
+    "mean_proof_indeg": 1.047,
+    "internal_refs_to_theorems": 198,
     "internal_refs_to_defs": 63,
-    "thm_def_ref_ratio": 3.079,
+    "thm_def_ref_ratio": 3.143,
     "pct_theorems_used_in_statements": 0.0
    },
    "cross_file": {
-    "pct_edges_cross_file": 0.1095,
-    "pct_edges_cross_dir": 0.081,
-    "pct_decls_used_outside_file": 0.0914,
+    "pct_edges_cross_file": 0.1075,
+    "pct_edges_cross_dir": 0.0794,
+    "pct_decls_used_outside_file": 0.0895,
     "pct_decls_used_in_5plus_external_files": 0.0,
-    "mean_user_files_per_used_decl": 1.074,
+    "mean_user_files_per_used_decl": 1.072,
     "n_dirs": 3
    },
    "external_reuse": {
-    "external_refs_total": 843,
-    "external_refs_per_decl": 4.532,
-    "external_internal_ratio": 3.28,
+    "external_refs_total": 863,
+    "external_refs_per_decl": 4.542,
+    "external_internal_ratio": 3.307,
     "per_dep": {
      "mathlib4": {
-      "refs": 631,
-      "distinct_decls_used": 213
+      "refs": 641,
+      "distinct_decls_used": 217
      },
      "batteries": {
       "refs": 2,
@@ -6670,17 +6708,17 @@
       "distinct_decls_used": 0
      },
      "core": {
-      "refs": 210,
+      "refs": 220,
       "distinct_decls_used": 21
      }
     },
-    "mathlib_refs_per_decl": 3.392,
-    "mathlib_vocab": 213,
-    "mathlib_vocab_per_1k_refs": 337.6,
+    "mathlib_refs_per_decl": 3.374,
+    "mathlib_vocab": 217,
+    "mathlib_vocab_per_1k_refs": 338.5,
     "top_mathlib": [
      {
       "name": "Finset.dens",
-      "refs": 66
+      "refs": 70
      },
      {
       "name": "Finset",
@@ -6781,57 +6819,59 @@
     ]
    },
    "concentration": {
-    "gini": 0.6486,
-    "top1pct_share": 0.0619,
-    "top10pct_share": 0.4762
+    "gini": 0.6444,
+    "top1pct_share": 0.0607,
+    "top10pct_share": 0.4766
    },
    "dependency_depth": {
-    "max_depth": 14,
-    "mean_depth": 3.193,
-    "p90_depth": 6.0,
+    "max_depth": 17,
+    "mean_depth": 3.455,
+    "p90_depth": 7.0,
     "pct_in_cycles": 0.0
    },
    "duplication": {
-    "body_dup_rate": 0.0102,
-    "body_dup_n": 98,
+    "body_dup_rate": 0.0099,
+    "body_dup_n": 101,
     "body_max_cluster": 2,
     "stmt_dup_rate": 0.0,
-    "stmt_dup_n": 140,
+    "stmt_dup_n": 144,
     "stmt_max_cluster": 1
    },
    "proof_economy": {
-    "n_theorems": 176,
+    "stmt_chars_median": 55.0,
+    "n_theorems": 180,
     "proof_lines": {
-     "mean": 4.608,
+     "mean": 4.739,
      "median": 3.0,
-     "p90": 8.0,
-     "p99": 21.25,
+     "p90": 8.199999999999989,
+     "p99": 21.210000000000008,
      "max": 24
     },
     "refs_per_proof": 4.972,
-    "refs_per_proof_line": 1.079,
+    "refs_per_proof_line": 1.049,
     "sorry_rate": 0.0,
     "n_sorried_theorems": 0,
     "n_examples": 0
    },
    "import_graph": {
+    "median_file_loc": 24.0,
     "n_files": 13,
-    "mean_internal_imports_per_file": 0.462,
-    "median_fan_in": 0.0,
-    "pct_files_fan_in_ge2": 0.0769,
-    "max_fan_in": 2,
+    "mean_internal_imports_per_file": 1.154,
+    "median_fan_in": 1.0,
+    "pct_files_fan_in_ge2": 0.2308,
+    "max_fan_in": 5,
     "pct_files_importing_all_mathlib": 0.0,
-    "n_distinct_external_modules": 13
+    "n_distinct_external_modules": 38
    },
    "doc_coverage": {
     "pct_defs_with_doc": 0.6667,
-    "pct_theorems_with_doc": 0.04,
-    "pct_public_decls_with_doc": 0.0595,
+    "pct_theorems_with_doc": 0.0615,
+    "pct_public_decls_with_doc": 0.0794,
     "comment_density": 0.1268
    },
    "complexity": {
-    "branch_per_proof": 0.102,
-    "branch_per_100_lines": 2.22,
+    "branch_per_proof": 0.133,
+    "branch_per_100_lines": 2.81,
     "pct_proofs_branchy": 0.0,
     "p90_branch": 0.0
    },
@@ -6849,13 +6889,13 @@
     "import_baseline_secs": 4.48
    },
    "amortization": {
-    "mean_log10_cost": 0.49,
+    "mean_log10_cost": 0.52,
     "median_log10_cost": 0.48,
-    "p90_log10_cost": 0.95,
-    "max_log10_cost": 2.03,
-    "mean_log10_cost_theorems": 0.5,
-    "total_amortization_exp": 0.78,
-    "n_scored": 187
+    "p90_log10_cost": 1.11,
+    "max_log10_cost": 2.05,
+    "mean_log10_cost_theorems": 0.54,
+    "total_amortization_exp": 0.91,
+    "n_scored": 191
    }
   }
  },
@@ -6870,14 +6910,14 @@
    "url": "https://github.com/AlexKontorovich/PrimeNumberTheoremAnd",
    "files": 211,
    "loc": 134600,
-   "decls": 8561,
-   "edges": 99758,
-   "dotted_coverage": 0.8113,
+   "decls": 8562,
+   "edges": 99787,
+   "dotted_coverage": 0.8114,
    "parse_errors": 0
   },
   "metrics": {
    "reuse_degree": {
-    "n_reusable_decls": 8496,
+    "n_reusable_decls": 8497,
     "degree": {
      "mean": 4.311,
      "median": 1.0,
@@ -6886,12 +6926,12 @@
      "max": 3207
     },
     "pct_never_reused": 0.1497,
-    "pct_reused_ge2": 0.3237,
+    "pct_reused_ge2": 0.3236,
     "ccdf": {
-     "1": 0.85028,
-     "2": 0.32368,
-     "3": 0.23046,
-     "5": 0.1802,
+     "1": 0.8503,
+     "2": 0.32364,
+     "3": 0.23043,
+     "5": 0.18018,
      "10": 0.04237,
      "20": 0.01518,
      "50": 0.00659,
@@ -6947,14 +6987,14 @@
      },
      {
       "name": "R",
-      "deg": 298
-     },
-     {
-      "name": "BKLNW.table_10_bcol",
-      "deg": 297
+      "deg": 299
      },
      {
       "name": "BKLNW.table_10_next",
+      "deg": 297
+     },
+     {
+      "name": "BKLNW.table_10_bcol",
       "deg": 297
      },
      {
@@ -6974,11 +7014,11 @@
       "deg": 287
      },
      {
-      "name": "BKLNW.table_10_bcol_le_K",
+      "name": "BKLNW.table_10_next_get",
       "deg": 286
      },
      {
-      "name": "BKLNW.table_10_bcol_sortedLT",
+      "name": "BKLNW.table_10_bcol_le_K",
       "deg": 286
      }
     ]
@@ -6989,28 +7029,28 @@
     "share_proof": 0.82,
     "load_bearing_share": 0.18,
     "mean_stmt_indeg": 1.433,
-    "mean_proof_indeg": 3.448,
-    "internal_refs_to_theorems": 21261,
-    "internal_refs_to_defs": 51094,
+    "mean_proof_indeg": 3.447,
+    "internal_refs_to_theorems": 21262,
+    "internal_refs_to_defs": 51122,
     "thm_def_ref_ratio": 0.416,
     "pct_theorems_used_in_statements": 0.0012
    },
    "cross_file": {
     "pct_edges_cross_file": 0.659,
     "pct_edges_cross_dir": 0.1287,
-    "pct_decls_used_outside_file": 0.3705,
+    "pct_decls_used_outside_file": 0.3706,
     "pct_decls_used_in_5plus_external_files": 0.01,
     "mean_user_files_per_used_decl": 1.24,
     "n_dirs": 6
    },
    "external_reuse": {
-    "external_refs_total": 130705,
-    "external_refs_per_decl": 15.361,
+    "external_refs_total": 130733,
+    "external_refs_per_decl": 15.362,
     "external_internal_ratio": 1.806,
     "per_dep": {
      "mathlib4": {
-      "refs": 108146,
-      "distinct_decls_used": 4167
+      "refs": 108167,
+      "distinct_decls_used": 4166
      },
      "batteries": {
       "refs": 60,
@@ -7021,17 +7061,17 @@
       "distinct_decls_used": 0
      },
      "core": {
-      "refs": 22499,
-      "distinct_decls_used": 519
+      "refs": 22506,
+      "distinct_decls_used": 524
      }
     },
-    "mathlib_refs_per_decl": 12.71,
-    "mathlib_vocab": 4167,
+    "mathlib_refs_per_decl": 12.711,
+    "mathlib_vocab": 4166,
     "mathlib_vocab_per_1k_refs": 38.5,
     "top_mathlib": [
      {
       "name": "norm_num",
-      "refs": 17810
+      "refs": 17811
      },
      {
       "name": "Real.log",
@@ -7055,7 +7095,7 @@
      },
      {
       "name": "nlinarith",
-      "refs": 2586
+      "refs": 2587
      },
      {
       "name": "Real.pi",
@@ -7127,13 +7167,13 @@
      },
      {
       "name": "Complex",
-      "refs": 394
+      "refs": 393
      }
     ]
    },
    "concentration": {
     "gini": 0.7736,
-    "top1pct_share": 0.525,
+    "top1pct_share": 0.5251,
     "top10pct_share": 0.7021
    },
    "dependency_depth": {
@@ -7144,40 +7184,42 @@
    },
    "duplication": {
     "body_dup_rate": 0.0119,
-    "body_dup_n": 6623,
+    "body_dup_n": 6624,
     "body_max_cluster": 37,
     "stmt_dup_rate": 0.0092,
-    "stmt_dup_n": 6411,
+    "stmt_dup_n": 6412,
     "stmt_max_cluster": 12
    },
    "proof_economy": {
-    "n_theorems": 7792,
+    "stmt_chars_median": 79.0,
+    "n_theorems": 7793,
     "proof_lines": {
-     "mean": 14.377,
+     "mean": 14.379,
      "median": 9.0,
      "p90": 26.0,
      "p99": 120.0,
      "max": 4310
     },
-    "refs_per_proof": 21.374,
+    "refs_per_proof": 21.377,
     "refs_per_proof_line": 1.487,
     "sorry_rate": 0.0281,
     "n_sorried_theorems": 219,
     "n_examples": 2
    },
    "import_graph": {
+    "median_file_loc": 242.0,
     "n_files": 211,
-    "mean_internal_imports_per_file": 1.313,
+    "mean_internal_imports_per_file": 1.758,
     "median_fan_in": 1.0,
-    "pct_files_fan_in_ge2": 0.218,
+    "pct_files_fan_in_ge2": 0.3223,
     "max_fan_in": 17,
     "pct_files_importing_all_mathlib": 0.0142,
-    "n_distinct_external_modules": 178
+    "n_distinct_external_modules": 214
    },
    "doc_coverage": {
     "pct_defs_with_doc": 0.6316,
-    "pct_theorems_with_doc": 0.5076,
-    "pct_public_decls_with_doc": 0.5199,
+    "pct_theorems_with_doc": 0.5077,
+    "pct_public_decls_with_doc": 0.52,
     "comment_density": 0.1109
    },
    "complexity": {
@@ -7206,7 +7248,7 @@
     "max_log10_cost": 4.93,
     "mean_log10_cost_theorems": 1.06,
     "total_amortization_exp": 2.21,
-    "n_scored": 6174
+    "n_scored": 6175
    }
   }
  },
@@ -7221,48 +7263,48 @@
    "url": "https://github.com/fpvandoorn/carleson",
    "files": 117,
    "loc": 40838,
-   "decls": 3071,
-   "edges": 37115,
-   "dotted_coverage": 0.6794,
+   "decls": 3091,
+   "edges": 37439,
+   "dotted_coverage": 0.6807,
    "parse_errors": 0
   },
   "metrics": {
    "reuse_degree": {
-    "n_reusable_decls": 2861,
+    "n_reusable_decls": 2881,
     "degree": {
-     "mean": 3.471,
+     "mean": 3.515,
      "median": 1.0,
      "p90": 6.0,
-     "p99": 37.80000000000018,
-     "max": 459
+     "p99": 39.19999999999982,
+     "max": 460
     },
-    "pct_never_reused": 0.2052,
-    "pct_reused_ge2": 0.3698,
+    "pct_never_reused": 0.2017,
+    "pct_reused_ge2": 0.3728,
     "ccdf": {
-     "1": 0.79483,
-     "2": 0.3698,
-     "3": 0.23034,
-     "5": 0.13492,
-     "10": 0.05872,
-     "20": 0.02901,
-     "50": 0.00734,
-     "100": 0.00315,
-     "200": 0.00105,
+     "1": 0.79833,
+     "2": 0.37279,
+     "3": 0.23291,
+     "5": 0.13676,
+     "10": 0.06005,
+     "20": 0.02985,
+     "50": 0.00764,
+     "100": 0.00312,
+     "200": 0.00104,
      "500": 0.0,
      "1000": 0.0
     },
     "top": [
      {
       "name": "s",
-      "deg": 459
+      "deg": 460
      },
      {
       "name": "k",
-      "deg": 323
+      "deg": 324
      },
      {
       "name": "c",
-      "deg": 220
+      "deg": 227
      },
      {
       "name": "K",
@@ -7270,7 +7312,7 @@
      },
      {
       "name": "E",
-      "deg": 174
+      "deg": 179
      },
      {
       "name": "Grid",
@@ -7302,7 +7344,7 @@
      },
      {
       "name": "defaultA",
-      "deg": 81
+      "deg": 82
      },
      {
       "name": "Ks",
@@ -7335,32 +7377,32 @@
     ]
    },
    "statement_vs_proof": {
-    "share_signature": 0.2086,
-    "share_value": 0.0276,
-    "share_proof": 0.7638,
-    "load_bearing_share": 0.2362,
-    "mean_stmt_indeg": 1.729,
-    "mean_proof_indeg": 2.363,
-    "internal_refs_to_theorems": 5198,
-    "internal_refs_to_defs": 15945,
-    "thm_def_ref_ratio": 0.326,
-    "pct_theorems_used_in_statements": 0.004
+    "share_signature": 0.2094,
+    "share_value": 0.0278,
+    "share_proof": 0.7628,
+    "load_bearing_share": 0.2372,
+    "mean_stmt_indeg": 1.755,
+    "mean_proof_indeg": 2.394,
+    "internal_refs_to_theorems": 5261,
+    "internal_refs_to_defs": 16196,
+    "thm_def_ref_ratio": 0.325,
+    "pct_theorems_used_in_statements": 0.0039
    },
    "cross_file": {
-    "pct_edges_cross_file": 0.5431,
-    "pct_edges_cross_dir": 0.3629,
-    "pct_decls_used_outside_file": 0.3226,
-    "pct_decls_used_in_5plus_external_files": 0.0294,
-    "mean_user_files_per_used_decl": 1.698,
+    "pct_edges_cross_file": 0.547,
+    "pct_edges_cross_dir": 0.3694,
+    "pct_decls_used_outside_file": 0.3277,
+    "pct_decls_used_in_5plus_external_files": 0.0305,
+    "mean_user_files_per_used_decl": 1.708,
     "n_dirs": 8
    },
    "external_reuse": {
-    "external_refs_total": 38589,
-    "external_refs_per_decl": 13.418,
-    "external_internal_ratio": 1.825,
+    "external_refs_total": 38675,
+    "external_refs_per_decl": 13.355,
+    "external_internal_ratio": 1.802,
     "per_dep": {
      "mathlib4": {
-      "refs": 32445,
+      "refs": 32521,
       "distinct_decls_used": 3198
      },
      "batteries": {
@@ -7372,17 +7414,17 @@
       "distinct_decls_used": 0
      },
      "core": {
-      "refs": 6124,
-      "distinct_decls_used": 318
+      "refs": 6134,
+      "distinct_decls_used": 319
      }
     },
-    "mathlib_refs_per_decl": 11.281,
+    "mathlib_refs_per_decl": 11.23,
     "mathlib_vocab": 3198,
-    "mathlib_vocab_per_1k_refs": 98.6,
+    "mathlib_vocab_per_1k_refs": 98.3,
     "top_mathlib": [
      {
       "name": "Metric.ball",
-      "refs": 1210
+      "refs": 1220
      },
      {
       "name": "Complex.I",
@@ -7390,23 +7432,23 @@
      },
      {
       "name": "Set",
-      "refs": 1091
+      "refs": 1092
      },
      {
       "name": "MeasureTheory.eLpNorm",
-      "refs": 817
+      "refs": 818
      },
      {
       "name": "linarith",
       "refs": 619
      },
      {
-      "name": "norm_num",
-      "refs": 552
+      "name": "positivity",
+      "refs": 555
      },
      {
-      "name": "positivity",
-      "refs": 547
+      "name": "norm_num",
+      "refs": 552
      },
      {
       "name": "mul_assoc",
@@ -7458,19 +7500,19 @@
      },
      {
       "name": "Measurable",
-      "refs": 187
+      "refs": 188
      },
      {
       "name": "one_mul",
-      "refs": 186
-     },
-     {
-      "name": "finiteness",
-      "refs": 173
+      "refs": 187
      },
      {
       "name": "MeasureTheory.Measure",
-      "refs": 173
+      "refs": 175
+     },
+     {
+      "name": "finiteness",
+      "refs": 174
      },
      {
       "name": "Real.exp",
@@ -7483,58 +7525,60 @@
     ]
    },
    "concentration": {
-    "gini": 0.733,
-    "top1pct_share": 0.3024,
-    "top10pct_share": 0.6516
+    "gini": 0.7326,
+    "top1pct_share": 0.2991,
+    "top10pct_share": 0.6514
    },
    "dependency_depth": {
     "max_depth": 14,
-    "mean_depth": 2.751,
+    "mean_depth": 2.763,
     "p90_depth": 5.0,
-    "pct_in_cycles": 0.5392
+    "pct_in_cycles": 0.5416
    },
    "duplication": {
-    "body_dup_rate": 0.0171,
-    "body_dup_n": 2110,
+    "body_dup_rate": 0.0169,
+    "body_dup_n": 2126,
     "body_max_cluster": 2,
     "stmt_dup_rate": 0.0018,
-    "stmt_dup_n": 2226,
+    "stmt_dup_n": 2241,
     "stmt_max_cluster": 2
    },
    "proof_economy": {
-    "n_theorems": 2517,
+    "stmt_chars_median": 97.0,
+    "n_theorems": 2532,
     "proof_lines": {
-     "mean": 14.58,
+     "mean": 14.523,
      "median": 7.0,
      "p90": 36.0,
-     "p99": 115.04000000000087,
+     "p99": 114.14000000000033,
      "max": 212
     },
-    "refs_per_proof": 17.99,
-    "refs_per_proof_line": 1.234,
+    "refs_per_proof": 17.981,
+    "refs_per_proof_line": 1.238,
     "sorry_rate": 0.0016,
     "n_sorried_theorems": 4,
     "n_examples": 2
    },
    "import_graph": {
+    "median_file_loc": 207.0,
     "n_files": 117,
-    "mean_internal_imports_per_file": 0.0,
-    "median_fan_in": 0.0,
-    "pct_files_fan_in_ge2": 0.0,
-    "max_fan_in": 0,
+    "mean_internal_imports_per_file": 1.88,
+    "median_fan_in": 1.0,
+    "pct_files_fan_in_ge2": 0.4274,
+    "max_fan_in": 11,
     "pct_files_importing_all_mathlib": 0.0,
-    "n_distinct_external_modules": 2
+    "n_distinct_external_modules": 84
    },
    "doc_coverage": {
-    "pct_defs_with_doc": 0.7903,
-    "pct_theorems_with_doc": 0.2096,
-    "pct_public_decls_with_doc": 0.2811,
+    "pct_defs_with_doc": 0.7904,
+    "pct_theorems_with_doc": 0.2108,
+    "pct_public_decls_with_doc": 0.2827,
     "comment_density": 0.0858
    },
    "complexity": {
-    "branch_per_proof": 0.524,
+    "branch_per_proof": 0.522,
     "branch_per_100_lines": 3.59,
-    "pct_proofs_branchy": 0.0199,
+    "pct_proofs_branchy": 0.0197,
     "p90_branch": 2.0
    },
    "trust_base": {
@@ -7557,7 +7601,7 @@
     "max_log10_cost": 2.59,
     "mean_log10_cost_theorems": 0.52,
     "total_amortization_exp": 0.82,
-    "n_scored": 1415
+    "n_scored": 1417
    }
   }
  },
@@ -7853,6 +7897,7 @@
     "stmt_max_cluster": 5
    },
    "proof_economy": {
+    "stmt_chars_median": 114.0,
     "n_theorems": 1077,
     "proof_lines": {
      "mean": 23.082,
@@ -7868,6 +7913,7 @@
     "n_examples": 0
    },
    "import_graph": {
+    "median_file_loc": 3727.0,
     "n_files": 7,
     "mean_internal_imports_per_file": 1.0,
     "median_fan_in": 1.0,
@@ -7916,39 +7962,39 @@
   "meta": {
    "tier": "textual",
    "join_rate": null,
-   "label": "Sphere Packing",
+   "label": "Sphere Packing (community)",
    "category": "AI-completed formalization",
    "provenance": "human+AI (Gauss)",
    "stars": 80,
    "url": "https://github.com/thefundamentaltheor3m/Sphere-Packing-Lean",
    "files": 80,
    "loc": 12930,
-   "decls": 1418,
-   "edges": 12686,
-   "dotted_coverage": 0.6915,
+   "decls": 1445,
+   "edges": 12861,
+   "dotted_coverage": 0.6855,
    "parse_errors": 0
   },
   "metrics": {
    "reuse_degree": {
-    "n_reusable_decls": 1368,
+    "n_reusable_decls": 1395,
     "degree": {
-     "mean": 2.802,
+     "mean": 2.79,
      "median": 1.0,
      "p90": 5.0,
-     "p99": 31.979999999999563,
+     "p99": 30.359999999999673,
      "max": 124
     },
-    "pct_never_reused": 0.2288,
-    "pct_reused_ge2": 0.3765,
+    "pct_never_reused": 0.2222,
+    "pct_reused_ge2": 0.3728,
     "ccdf": {
-     "1": 0.7712,
-     "2": 0.37646,
-     "3": 0.22368,
-     "5": 0.11404,
-     "10": 0.05044,
-     "20": 0.01681,
-     "50": 0.00731,
-     "100": 0.00146,
+     "1": 0.77778,
+     "2": 0.37276,
+     "3": 0.22151,
+     "5": 0.11326,
+     "10": 0.05018,
+     "20": 0.01649,
+     "50": 0.00717,
+     "100": 0.00143,
      "200": 0.0,
      "500": 0.0,
      "1000": 0.0
@@ -7976,11 +8022,11 @@
      },
      {
       "name": "g",
-      "deg": 73
+      "deg": 74
      },
      {
       "name": "\u03b1",
-      "deg": 65
+      "deg": 68
      },
      {
       "name": "serre_D",
@@ -8019,7 +8065,7 @@
       "deg": 27
      },
      {
-      "name": "PeriodicSpherePacking",
+      "name": "\u03b2",
       "deg": 26
      },
      {
@@ -8027,8 +8073,8 @@
       "deg": 26
      },
      {
-      "name": "\u03c8S'",
-      "deg": 23
+      "name": "PeriodicSpherePacking",
+      "deg": 26
      },
      {
       "name": "E8Matrix",
@@ -8037,33 +8083,33 @@
     ]
    },
    "statement_vs_proof": {
-    "share_signature": 0.253,
-    "share_value": 0.0526,
-    "share_proof": 0.6944,
-    "load_bearing_share": 0.3056,
-    "mean_stmt_indeg": 1.402,
-    "mean_proof_indeg": 1.787,
-    "internal_refs_to_theorems": 1690,
-    "internal_refs_to_defs": 4920,
-    "thm_def_ref_ratio": 0.343,
+    "share_signature": 0.2556,
+    "share_value": 0.0604,
+    "share_proof": 0.684,
+    "load_bearing_share": 0.316,
+    "mean_stmt_indeg": 1.429,
+    "mean_proof_indeg": 1.743,
+    "internal_refs_to_theorems": 1696,
+    "internal_refs_to_defs": 4994,
+    "thm_def_ref_ratio": 0.34,
     "pct_theorems_used_in_statements": 0.0088
    },
    "cross_file": {
-    "pct_edges_cross_file": 0.4729,
-    "pct_edges_cross_dir": 0.1388,
-    "pct_decls_used_outside_file": 0.2478,
-    "pct_decls_used_in_5plus_external_files": 0.0117,
-    "mean_user_files_per_used_decl": 1.438,
+    "pct_edges_cross_file": 0.4678,
+    "pct_edges_cross_dir": 0.1387,
+    "pct_decls_used_outside_file": 0.243,
+    "pct_decls_used_in_5plus_external_files": 0.0115,
+    "mean_user_files_per_used_decl": 1.428,
     "n_dirs": 7
    },
    "external_reuse": {
-    "external_refs_total": 11890,
-    "external_refs_per_decl": 8.616,
-    "external_internal_ratio": 1.799,
+    "external_refs_total": 12050,
+    "external_refs_per_decl": 8.564,
+    "external_internal_ratio": 1.801,
     "per_dep": {
      "mathlib4": {
-      "refs": 9413,
-      "distinct_decls_used": 1528
+      "refs": 9437,
+      "distinct_decls_used": 1533
      },
      "batteries": {
       "refs": 16,
@@ -8074,13 +8120,13 @@
       "distinct_decls_used": 0
      },
      "core": {
-      "refs": 2461,
-      "distinct_decls_used": 152
+      "refs": 2597,
+      "distinct_decls_used": 171
      }
     },
-    "mathlib_refs_per_decl": 6.821,
-    "mathlib_vocab": 1528,
-    "mathlib_vocab_per_1k_refs": 162.3,
+    "mathlib_refs_per_decl": 6.707,
+    "mathlib_vocab": 1533,
+    "mathlib_vocab_per_1k_refs": 162.4,
     "top_mathlib": [
      {
       "name": "Complex.I",
@@ -8100,7 +8146,7 @@
      },
      {
       "name": "Filter.Tendsto",
-      "refs": 123
+      "refs": 124
      },
      {
       "name": "Metric.ball",
@@ -8128,7 +8174,7 @@
      },
      {
       "name": "norm_num",
-      "refs": 98
+      "refs": 99
      },
      {
       "name": "UpperHalfPlane.re",
@@ -8163,6 +8209,10 @@
       "refs": 68
      },
      {
+      "name": "Complex",
+      "refs": 68
+     },
+     {
       "name": "Real.pi",
       "refs": 68
      },
@@ -8177,65 +8227,63 @@
      {
       "name": "mul_assoc",
       "refs": 64
-     },
-     {
-      "name": "Complex",
-      "refs": 64
      }
     ]
    },
    "concentration": {
-    "gini": 0.6912,
-    "top1pct_share": 0.2366,
-    "top10pct_share": 0.5901
+    "gini": 0.688,
+    "top1pct_share": 0.2341,
+    "top10pct_share": 0.5892
    },
    "dependency_depth": {
     "max_depth": 13,
-    "mean_depth": 3.525,
+    "mean_depth": 3.504,
     "p90_depth": 7.0,
-    "pct_in_cycles": 0.4577
+    "pct_in_cycles": 0.4554
    },
    "duplication": {
-    "body_dup_rate": 0.0215,
-    "body_dup_n": 883,
+    "body_dup_rate": 0.0209,
+    "body_dup_n": 908,
     "body_max_cluster": 3,
     "stmt_dup_rate": 0.0258,
     "stmt_dup_n": 853,
     "stmt_max_cluster": 3
    },
    "proof_economy": {
+    "stmt_chars_median": 72.0,
     "n_theorems": 1133,
     "proof_lines": {
-     "mean": 10.242,
+     "mean": 10.185,
      "median": 6.0,
      "p90": 23.0,
-     "p99": 61.690000000000055,
+     "p99": 60.38000000000011,
      "max": 181
     },
-    "refs_per_proof": 11.348,
-    "refs_per_proof_line": 1.108,
+    "refs_per_proof": 11.322,
+    "refs_per_proof_line": 1.112,
     "sorry_rate": 0.0485,
     "n_sorried_theorems": 55,
     "n_examples": 2
    },
    "import_graph": {
+    "median_file_loc": 81.0,
     "n_files": 80,
-    "mean_internal_imports_per_file": 0.0,
-    "median_fan_in": 0.0,
-    "pct_files_fan_in_ge2": 0.0,
-    "max_fan_in": 0,
+    "mean_internal_imports_per_file": 1.538,
+    "median_fan_in": 1.0,
+    "pct_files_fan_in_ge2": 0.375,
+    "max_fan_in": 7,
     "pct_files_importing_all_mathlib": 0.0,
-    "n_distinct_external_modules": 0
+    "n_distinct_external_modules": 101
    },
    "doc_coverage": {
-    "pct_defs_with_doc": 0.192,
+    "pct_defs_with_doc": 0.2043,
     "pct_theorems_with_doc": 0.2702,
-    "pct_public_decls_with_doc": 0.256,
+    "pct_public_decls_with_doc": 0.2579,
     "comment_density": 0.177
    },
    "complexity": {
-    "branch_per_proof": 0.239,
-    "branch_per_100_lines": 2.34,
+    "branch_per_proof": 0.238,
+    "branch_per_100_lines": 2.33,
     "pct_proofs_branchy": 0.0088,
     "p90_branch": 1.0
    },
@@ -8253,13 +8301,1436 @@
     "import_baseline_secs": 1.72
    },
    "amortization": {
-    "mean_log10_cost": 0.68,
+    "mean_log10_cost": 0.67,
     "median_log10_cost": 0.6,
     "p90_log10_cost": 1.54,
     "max_log10_cost": 2.74,
     "mean_log10_cost_theorems": 0.73,
     "total_amortization_exp": 1.15,
-    "n_scored": 769
+    "n_scored": 787
+   }
+  }
+ },
+ "sphere-gauss": {
+  "meta": {
+   "tier": "textual",
+   "join_rate": null,
+   "label": "Sphere Packing (Math Inc PR)",
+   "category": "AI formalization PR",
+   "provenance": "AI (Gauss)",
+   "stars": 80,
+   "url": "https://github.com/thefundamentaltheor3m/Sphere-Packing-Lean/pull/341",
+   "files": 266,
+   "loc": 46504,
+   "decls": 2983,
+   "edges": 32233,
+   "dotted_coverage": 0.8147,
+   "parse_errors": 0
+  },
+  "metrics": {
+   "reuse_degree": {
+    "n_reusable_decls": 2864,
+    "degree": {
+     "mean": 3.376,
+     "median": 1.0,
+     "p90": 6.0,
+     "p99": 37.0,
+     "max": 268
+    },
+    "pct_never_reused": 0.1072,
+    "pct_reused_ge2": 0.4302,
+    "ccdf": {
+     "1": 0.89281,
+     "2": 0.43017,
+     "3": 0.26292,
+     "5": 0.14385,
+     "10": 0.05517,
+     "20": 0.02339,
+     "50": 0.00733,
+     "100": 0.00244,
+     "200": 0.00105,
+     "500": 0.0,
+     "1000": 0.0
+    },
+    "top": [
+     {
+      "name": "h",
+      "deg": 268
+     },
+     {
+      "name": "g",
+      "deg": 228
+     },
+     {
+      "name": "F",
+      "deg": 202
+     },
+     {
+      "name": "\u03c6\u2080''",
+      "deg": 150
+     },
+     {
+      "name": "\u03b1",
+      "deg": 116
+     },
+     {
+      "name": "E",
+      "deg": 104
+     },
+     {
+      "name": "H\u2082",
+      "deg": 101
+     },
+     {
+      "name": "D",
+      "deg": 99
+     },
+     {
+      "name": "H\u2084",
+      "deg": 96
+     },
+     {
+      "name": "\u03c8T'",
+      "deg": 93
+     },
+     {
+      "name": "ResToImagAxis",
+      "deg": 76
+     },
+     {
+      "name": "\u03c8S",
+      "deg": 71
+     },
+     {
+      "name": "Function.resToImagAxis",
+      "deg": 64
+     },
+     {
+      "name": "G",
+      "deg": 64
+     },
+     {
+      "name": "E\u2082",
+      "deg": 61
+     },
+     {
+      "name": "\u03c8I'",
+      "deg": 59
+     },
+     {
+      "name": "hsum",
+      "deg": 56
+     },
+     {
+      "name": "H\u2083",
+      "deg": 55
+     },
+     {
+      "name": "serre_D",
+      "deg": 54
+     },
+     {
+      "name": "MagicFunction.FourierEigenfunctions.a",
+      "deg": 52
+     }
+    ]
+   },
+   "statement_vs_proof": {
+    "share_signature": 0.1758,
+    "share_value": 0.0352,
+    "share_proof": 0.789,
+    "load_bearing_share": 0.211,
+    "mean_stmt_indeg": 1.369,
+    "mean_proof_indeg": 2.612,
+    "internal_refs_to_theorems": 4633,
+    "internal_refs_to_defs": 17061,
+    "thm_def_ref_ratio": 0.272,
+    "pct_theorems_used_in_statements": 0.0058
+   },
+   "cross_file": {
+    "pct_edges_cross_file": 0.5897,
+    "pct_edges_cross_dir": 0.2195,
+    "pct_decls_used_outside_file": 0.3858,
+    "pct_decls_used_in_5plus_external_files": 0.0468,
+    "mean_user_files_per_used_decl": 1.964,
+    "n_dirs": 10
+   },
+   "external_reuse": {
+    "external_refs_total": 39492,
+    "external_refs_per_decl": 13.708,
+    "external_internal_ratio": 1.82,
+    "per_dep": {
+     "mathlib4": {
+      "refs": 32856,
+      "distinct_decls_used": 2304
+     },
+     "batteries": {
+      "refs": 17,
+      "distinct_decls_used": 3
+     },
+     "aesop": {
+      "refs": 0,
+      "distinct_decls_used": 0
+     },
+     "core": {
+      "refs": 6619,
+      "distinct_decls_used": 246
+     }
+    },
+    "mathlib_refs_per_decl": 11.404,
+    "mathlib_vocab": 2304,
+    "mathlib_vocab_per_1k_refs": 70.1,
+    "top_mathlib": [
+     {
+      "name": "Complex.I",
+      "refs": 2934
+     },
+     {
+      "name": "Real.exp",
+      "refs": 2193
+     },
+     {
+      "name": "Real.pi",
+      "refs": 1678
+     },
+     {
+      "name": "EuclideanSpace",
+      "refs": 900
+     },
+     {
+      "name": "Set",
+      "refs": 886
+     },
+     {
+      "name": "mul_assoc",
+      "refs": 869
+     },
+     {
+      "name": "UpperHalfPlane.I",
+      "refs": 804
+     },
+     {
+      "name": "mul_comm",
+      "refs": 546
+     },
+     {
+      "name": "mul_left_comm",
+      "refs": 412
+     },
+     {
+      "name": "Filter.Tendsto",
+      "refs": 405
+     },
+     {
+      "name": "norm_num",
+      "refs": 393
+     },
+     {
+      "name": "MeasureTheory.Measure",
+      "refs": 379
+     },
+     {
+      "name": "Complex",
+      "refs": 355
+     },
+     {
+      "name": "Metric.ball",
+      "refs": 296
+     },
+     {
+      "name": "ContinuousOn",
+      "refs": 292
+     },
+     {
+      "name": "positivity",
+      "refs": 288
+     },
+     {
+      "name": "UpperHalfPlane.atImInfty",
+      "refs": 288
+     },
+     {
+      "name": "UpperHalfPlane.im",
+      "refs": 273
+     },
+     {
+      "name": "ModularForm.E\u2084",
+      "refs": 272
+     },
+     {
+      "name": "symm",
+      "refs": 261
+     },
+     {
+      "name": "MeasureTheory.IntegrableOn",
+      "refs": 238
+     },
+     {
+      "name": "Set.Ioc",
+      "refs": 235
+     },
+     {
+      "name": "Filter.atTop",
+      "refs": 229
+     },
+     {
+      "name": "ModularGroup.S",
+      "refs": 225
+     },
+     {
+      "name": "MeasureTheory.Integrable",
+      "refs": 211
+     }
+    ]
+   },
+   "concentration": {
+    "gini": 0.6574,
+    "top1pct_share": 0.2484,
+    "top10pct_share": 0.578
+   },
+   "dependency_depth": {
+    "max_depth": 11,
+    "mean_depth": 3.128,
+    "p90_depth": 6.0,
+    "pct_in_cycles": 0.4995
+   },
+   "duplication": {
+    "body_dup_rate": 0.0056,
+    "body_dup_n": 2136,
+    "body_max_cluster": 4,
+    "stmt_dup_rate": 0.0187,
+    "stmt_dup_n": 1977,
+    "stmt_max_cluster": 5
+   },
+   "proof_economy": {
+    "stmt_chars_median": 85.0,
+    "n_theorems": 2405,
+    "proof_lines": {
+     "mean": 17.64,
+     "median": 6.0,
+     "p90": 36.0,
+     "p99": 192.8799999999992,
+     "max": 877
+    },
+    "refs_per_proof": 20.077,
+    "refs_per_proof_line": 1.138,
+    "sorry_rate": 0.0,
+    "n_sorried_theorems": 0,
+    "n_examples": 8
+   },
+   "import_graph": {
+    "median_file_loc": 91.5,
+    "n_files": 266,
+    "mean_internal_imports_per_file": 2.936,
+    "median_fan_in": 2.0,
+    "pct_files_fan_in_ge2": 0.594,
+    "max_fan_in": 23,
+    "pct_files_importing_all_mathlib": 0.0,
+    "n_distinct_external_modules": 243
+   },
+   "doc_coverage": {
+    "pct_defs_with_doc": 0.733,
+    "pct_theorems_with_doc": 0.535,
+    "pct_public_decls_with_doc": 0.5676,
+    "comment_density": 0.146
+   },
+   "complexity": {
+    "branch_per_proof": 0.219,
+    "branch_per_100_lines": 1.24,
+    "pct_proofs_branchy": 0.005,
+    "p90_branch": 1.0
+   },
+   "trust_base": {
+    "n_axioms_declared": 0,
+    "axioms_per_1k_decls": 0.0,
+    "axiom_names": [],
+    "n_native_decide_users": null
+   },
+   "elab_cost": {
+    "secs_per_kloc": 9.7,
+    "secs_per_kloc_median": 11.1,
+    "files_sampled": 12,
+    "loc_sampled": 2447,
+    "import_baseline_secs": 2.99
+   },
+   "amortization": {
+    "mean_log10_cost": 0.54,
+    "median_log10_cost": 0.48,
+    "p90_log10_cost": 1.28,
+    "max_log10_cost": 2.38,
+    "mean_log10_cost_theorems": 0.6,
+    "total_amortization_exp": 0.9,
+    "n_scored": 1493
+   }
+  }
+ },
+ "pedigree": {
+  "meta": {
+   "tier": "textual",
+   "join_rate": null,
+   "label": "Pedigree Polytopes (P=NP)",
+   "category": "slop calibration",
+   "provenance": "AI/crank",
+   "stars": 0,
+   "url": "https://github.com/tiruart/pedigree-polytopes-lean4",
+   "files": 188,
+   "loc": 20783,
+   "decls": 1877,
+   "edges": 10819,
+   "dotted_coverage": 0.41,
+   "parse_errors": 0
+  },
+  "metrics": {
+   "reuse_degree": {
+    "n_reusable_decls": 1798,
+    "degree": {
+     "mean": 2.879,
+     "median": 1.0,
+     "p90": 5.0,
+     "p99": 41.11999999999989,
+     "max": 317
+    },
+    "pct_never_reused": 0.4911,
+    "pct_reused_ge2": 0.2914,
+    "ccdf": {
+     "1": 0.5089,
+     "2": 0.29143,
+     "3": 0.1802,
+     "5": 0.10623,
+     "10": 0.04505,
+     "20": 0.02113,
+     "50": 0.00945,
+     "100": 0.00501,
+     "200": 0.00111,
+     "500": 0.0,
+     "1000": 0.0
+    },
+    "top": [
+     {
+      "name": "P",
+      "deg": 317
+     },
+     {
+      "name": "MembershipProject.Core.Triple",
+      "deg": 287
+     },
+     {
+      "name": "MembershipProject.Core.Node",
+      "deg": 164
+     },
+     {
+      "name": "MembershipProject.Core.Pedigree",
+      "deg": 154
+     },
+     {
+      "name": "MembershipProject.Core.Delta",
+      "deg": 117
+     },
+     {
+      "name": "MembershipProject.Core.PedigreePath",
+      "deg": 115
+     },
+     {
+      "name": "MembershipProject.Core.Commodity",
+      "deg": 110
+     },
+     {
+      "name": "x",
+      "deg": 108
+     },
+     {
+      "name": "MembershipProject.Core.LayeredPoint",
+      "deg": 105
+     },
+     {
+      "name": "MembershipProject.Core.Edge",
+      "deg": 88
+     },
+     {
+      "name": "MembershipProject.Core.LayeredNetwork",
+      "deg": 81
+     },
+     {
+      "name": "S",
+      "deg": 74
+     },
+     {
+      "name": "MembershipProject.Core.ConvexWitness",
+      "deg": 73
+     },
+     {
+      "name": "Edge",
+      "deg": 69
+     },
+     {
+      "name": "MembershipProject.Core.generators",
+      "deg": 63
+     },
+     {
+      "name": "MembershipProject.Core.ParsedMIRData",
+      "deg": 57
+     },
+     {
+      "name": "GraphInterface.FlowNetwork",
+      "deg": 52
+     },
+     {
+      "name": "MembershipProject.Core.PedigreeCompact",
+      "deg": 45
+     },
+     {
+      "name": "MembershipProject.Core.Triple.k",
+      "deg": 41
+     },
+     {
+      "name": "MembershipProject.Core.Link",
+      "deg": 39
+     }
+    ]
+   },
+   "statement_vs_proof": {
+    "share_signature": 0.4015,
+    "share_value": 0.2722,
+    "share_proof": 0.3263,
+    "load_bearing_share": 0.6737,
+    "mean_stmt_indeg": 2.559,
+    "mean_proof_indeg": 0.685,
+    "internal_refs_to_theorems": 527,
+    "internal_refs_to_defs": 9189,
+    "thm_def_ref_ratio": 0.057,
+    "pct_theorems_used_in_statements": 0.0019
+   },
+   "cross_file": {
+    "pct_edges_cross_file": 0.6612,
+    "pct_edges_cross_dir": 0.1541,
+    "pct_decls_used_outside_file": 0.1997,
+    "pct_decls_used_in_5plus_external_files": 0.0389,
+    "mean_user_files_per_used_decl": 2.246,
+    "n_dirs": 6
+   },
+   "external_reuse": {
+    "external_refs_total": 9279,
+    "external_refs_per_decl": 5.152,
+    "external_internal_ratio": 0.944,
+    "per_dep": {
+     "mathlib4": {
+      "refs": 2371,
+      "distinct_decls_used": 207
+     },
+     "batteries": {
+      "refs": 20,
+      "distinct_decls_used": 4
+     },
+     "aesop": {
+      "refs": 0,
+      "distinct_decls_used": 0
+     },
+     "core": {
+      "refs": 6888,
+      "distinct_decls_used": 280
+     }
+    },
+    "mathlib_refs_per_decl": 1.316,
+    "mathlib_vocab": 207,
+    "mathlib_vocab_per_1k_refs": 87.3,
+    "top_mathlib": [
+     {
+      "name": "Finset",
+      "refs": 686
+     },
+     {
+      "name": "linarith",
+      "refs": 154
+     },
+     {
+      "name": "List.get_eq_getElem",
+      "refs": 95
+     },
+     {
+      "name": "Finset.mem_image",
+      "refs": 74
+     },
+     {
+      "name": "Finset.Ico",
+      "refs": 74
+     },
+     {
+      "name": "Finset.mem_Ico",
+      "refs": 52
+     },
+     {
+      "name": "by_contra",
+      "refs": 50
+     },
+     {
+      "name": "Finset.Icc",
+      "refs": 47
+     },
+     {
+      "name": "Finset.mem_inter",
+      "refs": 46
+     },
+     {
+      "name": "Finset.mem_singleton",
+      "refs": 46
+     },
+     {
+      "name": "norm_num",
+      "refs": 45
+     },
+     {
+      "name": "Finset.univ",
+      "refs": 33
+     },
+     {
+      "name": "by_cases",
+      "refs": 33
+     },
+     {
+      "name": "Disjoint",
+      "refs": 32
+     },
+     {
+      "name": "Finset.mem_biUnion",
+      "refs": 32
+     },
+     {
+      "name": "symm",
+      "refs": 29
+     },
+     {
+      "name": "Finset.mem_union",
+      "refs": 27
+     },
+     {
+      "name": "Fintype",
+      "refs": 22
+     },
+     {
+      "name": "Finset.Nonempty",
+      "refs": 22
+     },
+     {
+      "name": "Finset.mem_attach",
+      "refs": 19
+     },
+     {
+      "name": "Finset.max",
+      "refs": 18
+     },
+     {
+      "name": "Set",
+      "refs": 18
+     },
+     {
+      "name": "Finset.mem_insert",
+      "refs": 17
+     },
+     {
+      "name": "List.head",
+      "refs": 16
+     },
+     {
+      "name": "SimpleGraph.completeGraph",
+      "refs": 14
+     }
+    ]
+   },
+   "concentration": {
+    "gini": 0.8455,
+    "top1pct_share": 0.393,
+    "top10pct_share": 0.7456
+   },
+   "dependency_depth": {
+    "max_depth": 17,
+    "mean_depth": 5.156,
+    "p90_depth": 10.0,
+    "pct_in_cycles": 0.0
+   },
+   "duplication": {
+    "body_dup_rate": 0.1885,
+    "body_dup_n": 976,
+    "body_max_cluster": 6,
+    "stmt_dup_rate": 0.1455,
+    "stmt_dup_n": 481,
+    "stmt_max_cluster": 4
+   },
+   "proof_economy": {
+    "stmt_chars_median": 122.0,
+    "n_theorems": 513,
+    "proof_lines": {
+     "mean": 21.14,
+     "median": 10.0,
+     "p90": 42.0,
+     "p99": 186.4799999999999,
+     "max": 404
+    },
+    "refs_per_proof": 12.049,
+    "refs_per_proof_line": 0.57,
+    "sorry_rate": 0.193,
+    "n_sorried_theorems": 99,
+    "n_examples": 30
+   },
+   "import_graph": {
+    "median_file_loc": 68.0,
+    "n_files": 188,
+    "mean_internal_imports_per_file": 0.676,
+    "median_fan_in": 0.0,
+    "pct_files_fan_in_ge2": 0.0904,
+    "max_fan_in": 21,
+    "pct_files_importing_all_mathlib": 0.0,
+    "n_distinct_external_modules": 104
+   },
+   "doc_coverage": {
+    "pct_defs_with_doc": 0.5263,
+    "pct_theorems_with_doc": 0.4134,
+    "pct_public_decls_with_doc": 0.4952,
+    "comment_density": 0.3761
+   },
+   "complexity": {
+    "branch_per_proof": 0.928,
+    "branch_per_100_lines": 4.39,
+    "pct_proofs_branchy": 0.0448,
+    "p90_branch": 2.8000000000000114
+   },
+   "trust_base": {
+    "n_axioms_declared": 59,
+    "axioms_per_1k_decls": 31.43,
+    "axiom_names": [
+     "MembershipProject.Core.Tardos_strongly_polynomial",
+     "MembershipProject.Core.GLS_separation_optimization",
+     "MembershipProject.Core.Maurras_membership_to_separation",
+     "MembershipProject.Core.Karp_STSP_NP_complete",
+     "MembershipProject.Core.Cook_P_eq_NP_criterion",
+     "Pedigree",
+     "discords",
+     "swap",
+     "restrict_to",
+     "IsPedigree",
+     "welded",
+     "not_pedigree_implies_welding"
+    ],
+    "n_native_decide_users": null
+   },
+   "elab_cost": {
+    "secs_per_kloc": 3.8,
+    "secs_per_kloc_median": 3.4,
+    "files_sampled": 3,
+    "loc_sampled": 674,
+    "import_baseline_secs": 3.07
+   },
+   "amortization": {
+    "mean_log10_cost": 1.03,
+    "median_log10_cost": 1.0,
+    "p90_log10_cost": 2.06,
+    "max_log10_cost": 4.22,
+    "mean_log10_cost_theorems": 1.48,
+    "total_amortization_exp": 1.96,
+    "n_scored": 1877
+   }
+  }
+ },
+ "rubik": {
+  "meta": {
+   "tier": "textual",
+   "join_rate": null,
+   "label": "Rubik Cube Group",
+   "category": "slop calibration",
+   "provenance": "human scaffold",
+   "stars": 25,
+   "url": "https://github.com/chenjulang/rubikcubegroup",
+   "files": 4,
+   "loc": 3177,
+   "decls": 196,
+   "edges": 1325,
+   "dotted_coverage": 0.791,
+   "parse_errors": 0
+  },
+  "metrics": {
+   "reuse_degree": {
+    "n_reusable_decls": 183,
+    "degree": {
+     "mean": 4.29,
+     "median": 1.0,
+     "p90": 11.0,
+     "p99": 27.160000000000082,
+     "max": 103
+    },
+    "pct_never_reused": 0.2568,
+    "pct_reused_ge2": 0.4645,
+    "ccdf": {
+     "1": 0.74317,
+     "2": 0.46448,
+     "3": 0.37158,
+     "5": 0.2623,
+     "10": 0.11475,
+     "20": 0.02732,
+     "50": 0.00546,
+     "100": 0.00546,
+     "200": 0.0,
+     "500": 0.0,
+     "1000": 0.0
+    },
+    "top": [
+     {
+      "name": "RubiksSuperType",
+      "deg": 103
+     },
+     {
+      "name": "Reachable",
+      "deg": 37
+     },
+     {
+      "name": "Solved",
+      "deg": 25
+     },
+     {
+      "name": "F",
+      "deg": 22
+     },
+     {
+      "name": "R",
+      "deg": 20
+     },
+     {
+      "name": "R'",
+      "deg": 19
+     },
+     {
+      "name": "F'",
+      "deg": 19
+     },
+     {
+      "name": "PieceState.mul_def",
+      "deg": 18
+     },
+     {
+      "name": "U",
+      "deg": 18
+     },
+     {
+      "name": "U'",
+      "deg": 16
+     },
+     {
+      "name": "ps_mul",
+      "deg": 16
+     },
+     {
+      "name": "PieceState",
+      "deg": 16
+     },
+     {
+      "name": "B",
+      "deg": 14
+     },
+     {
+      "name": "ps_mul_assoc",
+      "deg": 14
+     },
+     {
+      "name": "ValidCube",
+      "deg": 13
+     },
+     {
+      "name": "Edge_Absolute_Orient",
+      "deg": 13
+     },
+     {
+      "name": "G1Perm",
+      "deg": 12
+     },
+     {
+      "name": "UR_index",
+      "deg": 12
+     },
+     {
+      "name": "L2",
+      "deg": 11
+     },
+     {
+      "name": "FR_index",
+      "deg": 11
+     }
+    ]
+   },
+   "statement_vs_proof": {
+    "share_signature": 0.2645,
+    "share_value": 0.2073,
+    "share_proof": 0.5282,
+    "load_bearing_share": 0.4718,
+    "mean_stmt_indeg": 3.284,
+    "mean_proof_indeg": 1.448,
+    "internal_refs_to_theorems": 201,
+    "internal_refs_to_defs": 1548,
+    "thm_def_ref_ratio": 0.13,
+    "pct_theorems_used_in_statements": 0.0
+   },
+   "cross_file": {
+    "pct_edges_cross_file": 0.5393,
+    "pct_edges_cross_dir": 0.0,
+    "pct_decls_used_outside_file": 0.2896,
+    "pct_decls_used_in_5plus_external_files": 0.0,
+    "mean_user_files_per_used_decl": 1.449,
+    "n_dirs": 1
+   },
+   "external_reuse": {
+    "external_refs_total": 1232,
+    "external_refs_per_decl": 6.45,
+    "external_internal_ratio": 0.693,
+    "per_dep": {
+     "mathlib4": {
+      "refs": 502,
+      "distinct_decls_used": 43
+     },
+     "batteries": {
+      "refs": 0,
+      "distinct_decls_used": 0
+     },
+     "aesop": {
+      "refs": 0,
+      "distinct_decls_used": 0
+     },
+     "core": {
+      "refs": 730,
+      "distinct_decls_used": 23
+     }
+    },
+    "mathlib_refs_per_decl": 2.628,
+    "mathlib_vocab": 43,
+    "mathlib_vocab_per_1k_refs": 85.7,
+    "top_mathlib": [
+     {
+      "name": "Finset",
+      "refs": 93
+     },
+     {
+      "name": "Prod.fst_mul",
+      "refs": 85
+     },
+     {
+      "name": "Prod.snd_mul",
+      "refs": 62
+     },
+     {
+      "name": "mul_one",
+      "refs": 36
+     },
+     {
+      "name": "mul_assoc",
+      "refs": 31
+     },
+     {
+      "name": "List.formPerm_cons_cons",
+      "refs": 20
+     },
+     {
+      "name": "List.formPerm_singleton",
+      "refs": 20
+     },
+     {
+      "name": "Equiv.Perm.sign",
+      "refs": 18
+     },
+     {
+      "name": "List.formPerm",
+      "refs": 14
+     },
+     {
+      "name": "Equiv.Perm",
+      "refs": 12
+     },
+     {
+      "name": "Equiv.symm",
+      "refs": 12
+     },
+     {
+      "name": "Equiv.Inv",
+      "refs": 8
+     },
+     {
+      "name": "Equiv.Perm.IsThreeCycle",
+      "refs": 8
+     },
+     {
+      "name": "alternatingGroup",
+      "refs": 7
+     },
+     {
+      "name": "lemma",
+      "refs": 7
+     },
+     {
+      "name": "Equiv.mul",
+      "refs": 4
+     },
+     {
+      "name": "Equiv.apply_symm_apply",
+      "refs": 4
+     },
+     {
+      "name": "Set",
+      "refs": 4
+     },
+     {
+      "name": "Subgroup",
+      "refs": 4
+     },
+     {
+      "name": "Equiv.Perm.mul_def",
+      "refs": 4
+     },
+     {
+      "name": "Equiv.trans_apply",
+      "refs": 4
+     },
+     {
+      "name": "Group",
+      "refs": 4
+     },
+     {
+      "name": "Set.mem_setOf_eq",
+      "refs": 3
+     },
+     {
+      "name": "Subgroup.prod",
+      "refs": 3
+     },
+     {
+      "name": "Equiv.inv",
+      "refs": 3
+     }
+    ]
+   },
+   "concentration": {
+    "gini": 0.6966,
+    "top1pct_share": 0.1312,
+    "top10pct_share": 0.5185
+   },
+   "dependency_depth": {
+    "max_depth": 14,
+    "mean_depth": 5.429,
+    "p90_depth": 8.0,
+    "pct_in_cycles": 0.0
+   },
+   "duplication": {
+    "body_dup_rate": 0.012,
+    "body_dup_n": 83,
+    "body_max_cluster": 2,
+    "stmt_dup_rate": 0.0,
+    "stmt_dup_n": 67,
+    "stmt_max_cluster": 1
+   },
+   "proof_economy": {
+    "stmt_chars_median": 118.0,
+    "n_theorems": 85,
+    "proof_lines": {
+     "mean": 29.871,
+     "median": 6.0,
+     "p90": 75.80000000000007,
+     "p99": 282.2399999999999,
+     "max": 315
+    },
+    "refs_per_proof": 18.706,
+    "refs_per_proof_line": 0.626,
+    "sorry_rate": 0.4118,
+    "n_sorried_theorems": 35,
+    "n_examples": 0
+   },
+   "import_graph": {
+    "median_file_loc": 390.5,
+    "n_files": 4,
+    "mean_internal_imports_per_file": 0.5,
+    "median_fan_in": 0.5,
+    "pct_files_fan_in_ge2": 0.0,
+    "max_fan_in": 1,
+    "pct_files_importing_all_mathlib": 0.0,
+    "n_distinct_external_modules": 5
+   },
+   "doc_coverage": {
+    "pct_defs_with_doc": 0.1837,
+    "pct_theorems_with_doc": 0.2118,
+    "pct_public_decls_with_doc": 0.1967,
+    "comment_density": 0.3904
+   },
+   "complexity": {
+    "branch_per_proof": 0.565,
+    "branch_per_100_lines": 1.89,
+    "pct_proofs_branchy": 0.0235,
+    "p90_branch": 3.0
+   },
+   "trust_base": {
+    "n_axioms_declared": 0,
+    "axioms_per_1k_decls": 0.0,
+    "axiom_names": [],
+    "n_native_decide_users": null
+   },
+   "elab_cost": {
+    "secs_per_kloc": null
+   },
+   "amortization": {
+    "mean_log10_cost": 1.44,
+    "median_log10_cost": 1.42,
+    "p90_log10_cost": 2.49,
+    "max_log10_cost": 4.09,
+    "mean_log10_cost_theorems": 2.06,
+    "total_amortization_exp": 2.48,
+    "n_scored": 196
+   }
+  }
+ },
+ "gblean": {
+  "meta": {
+   "tier": "textual",
+   "join_rate": null,
+   "label": "GBLean (Groebner)",
+   "category": "slop calibration",
+   "provenance": "human scaffold",
+   "stars": 2,
+   "url": "https://github.com/hyun2023/gblean",
+   "files": 8,
+   "loc": 2241,
+   "decls": 122,
+   "edges": 1308,
+   "dotted_coverage": 0.6974,
+   "parse_errors": 0
+  },
+  "metrics": {
+   "reuse_degree": {
+    "n_reusable_decls": 103,
+    "degree": {
+     "mean": 3.184,
+     "median": 1.0,
+     "p90": 6.0,
+     "p99": 38.780000000000044,
+     "max": 51
+    },
+    "pct_never_reused": 0.1845,
+    "pct_reused_ge2": 0.4272,
+    "ccdf": {
+     "1": 0.81553,
+     "2": 0.42718,
+     "3": 0.25243,
+     "5": 0.14563,
+     "10": 0.06796,
+     "20": 0.02913,
+     "50": 0.00971,
+     "100": 0.0,
+     "200": 0.0,
+     "500": 0.0,
+     "1000": 0.0
+    },
+    "top": [
+     {
+      "name": "Monomial",
+      "deg": 51
+     },
+     {
+      "name": "MonomialOrder",
+      "deg": 39
+     },
+     {
+      "name": "leading_monomial",
+      "deg": 28
+     },
+     {
+      "name": "buchberger_step",
+      "deg": 13
+     },
+     {
+      "name": "monomials",
+      "deg": 12
+     },
+     {
+      "name": "is_monomial",
+      "deg": 11
+     },
+     {
+      "name": "leading_monomial_finset",
+      "deg": 10
+     },
+     {
+      "name": "leading_coeff",
+      "deg": 8
+     },
+     {
+      "name": "toMvPolynomial_Finset",
+      "deg": 8
+     },
+     {
+      "name": "toMvPolynomial",
+      "deg": 7
+     },
+     {
+      "name": "s_red",
+      "deg": 6
+     },
+     {
+      "name": "buchberger_algorithm",
+      "deg": 6
+     },
+     {
+      "name": "Monomial.instDvd'",
+      "deg": 5
+     },
+     {
+      "name": "fundamental_thm_of_buchberger_step",
+      "deg": 5
+     },
+     {
+      "name": "Spol_help",
+      "deg": 5
+     },
+     {
+      "name": "ReductionProp",
+      "deg": 4
+     },
+     {
+      "name": "MvPolynomial.toMonomial",
+      "deg": 4
+     },
+     {
+      "name": "Groebner",
+      "deg": 4
+     },
+     {
+      "name": "Spol",
+      "deg": 4
+     },
+     {
+      "name": "is_monomial_fst",
+      "deg": 4
+     }
+    ]
+   },
+   "statement_vs_proof": {
+    "share_signature": 0.3146,
+    "share_value": 0.2705,
+    "share_proof": 0.4149,
+    "load_bearing_share": 0.5851,
+    "mean_stmt_indeg": 2.311,
+    "mean_proof_indeg": 1.311,
+    "internal_refs_to_theorems": 52,
+    "internal_refs_to_defs": 599,
+    "thm_def_ref_ratio": 0.087,
+    "pct_theorems_used_in_statements": 0.0732
+   },
+   "cross_file": {
+    "pct_edges_cross_file": 0.3898,
+    "pct_edges_cross_dir": 0.0,
+    "pct_decls_used_outside_file": 0.3689,
+    "pct_decls_used_in_5plus_external_files": 0.0097,
+    "mean_user_files_per_used_decl": 1.548,
+    "n_dirs": 1
+   },
+   "external_reuse": {
+    "external_refs_total": 1751,
+    "external_refs_per_decl": 14.714,
+    "external_internal_ratio": 2.527,
+    "per_dep": {
+     "mathlib4": {
+      "refs": 915,
+      "distinct_decls_used": 164
+     },
+     "batteries": {
+      "refs": 0,
+      "distinct_decls_used": 0
+     },
+     "aesop": {
+      "refs": 0,
+      "distinct_decls_used": 0
+     },
+     "core": {
+      "refs": 836,
+      "distinct_decls_used": 80
+     }
+    },
+    "mathlib_refs_per_decl": 7.689,
+    "mathlib_vocab": 164,
+    "mathlib_vocab_per_1k_refs": 179.2,
+    "top_mathlib": [
+     {
+      "name": "MvPolynomial",
+      "refs": 208
+     },
+     {
+      "name": "Finset",
+      "refs": 90
+     },
+     {
+      "name": "MvPolynomial.R",
+      "refs": 71
+     },
+     {
+      "name": "Ideal.span",
+      "refs": 40
+     },
+     {
+      "name": "Finset.filter",
+      "refs": 35
+     },
+     {
+      "name": "Field",
+      "refs": 33
+     },
+     {
+      "name": "CommRing",
+      "refs": 30
+     },
+     {
+      "name": "Multiplicative",
+      "refs": 30
+     },
+     {
+      "name": "MvPolynomial.monomial",
+      "refs": 26
+     },
+     {
+      "name": "MvPolynomial.coeff",
+      "refs": 18
+     },
+     {
+      "name": "Finsupp",
+      "refs": 15
+     },
+     {
+      "name": "Finsupp.single",
+      "refs": 13
+     },
+     {
+      "name": "LinearOrder",
+      "refs": 12
+     },
+     {
+      "name": "symm",
+      "refs": 12
+     },
+     {
+      "name": "Set",
+      "refs": 10
+     },
+     {
+      "name": "em",
+      "refs": 9
+     },
+     {
+      "name": "Ideal",
+      "refs": 8
+     },
+     {
+      "name": "AddMonoidAlgebra",
+      "refs": 8
+     },
+     {
+      "name": "CommSemiring",
+      "refs": 7
+     },
+     {
+      "name": "by_cases",
+      "refs": 5
+     },
+     {
+      "name": "Finsupp.onFinset",
+      "refs": 5
+     },
+     {
+      "name": "Finsupp.zipWith",
+      "refs": 5
+     },
+     {
+      "name": "Function.Bijective",
+      "refs": 5
+     },
+     {
+      "name": "MvPolynomial.support",
+      "refs": 4
+     },
+     {
+      "name": "Finsupp.instAdd",
+      "refs": 4
+     }
+    ]
+   },
+   "concentration": {
+    "gini": 0.6749,
+    "top1pct_share": 0.1555,
+    "top10pct_share": 0.5701
+   },
+   "dependency_depth": {
+    "max_depth": 15,
+    "mean_depth": 4.984,
+    "p90_depth": 10.0,
+    "pct_in_cycles": 0.0
+   },
+   "duplication": {
+    "body_dup_rate": 0.0135,
+    "body_dup_n": 74,
+    "body_max_cluster": 2,
+    "stmt_dup_rate": 0.075,
+    "stmt_dup_n": 40,
+    "stmt_max_cluster": 4
+   },
+   "proof_economy": {
+    "stmt_chars_median": 158.0,
+    "n_theorems": 41,
+    "proof_lines": {
+     "mean": 39.561,
+     "median": 19.0,
+     "p90": 95.0,
+     "p99": 195.60000000000002,
+     "max": 202
+    },
+    "refs_per_proof": 24.732,
+    "refs_per_proof_line": 0.625,
+    "sorry_rate": 0.2683,
+    "n_sorried_theorems": 11,
+    "n_examples": 0
+   },
+   "import_graph": {
+    "median_file_loc": 307.5,
+    "n_files": 8,
+    "mean_internal_imports_per_file": 2.0,
+    "median_fan_in": 1.5,
+    "pct_files_fan_in_ge2": 0.5,
+    "max_fan_in": 5,
+    "pct_files_importing_all_mathlib": 0.0,
+    "n_distinct_external_modules": 22
+   },
+   "doc_coverage": {
+    "pct_defs_with_doc": 0.0164,
+    "pct_theorems_with_doc": 0.0,
+    "pct_public_decls_with_doc": 0.0097,
+    "comment_density": 0.3374
+   },
+   "complexity": {
+    "branch_per_proof": 1.244,
+    "branch_per_100_lines": 3.14,
+    "pct_proofs_branchy": 0.0732,
+    "p90_branch": 3.0
+   },
+   "trust_base": {
+    "n_axioms_declared": 1,
+    "axioms_per_1k_decls": 8.2,
+    "axiom_names": [
+     "leading_monomial_unwrap"
+    ],
+    "n_native_decide_users": null
+   },
+   "elab_cost": {
+    "secs_per_kloc": 7.5,
+    "secs_per_kloc_median": 5.4,
+    "files_sampled": 5,
+    "loc_sampled": 1724,
+    "import_baseline_secs": 1.01
+   },
+   "amortization": {
+    "mean_log10_cost": 1.05,
+    "median_log10_cost": 0.95,
+    "p90_log10_cost": 2.14,
+    "max_log10_cost": 3.66,
+    "mean_log10_cost_theorems": 1.59,
+    "total_amortization_exp": 2.03,
+    "n_scored": 122
    }
   }
  }
