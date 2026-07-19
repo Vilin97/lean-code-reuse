@@ -178,48 +178,118 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
 </header>
 
 <nav class="toc">
-  <a href="#verdict">Verdict</a>
+  <a href="#reuse">Reuse CCDF</a>
+  <a href="#amortization">Amortization</a>
+  <a href="#elabcost">Elab cost</a>
+  <a href="#discriminate">PCA & composite</a>
   <a href="#corpus">Corpus</a>
   <a href="#metrics">Metrics</a>
-  <a href="#reuse">Reuse degree</a>
   <a href="#where">Where reuse lives</a>
   <a href="#mathlib">Standing on Mathlib</a>
   <a href="#shape">Graph shape</a>
-  <a href="#amortization">Amortization</a>
   <a href="#hygiene">Hygiene</a>
   <a href="#classic">Classic metrics</a>
-  <a href="#discriminate">What discriminates</a>
+  <a href="#taxonomy">Expert review</a>
   <a href="#validity">Validity</a>
 </nav>
 
-<section id="verdict">
+<section id="reuse">
   <div class="secno">01</div>
-  <h2>Verdict up front</h2>
+  <h2>Reuse degree: necessary, not sufficient</h2>
   <div class="prose">
     <p>
-      Reuse <em>is</em> the signature — once it is measured as <strong>compression, not
-      citation counts</strong>. The amortization exponent (§8) asks how many orders of
-      magnitude of re-proved work sharing eliminates: Mathlib's average declaration sits on
-      a 10<sup>7.5</sup>-node inlined dependency tree, unreviewed dumps barely clear
-      10<sup>1</sup>, and unlike raw in-degree the exponent cannot be inflated by splitting
-      proofs into chains. Around it, the discriminating family is <strong>organization</strong>
-      (cross-directory interweaving), <strong>process discipline</strong> (docstrings,
-      granular imports, sorry hygiene) and <strong>economy</strong> (duplication). Raw reuse
-      counts stay a coin flip, and the heartbeats hypothesis inverts — elaboration cost
-      tracks mathematical effort, not quality. The ranking these checks produce is not an
-      authorship ranking: TauCeti and LeanPool land inside the human band and the dumps at
-      the bottom. And the corpus's natural A/B experiment cuts the other way: Math Inc's
-      Gauss PR against the community Sphere Packing project <em>tops every mechanical
-      check</em> — sorry-free, documented, deduplicated, organized — while community review
-      still rejected it on definition quality and API design. These metrics are a floor,
-      not a certificate, and modern AI pipelines have crossed the floor (§11–12).
+      The base metric: for each reusable declaration, how many <em>distinct</em> other
+      declarations in the same repo reference it. The tail tells the real story — every
+      corpus has hubs, but only libraries have a <em>thick middle</em>: thousands of
+      declarations each reused a handful of times across many files.
     </p>
   </div>
-  <div id="verdictCards" class="mgrid"></div>
+  <div class="card">
+    <h4>CCDF of internal reuse degree (log–log)</h4>
+    <div class="sub">All 20 corpus repos; fraction of declarations with in-degree ≥ x. Dashed = textual tier.</div>
+    <div class="legend" id="ccdfLegend"></div>
+    <div class="chartwrap" id="ccdfChart"></div>
+    <div class="sub" style="margin-top:10px">Per-repo aggregate: average internal in-degree (distinct users per declaration), sorted:</div>
+    <div class="chips" id="ccdfAgg"></div>
+  </div>
+  <div class="card">
+    <h4>Share of declarations reused at least twice</h4>
+    <div class="sub">Distinct-user in-degree ≥ 2, as a share of reusable declarations.</div>
+    <div class="chartwrap" id="ge2Chart"></div>
+  </div>
+  <div class="prose" id="reuseProse"></div>
+</section>
+<section id="amortization">
+  <div class="secno">02</div>
+  <h2>Reuse as compression: the amortization exponent</h2>
+  <div class="prose">
+    <p>
+      If reuse is Mathlib's central design philosophy, the right measurement is not how
+      often a declaration is cited but <strong>how much work sharing avoids</strong>.
+      Define the fully-inlined cost of a declaration recursively —
+      <code>cost(v) = 1 + Σ cost(deps)</code>, <em>with repetition</em> — the size its
+      dependency tree would have if every lemma were re-proved at every use site. In a flat
+      corpus this is chain length; in a shared library it grows exponentially, so we report
+      <code>log₁₀ cost</code>: the number of <em>orders of magnitude of duplication that
+      sharing eliminates</em>.
+    </p>
+  </div>
+  <div class="card">
+    <h4>Amortization exponent (log₁₀ of fully-inlined dependency-tree size)</h4>
+    <div class="sub">Dot = mean over declarations; tick = p90. A value of 7 means the average declaration sits on a tree 10⁷ nodes large if nothing were shared.</div>
+    <div class="chartwrap" id="amortChart"></div>
+  </div>
+  <div class="prose" id="amortProse"></div>
+</section>
+<section id="elabcost">
+  <div class="secno">03</div>
+  <h2>Elaboration cost per kLOC</h2>
+  <div class="prose">
+    <p>
+      The heartbeats hypothesis — that low-quality corpora make the elaborator work harder
+      per line — measured by re-elaborating sampled built files with import-loading
+      baselines subtracted. The result inverts the hypothesis: shallow or sorried content
+      elaborates cheaply, while high cost tracks genuinely hard mathematics being worked.
+      Cost is an effort meter, not a quality meter; the smell is expensive-per-line
+      <em>combined with</em> nothing-reused.
+    </p>
+  </div>
+  <div class="card">
+    <h4>Elaboration cost per kLOC (heartbeats proxy)</h4>
+    <div class="sub">Median seconds to re-elaborate 1,000 source lines, from 12 sampled built files per repo; import-loading baseline subtracted. Only repos with working builds.</div>
+    <div class="chartwrap" id="elabChart"></div>
+  </div>
 </section>
 
+<section id="discriminate">
+  <div class="secno">04</div>
+  <h2>The metric space, and a composite of mechanical checks</h2>
+  <div class="prose">
+    <p>
+      Rather than fitting to labels, this section lets the metrics speak jointly: a PCA of
+      the full battery (no imputation — only metrics computed for every corpus repo enter),
+      and an unweighted composite of the mechanical checks. Neither is a quality
+      certificate; §12 documents the Gauss-PR case where every mechanical check passes and
+      community review still said no.
+    </p>
+  </div>
+  <div class="card">
+    <h4>The metric space, flattened: PCA of all metrics</h4>
+    <div class="sub" id="pcaSub"></div>
+    <div class="legend" id="pcaLegend"></div>
+    <div class="chartwrap" id="pcaChart"></div>
+    <div class="note" id="pcaLoadings" style="margin-top:8px"></div>
+  </div>
+  <div class="card">
+    <h4>Composite of mechanical checks</h4>
+    <div class="sub">Mean percentile rank across ten mechanical checks (cross-dir reuse, outside-file reuse, granular imports, sorries, duplication, doc coverage, elaboration economy, amortization, no trivial statements, Mathlib vocabulary breadth). Purely descriptive — §12 shows exactly what it cannot certify.</div>
+    <div class="legend" id="compLegend"></div>
+    <div class="chartwrap" id="compChart"></div>
+  </div>
+  <div class="prose" id="discussProse"></div>
+</section>
 <section id="corpus">
-  <div class="secno">02</div>
+  <div class="secno">05</div>
   <h2>The corpus</h2>
   <div class="prose">
     <p>
@@ -251,42 +321,13 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
   <div class="tablewrap"><table class="data" id="corpusTable"></table></div>
   <p class="note">Click a column header to sort. kLOC = non-blank, non-comment source lines (thousands). Decls = source-level declarations after contracting compiler-generated auxiliaries. NNG4 is listed for completeness but excluded from charts: its game-DSL macros (<code>Statement</code>/<code>World</code>) defeat both tiers.</p>
 </section>
-
 <section id="metrics">
-  <div class="secno">03</div>
+  <div class="secno">06</div>
   <h2>Fourteen ways to measure quality</h2>
   <div class="mgrid" id="metricCards"></div>
 </section>
-
-<section id="reuse">
-  <div class="secno">04</div>
-  <h2>Reuse degree: necessary, not sufficient</h2>
-  <div class="prose">
-    <p>
-      The base metric: for each reusable declaration, how many <em>distinct</em> other
-      declarations in the same repo reference it. The tail tells the real story — every
-      corpus has hubs, but only libraries have a <em>thick middle</em>: thousands of
-      declarations each reused a handful of times across many files.
-    </p>
-  </div>
-  <div class="card">
-    <h4>CCDF of internal reuse degree (log–log)</h4>
-    <div class="sub">All 20 corpus repos; fraction of declarations with in-degree ≥ x. Dashed = textual tier.</div>
-    <div class="legend" id="ccdfLegend"></div>
-    <div class="chartwrap" id="ccdfChart"></div>
-    <div class="sub" style="margin-top:10px">Per-repo aggregate: average internal in-degree (distinct users per declaration), sorted:</div>
-    <div class="chips" id="ccdfAgg"></div>
-  </div>
-  <div class="card">
-    <h4>Share of declarations reused at least twice</h4>
-    <div class="sub">Distinct-user in-degree ≥ 2, as a share of reusable declarations.</div>
-    <div class="chartwrap" id="ge2Chart"></div>
-  </div>
-  <div class="prose" id="reuseProse"></div>
-</section>
-
 <section id="where">
-  <div class="secno">05</div>
+  <div class="secno">07</div>
   <h2>Where the reuse lives</h2>
   <div class="prose">
     <p>
@@ -309,9 +350,8 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
   </div>
   <div class="prose" id="whereProse"></div>
 </section>
-
 <section id="mathlib">
-  <div class="secno">06</div>
+  <div class="secno">08</div>
   <h2>Standing on Mathlib's shoulders</h2>
   <div class="prose">
     <p>
@@ -331,9 +371,8 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
   <div id="vocabChips"></div>
   <div class="prose" id="mlProse"></div>
 </section>
-
 <section id="shape">
-  <div class="secno">07</div>
+  <div class="secno">09</div>
   <h2>The shape of the graph</h2>
   <div class="prose">
     <p>
@@ -355,32 +394,8 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
     <div class="chartwrap" id="giniChart"></div>
   </div>
 </section>
-
-<section id="amortization">
-  <div class="secno">08</div>
-  <h2>Reuse as compression: the amortization exponent</h2>
-  <div class="prose">
-    <p>
-      If reuse is Mathlib's central design philosophy, the right measurement is not how
-      often a declaration is cited but <strong>how much work sharing avoids</strong>.
-      Define the fully-inlined cost of a declaration recursively —
-      <code>cost(v) = 1 + Σ cost(deps)</code>, <em>with repetition</em> — the size its
-      dependency tree would have if every lemma were re-proved at every use site. In a flat
-      corpus this is chain length; in a shared library it grows exponentially, so we report
-      <code>log₁₀ cost</code>: the number of <em>orders of magnitude of duplication that
-      sharing eliminates</em>.
-    </p>
-  </div>
-  <div class="card">
-    <h4>Amortization exponent (log₁₀ of fully-inlined dependency-tree size)</h4>
-    <div class="sub">Dot = mean over declarations; tick = p90. A value of 7 means the average declaration sits on a tree 10⁷ nodes large if nothing were shared.</div>
-    <div class="chartwrap" id="amortChart"></div>
-  </div>
-  <div class="prose" id="amortProse"></div>
-</section>
-
 <section id="hygiene">
-  <div class="secno">09</div>
+  <div class="secno">10</div>
   <h2>Hygiene: duplication and <code>sorry</code></h2>
   <div class="prose">
     <p>
@@ -400,20 +415,19 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
     <div class="chartwrap" id="sorryChart"></div>
   </div>
   <div class="card">
+    <h4>Trivial and vacuous theorems (M15)</h4>
+    <div class="sub">Share of theorems proved by a bare one-liner (<code>trivial</code>/<code>rfl</code>/<code>decide</code>/<code>norm_num</code>/<code>simp</code>). Tooltip shows statements that normalize to <code>True</code>/numerals-only and statements referencing zero declarations.</div>
+    <div class="chartwrap" id="trivChart"></div>
+  </div>
+  <div class="card">
     <h4>Docstring coverage on definitions</h4>
     <div class="sub">Share of public defs/structures/classes carrying a <code>/-- ... -/</code> docstring. Mathlib enforces this by linter — a process signal.</div>
     <div class="chartwrap" id="docChart"></div>
   </div>
-  <div class="card">
-    <h4>Elaboration cost per kLOC (heartbeats proxy)</h4>
-    <div class="sub">Median seconds to re-elaborate 1,000 source lines, from 12 sampled built files per repo; import-loading baseline subtracted. Only repos with working builds.</div>
-    <div class="chartwrap" id="elabChart"></div>
-  </div>
   <div class="prose" id="hygieneProse"></div>
 </section>
-
 <section id="classic">
-  <div class="secno">10</div>
+  <div class="secno">11</div>
   <h2>Classical software metrics, adapted</h2>
   <div class="prose">
     <p>
@@ -451,35 +465,6 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
     system defect density</i> (process &gt; product metrics).
   </p>
 </section>
-
-<section id="discriminate">
-  <div class="secno">11</div>
-  <h2>The metric space, and a composite of mechanical checks</h2>
-  <div class="prose">
-    <p>
-      Rather than fitting to labels, this section lets the metrics speak jointly: a PCA of
-      the full battery (no imputation — only metrics computed for every corpus repo enter),
-      and an unweighted composite of the mechanical checks. Neither is a quality
-      certificate; §12 documents the Gauss-PR case where every mechanical check passes and
-      community review still said no.
-    </p>
-  </div>
-  <div class="card">
-    <h4>The metric space, flattened: PCA of all metrics</h4>
-    <div class="sub" id="pcaSub"></div>
-    <div class="legend" id="pcaLegend"></div>
-    <div class="chartwrap" id="pcaChart"></div>
-    <div class="note" id="pcaLoadings" style="margin-top:8px"></div>
-  </div>
-  <div class="card">
-    <h4>Composite of mechanical checks</h4>
-    <div class="sub">Mean percentile rank across ten mechanical checks (cross-dir reuse, outside-file reuse, granular imports, sorries, duplication, doc coverage, elaboration economy, amortization, no trivial statements, Mathlib vocabulary breadth). Purely descriptive — §12 shows exactly what it cannot certify.</div>
-    <div class="legend" id="compLegend"></div>
-    <div class="chartwrap" id="compChart"></div>
-  </div>
-  <div class="prose" id="discussProse"></div>
-</section>
-
 <section id="taxonomy">
   <div class="secno">12</div>
   <h2>What expert review sees that these metrics don't</h2>
@@ -521,7 +506,6 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
     </p>
   </div>
 </section>
-
 <section id="validity">
   <div class="secno">13</div>
   <h2>Validity, and what this can't see</h2>
@@ -887,6 +871,11 @@ dotRank('elabChart', charted.filter(r => r.m13 && r.m13.secs_per_kloc != null).m
     rows.map(r => '<tr>' + cols.map(c => `<td>${c[1](r)}</td>`).join('') + '</tr>').join('');
 })();
 
+dotRank('trivChart', charted.filter(r => r.m15 && r.m15.pct_trivial_proofs != null).map(r => ({
+  label: r.label, value: r.m15.pct_trivial_proofs, group: r.group,
+  tip: `<b>${esc(r.label)}</b><br>one-liner trivial proofs: ${fmtPct(r.m15.pct_trivial_proofs)}<br>True/numeral-only statements: ${r.m15.n_trivial_statements ?? 0} (${fmtPct(r.m15.pct_trivial_statements ?? 0)})<br>statements referencing nothing: ${fmtPct(r.m15.pct_statements_no_refs ?? 0)}`
+})).sort((a,b) => b.value - a.value), { fmt: fmtPct, ticks: 4 });
+
 // size panels
 function sizePanel(id, get) {
   dotRank(id, charted.filter(r => get(r)).map(r => {
@@ -970,11 +959,6 @@ dotRank('compChart', DATA.composite.map(c => ({
     rows.map(r => `<tr><td>${r[0]}</td><td style="text-align:left">${r[1]}</td><td>${r[2]}</td><td style="text-align:left; white-space:normal; max-width:300px">${r[3]}</td></tr>`).join('');
 })();
 
-// verdict cards
-document.getElementById('verdictCards').innerHTML = DATA.verdicts.map(v =>
-  `<div class="mcard"><span class="id" style="color:${v.good ? 'var(--good)' : 'var(--critical)'}">${v.good ? '✓ discriminates' : '✗ gameable'}</span>
-   <h4>${v.title}</h4><p>${v.text}</p></div>`).join('');
-
 // prose fills
 for (const [id, html] of Object.entries(DATA.prose)) {
   const el = document.getElementById(id);
@@ -1031,6 +1015,7 @@ dotRank('amortChart', charted.filter(r => r.m14 && r.m14.mean_log10_cost != null
     elabChart: '12 random built files per repo (≥30 LOC) re-elaborated with lake env lean, wall-clock timed; a stub containing only the file\u2019s import header is timed once per distinct import set and subtracted. Value = median over files of elaboration-seconds per 1,000 source lines.',
     amortChart: 'cost(v) = 1 + Σ cost(u) over v\u2019s internal dependencies, with repetition — the size of the fully-inlined dependency tree. Computed in log-space (log-sum-exp) over the acyclic graph in topological order; shown as log₁₀. Mean over declarations; tick = p90.',
     pcaChart: 'One column per metric, restricted to metrics computed for every corpus repo (no imputation — the excluded columns are those undefined for some repo, e.g. Mathlib-leverage for Mathlib itself or elaboration cost for unbuildable dumps). Each column standardized to zero mean and unit variance, then projected onto the top two right-singular vectors (SVD). Axes oriented so Mathlib sits at positive PC1 and Seed-Prover at negative PC2. The exact metric list is printed under the chart.',
+    trivChart: 'A theorem statement is "trivial" if its normalized signature is `True` or contains only numerals and arithmetic operators; a proof is a trivial one-liner if it normalizes to trivial/rfl/decide/norm_num/simp. Zero-reference statements come from the dependency graph: theorems whose statement cites no declaration at all.',
     stmtLenChart: 'Line count of each theorem\u2019s signature text (binders + statement, before := ). Median and p90 over theorems.',
     proofLenChart: 'Line count of each theorem\u2019s proof text; empty proofs excluded. Median and p90.',
     fileLenChart: 'Non-blank, non-comment lines per source file. Median and p90 over files.',

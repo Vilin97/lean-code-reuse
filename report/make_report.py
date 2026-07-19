@@ -360,9 +360,8 @@ def build_prose(byk, validation, comp=None):
 others. But raw counts mislead in both directions: <b>superhuman</b> (58 bespoke proof
 towers) has one of the lowest never-reused rates in the corpus ({pct(sh['m1']['never'])})
 because every lemma feeds the next step exactly once, and StrongPNT's curve tracks the human
-research projects closely. Counting reuse is not enough; the sections below ask
-<em>where</em> it lives (§5), what it costs (§9), and — the formulation that ends up
-mattering — how it <em>compounds</em> (§8).</p>""",
+research projects closely. Counting reuse is not enough; the next sections ask how reuse
+<em>compounds</em> (§2), what it costs (§3), and <em>where</em> it lives (§7).</p>""",
         "whereProse": f"""
 <p>File-system locality separates the anchors cleanly: {pct(ml['m3']['outside'])} of Mathlib
 declarations are used outside their defining file, research formalizations cluster at
@@ -398,7 +397,7 @@ declared axioms (M12 catches what the sorry counter cannot: axiomatizing your wa
 headline). The curated AI projects are clean on both counts (TauCeti:
 {pct(tc['m7']['dup'])} duplicates, zero sorries; StrongPNT: {pct(spnt['m7']['dup'])}
 duplicates, {pct(spnt['m8']['sorry'])} sorries). The two Sphere Packing rows are compared
-directly in §11.</p>""",
+directly in §4 and §12.</p>""",
         "discussProse": f"""
 <p>The discriminating metrics form a coherent family: <b>compounding reuse</b> (the
 amortization exponent), <b>organization</b> (cross-directory and outside-file reuse),
