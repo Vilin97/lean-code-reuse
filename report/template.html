@@ -274,7 +274,7 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
     <div class="sub">All 20 corpus repos; fraction of declarations with in-degree ≥ x. Dashed = textual tier.</div>
     <div class="legend" id="ccdfLegend"></div>
     <div class="chartwrap" id="ccdfChart"></div>
-    <div class="sub" style="margin-top:10px">Per-repo aggregates (share of declarations reused ≥ 2, median in-degree), sorted:</div>
+    <div class="sub" style="margin-top:10px">Per-repo aggregate: average internal in-degree (distinct users per declaration), sorted:</div>
     <div class="chips" id="ccdfAgg"></div>
   </div>
   <div class="card">
@@ -472,6 +472,12 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
     <div class="legend" id="pcaLegend"></div>
     <div class="chartwrap" id="pcaChart"></div>
     <div class="note" id="pcaLoadings" style="margin-top:8px"></div>
+  </div>
+  <div class="card">
+    <h4>The same space in three dimensions</h4>
+    <div class="sub" id="pca3Sub"></div>
+    <div class="chartwrap" id="pca3Chart" style="cursor:grab; touch-action:none"></div>
+    <div class="note" id="pca3Loadings" style="margin-top:8px"></div>
   </div>
   <div class="card">
     <h4>Composite quality score</h4>
@@ -794,10 +800,10 @@ document.getElementById('ccdfLegend').innerHTML = legendHTML(GROUPS) +
 (function() {
   const el = document.getElementById('ccdfAgg');
   if (!el) return;
-  const rows = [...charted].sort((a,b) => b.m1.ge2 - a.m1.ge2);
+  const rows = [...charted].sort((a,b) => b.m1.mean - a.m1.mean);
   el.innerHTML = rows.map(r =>
     `<span class="chip" title="${esc(r.label)}"><span class="sw" style="background:${GCOL(r.group)};display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px"></span>` +
-    `${esc(r.label)} <b>${fmtPct(r.m1.ge2)}</b> ≥2 · med ${r.m1.median}</span>`).join('');
+    `${esc(r.label)} avg <b>${r.m1.mean.toFixed(1)}</b></span>`).join('');
 })();
 
 // 04 — reused >= 2
@@ -953,6 +959,71 @@ sizePanel('fileLenChart', r => r.m9.file_stats);
   });
 })();
 
+// 3D PCA (drag to rotate)
+(function() {
+  const P = DATA.pca;
+  if (!P || P.points[0].z === undefined) return;
+  document.getElementById('pca3Sub').textContent =
+    `PC1–PC3 (${(P.expl[0]*100).toFixed(0)}% + ${(P.expl[1]*100).toFixed(0)}% + ${(P.expl[2]*100).toFixed(0)}% of variance). Drag to rotate; nearer points draw larger.`;
+  document.getElementById('pca3Loadings').innerHTML =
+    '<b>PC3 strongest loadings:</b> ' + P.load3.map(l => `${esc(l.m)} (${l.w > 0 ? '+' : ''}${l.w})`).join(' · ');
+  const el = document.getElementById('pca3Chart');
+  const W = Math.max(640, Math.min(el.clientWidth || 900, 980)), H = 500;
+  const svg = svgEl('svg', { width: W, height: H, viewBox: `0 0 ${W} ${H}` }, el);
+  const cx = W/2, cy = H/2;
+  const spanv = Math.max(...P.points.map(p => Math.max(Math.abs(p.x), Math.abs(p.y), Math.abs(p.z))));
+  const scale = (Math.min(W, H)/2 - 60) / spanv;
+  let yaw = 0.6, pitch = 0.35;
+  const AXES = [[1,0,0,'PC1'],[0,1,0,'PC2'],[0,0,1,'PC3']];
+  function draw() {
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    const cyaw = Math.cos(yaw), syaw = Math.sin(yaw), cp = Math.cos(pitch), sp = Math.sin(pitch);
+    function proj(x, y, z) {
+      const x1 = x*cyaw + z*syaw, z1 = -x*syaw + z*cyaw;
+      const y2 = y*cp - z1*sp, z2 = y*sp + z1*cp;
+      return [cx + x1*scale, cy - y2*scale, z2];
+    }
+    for (const [ax, ay, az, name] of AXES) {
+      const L = spanv * 1.05;
+      const [x1, y1] = proj(-ax*L, -ay*L, -az*L);
+      const [x2, y2, z2] = proj(ax*L, ay*L, az*L);
+      svgEl('line', { x1, y1, x2, y2, stroke: 'var(--axis)', 'stroke-width': 1 }, svg);
+      const t = svgEl('text', { x: x2, y: y2 - 4, 'font-size': 10.5, fill: 'var(--muted)', 'text-anchor': 'middle' }, svg);
+      t.textContent = name;
+    }
+    const pts = P.points.map(p => {
+      const [px, py, pz] = proj(p.x, p.y, p.z);
+      return { p, px, py, pz };
+    }).sort((a, b) => b.pz - a.pz);  // far first
+    for (const { p, px, py, pz } of pts) {
+      const depth = (pz / (spanv*1.4) + 1) / 2;  // 0 far .. 1 near
+      const r = 3.5 + depth * 5;
+      const c = svgEl('circle', { cx: px, cy: py, r, fill: GCOL(p.group),
+        opacity: 0.45 + 0.55*depth, stroke: 'var(--surface)', 'stroke-width': 1.5 }, svg);
+      const mark = p.anchor === 'high' ? '▲' : p.anchor === 'low' ? '▼' : null;
+      if (mark || depth > 0.55) {
+        const t = svgEl('text', { x: px + r + 3, y: py + 3.5, 'font-size': 10,
+          fill: 'var(--ink2)', opacity: 0.4 + 0.6*depth }, svg);
+        t.textContent = (mark ? mark + ' ' : '') + p.label;
+      }
+      c.addEventListener('mousemove', ev => showTip(ev,
+        `<b>${esc(p.label)}</b> <span class="tiertag">(${p.tier})</span><br>PC1 ${p.x} · PC2 ${p.y} · PC3 ${p.z}`));
+      c.addEventListener('mouseleave', hideTip);
+    }
+  }
+  draw();
+  let dragging = false, lx = 0, ly = 0;
+  el.addEventListener('pointerdown', ev => { dragging = true; lx = ev.clientX; ly = ev.clientY; el.style.cursor = 'grabbing'; el.setPointerCapture(ev.pointerId); });
+  el.addEventListener('pointermove', ev => {
+    if (!dragging) return;
+    yaw += (ev.clientX - lx) * 0.008;
+    pitch = Math.max(-1.4, Math.min(1.4, pitch + (ev.clientY - ly) * 0.008));
+    lx = ev.clientX; ly = ev.clientY;
+    draw();
+  });
+  el.addEventListener('pointerup', ev => { dragging = false; el.style.cursor = 'grab'; });
+})();
+
 // 10 — composite quality score
 document.getElementById('compLegend').innerHTML = legendHTML(GROUPS.slice(0,4));
 dotRank('compChart', DATA.composite.map(c => ({
@@ -1040,6 +1111,7 @@ dotRank('amortChart', charted.filter(r => r.m14 && r.m14.mean_log10_cost != null
     docChart: 'A declaration "has a docstring" if a /-- … -/ block ends within 4 lines above its keyword (attributes may sit between). Coverage is over public (non-private, named) defs/structures/classes/inductives.',
     elabChart: '12 random built files per repo (≥30 LOC) re-elaborated with lake env lean, wall-clock timed; a stub containing only the file\u2019s import header is timed once per distinct import set and subtracted. Value = median over files of elaboration-seconds per 1,000 source lines.',
     amortChart: 'cost(v) = 1 + Σ cost(u) over v\u2019s internal dependencies, with repetition — the size of the fully-inlined dependency tree. Computed in log-space (log-sum-exp) over the acyclic graph in topological order; shown as log₁₀. Mean over declarations; tick = p90.',
+    pca3Chart: 'Same standardized metric matrix as the 2D projection, keeping the third principal component. Orthographic projection with a yaw/pitch rotation controlled by dragging; point size and opacity encode depth. Labels show for anchors and near points; hover any point for exact coordinates.',
     pcaChart: 'Take the full metric battery from the AUC table (one column per metric), impute missing values with the column median, standardize each column to zero mean and unit variance, and project onto the top two right-singular vectors (SVD). Axes are oriented so Mathlib sits at positive PC1 and the high anchors average positive PC2. Distances are in standardized metric space — repos that are close score similarly across the whole battery.',
     stmtLenChart: 'Line count of each theorem\u2019s signature text (binders + statement, before := ). Median and p90 over theorems.',
     proofLenChart: 'Line count of each theorem\u2019s proof text; empty proofs excluded. Median and p90.',

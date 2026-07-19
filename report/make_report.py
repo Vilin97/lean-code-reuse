@@ -274,8 +274,8 @@ def main():
         sd = col.std()
         M[:, j] = (col - col.mean()) / (sd if sd > 1e-9 else 1.0)
     U, S, Vt = _np.linalg.svd(M, full_matrices=False)
-    pcs = U[:, :2] * S[:2]
-    expl = (S**2 / (S**2).sum())[:2]
+    pcs = U[:, :3] * S[:3]
+    expl = (S**2 / (S**2).sum())[:3]
     # orient PC1 so Mathlib is positive; PC2 so high anchors avg positive
     mi = next(i for i, r in enumerate(repos) if r["key"] == "mathlib4")
     if pcs[mi, 0] < 0:
@@ -287,15 +287,18 @@ def main():
         Vt[1] *= -1
     load1 = sorted(zip([l for l, _ in pca_metrics], Vt[0]), key=lambda t: -abs(t[1]))[:5]
     load2 = sorted(zip([l for l, _ in pca_metrics], Vt[1]), key=lambda t: -abs(t[1]))[:5]
+    load3 = sorted(zip([l for l, _ in pca_metrics], Vt[2]), key=lambda t: -abs(t[1]))[:5]
     pca = {
         "points": [
             {"label": r["label"], "group": r["group"], "anchor": r["anchor"],
-             "tier": r["tier"], "x": round(float(pcs[i, 0]), 3), "y": round(float(pcs[i, 1]), 3)}
+             "tier": r["tier"], "x": round(float(pcs[i, 0]), 3), "y": round(float(pcs[i, 1]), 3),
+             "z": round(float(pcs[i, 2]), 3)}
             for i, r in enumerate(repos)
         ],
         "expl": [round(float(e), 3) for e in expl],
         "load1": [{"m": l, "w": round(float(w), 2)} for l, w in load1],
         "load2": [{"m": l, "w": round(float(w), 2)} for l, w in load2],
+        "load3": [{"m": l, "w": round(float(w), 2)} for l, w in load3],
     }
 
     data = {
