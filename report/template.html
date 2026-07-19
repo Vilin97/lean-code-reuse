@@ -168,10 +168,11 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
   <p class="sub">
     As AI-generated Lean corpora proliferate, we need statistical measures of quality that
     don't require reading the code — and that measure the artifact, not its author. This
-    study implements thirteen metric families (reuse structure, hygiene, documentation,
-    elaboration cost), extracts exact declaration-level dependency graphs from elaborated
-    environments, calibrates every metric against declared high/low quality anchors, and
-    asks which ones actually discriminate.
+    study implements fourteen metric families (reuse structure, hygiene, documentation,
+    elaboration cost, and an amortization exponent that measures reuse as compression),
+    extracts exact declaration-level dependency graphs from elaborated environments,
+    calibrates every metric against declared high/low quality anchors, and asks which ones
+    actually discriminate.
   </p>
   <div class="tiles" id="heroTiles"></div>
 </header>
@@ -196,14 +197,19 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
   <h2>Verdict up front</h2>
   <div class="prose">
     <p>
-      Reuse separates strong libraries from weak corpora — but only when you ask
-      <strong><em>where</em> the reuse lives, not how much of it there is</strong>. Raw
-      counts are a coin flip; what discriminates, against declared quality anchors, is
-      <strong>organization</strong> (cross-directory interweaving), <strong>process
-      discipline</strong> (docstrings, granular imports, sorry hygiene) and
-      <strong>economy</strong> (duplication, elaboration cost per line). The ranking these
-      produce is visibly not an authorship ranking: mixed and curated-AI projects land
-      inside the human band; unreviewed corpora sink regardless of provenance.
+      Reuse <em>is</em> the signature — once it is measured as <strong>compression, not
+      citation counts</strong>. The amortization exponent (§8) asks how many orders of
+      magnitude of re-proved work sharing eliminates: Mathlib's average declaration sits on
+      a 10<sup>7.5</sup>-node inlined dependency tree, unreviewed dumps barely clear
+      10<sup>1</sup>, and unlike raw in-degree the exponent cannot be inflated by splitting
+      proofs into chains. Around it, the discriminating family is <strong>organization</strong>
+      (cross-directory interweaving), <strong>process discipline</strong> (docstrings,
+      granular imports, sorry hygiene) and <strong>economy</strong> (duplication). Raw reuse
+      counts stay a coin flip, and the heartbeats hypothesis inverts — elaboration cost
+      tracks mathematical effort, not quality. The ranking these checks produce is not an
+      authorship ranking: TauCeti and LeanPool land inside the human band, while the
+      Gauss-completed Sphere Packing — added as an out-of-sample test after the community's
+      cool reception — scores next to StrongPNT near the bottom of the project band.
     </p>
   </div>
   <div id="verdictCards" class="mgrid"></div>
@@ -214,16 +220,17 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
   <h2>The corpus</h2>
   <div class="prose">
     <p>
-      Nineteen <b>formalization projects</b> — compiler internals, teaching games and
+      Twenty <b>formalization projects</b> — compiler internals, teaching games and
       statements-only conjecture lists are excluded by design (Lean core, Batteries and
       Aesop remain in the pipeline only as name-resolution upstreams). The corpus spans
       Mathlib and its reviewed satellites (FLT, PFR, AddCombi, Carleson, PNT+, Tao's
       <i>Analysis I</i>, CSLib, SciLean, Physlib, Equational Theories), mixed-authorship
-      pools (LeanPool — a large portion of which is human-written), curated AI projects
-      (TauCeti, Math&nbsp;Inc's StrongPNT), and low-curation AI corpora (Meta ATLAS,
-      Seed-Prover, DeepMind superhuman, OpenAI's Erdős-90, Clawristotle). Provenance is
-      shown as color, but it is <em>not</em> the analysis axis: the question is what
-      separates low-quality from high-quality corpora, whoever wrote them.
+      projects (LeanPool — 65 human / 38 AI / 20 mixed projects by the maintainer's count —
+      and the Gauss-completed Sphere Packing formalization), curated AI projects (TauCeti,
+      Math&nbsp;Inc's StrongPNT), and low-curation AI corpora (Meta ATLAS, Seed-Prover,
+      DeepMind superhuman, OpenAI's Erdős-90, Clawristotle). Provenance is shown as color,
+      but it is <em>not</em> the analysis axis: the question is what separates low-quality
+      from high-quality corpora, whoever wrote them.
     </p>
     <p>
       Where the repo could be built, metrics come from the <b>exact tier</b>: a Lean
@@ -241,7 +248,7 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
 
 <section id="metrics">
   <div class="secno">03</div>
-  <h2>Nine ways to measure reuse</h2>
+  <h2>Fourteen ways to measure quality</h2>
   <div class="mgrid" id="metricCards"></div>
 </section>
 
@@ -445,7 +452,7 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
 </section>
 
 <section id="taxonomy">
-  <div class="secno">—</div>
+  <div class="secno">12</div>
   <h2>What expert review sees that these metrics don't</h2>
   <div class="prose">
     <p>
@@ -474,7 +481,7 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
 </section>
 
 <section id="validity">
-  <div class="secno">12</div>
+  <div class="secno">13</div>
   <h2>Validity, and what this can't see</h2>
   <div class="prose" id="validityProse"></div>
   <div class="tablewrap"><table class="data" id="valTable"></table></div>
@@ -582,6 +589,11 @@ document.getElementById('groupLegend').innerHTML = legendHTML(GROUPS);
     ['M7','Duplication','Exact-duplicate normalized bodies and theorem statements — the anti-reuse.'],
     ['M8','Proof economy & hygiene','Proof length, distinct lemmas per proof, sorry rate.'],
     ['M9','Import granularity','File fan-in and wholesale <code>import Mathlib</code> vs granular imports.'],
+    ['M10','Documentation coverage','Docstrings on public definitions, comment density — the process signal Mathlib enforces by linter.'],
+    ['M11','Proof complexity','Branching tactic tokens per proof — McCabe cyclomatic complexity, adapted.'],
+    ['M12','Trust base','Declared axioms and <code>native_decide</code> reliance beyond the standard axioms.'],
+    ['M13','Elaboration cost','Seconds per kLOC to re-elaborate sampled files, import baseline subtracted — the heartbeats proxy.'],
+    ['M14','Amortization exponent','log₁₀ of the fully-inlined dependency-tree size: reuse measured as compression.'],
   ];
   document.getElementById('metricCards').innerHTML = M.map(([id,t,d]) =>
     `<div class="mcard"><span class="id">${id}</span><h4>${t}</h4><p>${d}</p></div>`).join('');

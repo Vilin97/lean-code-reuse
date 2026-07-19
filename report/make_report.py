@@ -270,27 +270,30 @@ def main():
 
 
 VERDICTS = [
+    {"good": True, "title": "Amortization exponent (M14)",
+     "text": "Reuse measured as compression: log₁₀ of the fully-inlined dependency tree. Mathlib averages 10^7.5 (deepest 10^41); unreviewed dumps sit near 10^0.5–0.8. AUC 0.87 where raw reuse counts were a coin flip — and chain-splitting cannot inflate it, since a chain of length k only reaches cost k."},
     {"good": True, "title": "Cross-directory reuse (M3)",
-     "text": "The strongest structural separator against the low anchors: high-quality libraries interweave their directories; dumps and archipelagos don't. LeanPool's 93 directories with 0.1% cross-dir reuse reflect its pool-of-projects design, not its authorship."},
+     "text": "The strongest structural separator (AUC 1.0): Mathlib routes 62% of reuse edges across top-level directories; every AI-heavy corpus — curated included — sits below 2%. LeanPool's 93 directories with 0.1% cross-dir reuse reflect its pool-of-projects design, not its authorship."},
     {"good": True, "title": "Docstring coverage (M10)",
-     "text": "A process signal: Mathlib's linter enforces docstrings on definitions and the habit propagates through reviewed projects; unreviewed corpora rarely fake it. Mirrors the SE finding that process metrics out-predict product metrics."},
-    {"good": False, "title": "Elaboration cost per LOC (M13) — refuted",
-     "text": "The heartbeats hypothesis inverts: sorried or shallow content elaborates cheaply (ATLAS: 12 s/kLOC), while TauCeti's 73 s/kLOC reflects genuinely hard mathematics being worked. Cost per line measures mathematical effort, not quality — high cost with low reuse is the actual smell."},
+     "text": "A process signal: Mathlib's linter enforces docstrings on definitions (99.4% coverage) and the habit propagates through reviewed projects; both Gauss-completed corpora sit near 20%. Mirrors the SE finding that process metrics out-predict product metrics."},
     {"good": True, "title": "Hygiene profile (M7/M8/M9)",
-     "text": "Sorries, duplicate bodies, wholesale imports: each catches a different failure mode; jointly with locality they separate the anchors completely. Cheap to compute, hard to fail accidentally."},
+     "text": "Sorries, duplicate bodies, wholesale imports: each catches a different failure mode — ATLAS's 2,900 sorries, Seed-Prover's 60% duplication, superhuman's blanket `import Mathlib`. Jointly with locality they separate the anchors completely."},
     {"good": False, "title": "Raw reuse counts (M1)",
-     "text": "Median in-degree is a coin flip; never-reused inverts on bespoke proof towers (superhuman reuses 97% of its lemmas — exactly once each). Volume of reuse cannot tell a cathedral from scaffolding."},
+     "text": "Median in-degree: AUC ~0.5. Never-reused even inverts — superhuman's bespoke proof towers reuse 97% of their lemmas, exactly once each. Citation volume cannot tell a cathedral from scaffolding; that is what M14 fixes."},
+    {"good": False, "title": "Elaboration cost per LOC (M13) — refuted",
+     "text": "The heartbeats hypothesis inverts (AUC 0.2): sorried or shallow content elaborates cheaply (ATLAS: 12 s/kLOC) while TauCeti's 73 s/kLOC reflects genuinely hard mathematics. Cost per line measures effort, not quality — expensive-per-line *and* nothing-reused is the actual smell."},
     {"good": False, "title": "Depth, leverage, statement share",
-     "text": "Depth is inheritable via vendored code; Mathlib leverage measures participation, which every serious pipeline has; statement share inverts on hypothesis-heavy restated problem statements."},
+     "text": "Depth is inheritable via vendored code (LeanPool's 163-deep chain runs through a vendored logic library); Mathlib leverage measures participation, which every serious pipeline has; statement share inverts on hypothesis-heavy restated problem statements."},
 ]
 
 FOOTER = (
-    "Generated 2026-07-18 by the <span class=\"mono\">lean_reuse</span> toolkit — "
-    "textual tier: scoping parser; exact tier: Lean metaprogram over elaborated "
-    "environments (getUsedConstants on types and values, generated auxiliaries "
-    "contracted). Elaboration cost: timed re-elaboration of sampled files per built "
-    "repo, import baseline subtracted. Corpus: formalization projects only, pinned "
-    "2026-07-18. Code: lean-code-reuse repo, one module per metric."
+    "Generated 2026-07-19 by the <span class=\"mono\">lean_reuse</span> toolkit — "
+    "20 formalization projects, 14 metric families. Textual tier: scoping parser; exact "
+    "tier: Lean metaprogram over elaborated environments (getUsedConstants on types and "
+    "values, generated auxiliaries contracted). Elaboration cost: timed re-elaboration of "
+    "sampled files, import baseline subtracted. Amortization: log-space inlined-cost DP "
+    "over the declaration DAG. Repos pinned 2026-07-18/19. Code: lean-code-reuse repo, "
+    "one module per metric."
 )
 
 
@@ -317,7 +320,8 @@ others. But raw counts mislead in both directions: <b>superhuman</b> (58 bespoke
 towers) has one of the lowest never-reused rates in the corpus ({pct(sh['m1']['never'])})
 because every lemma feeds the next step exactly once, and StrongPNT's curve tracks the human
 research projects closely. Counting reuse is not enough; the sections below ask
-<em>where</em> it lives and <em>what it costs</em>.</p>""",
+<em>where</em> it lives (§5), what it costs (§9), and — the formulation that ends up
+mattering — how it <em>compounds</em> (§8).</p>""",
         "whereProse": f"""
 <p>File-system locality separates the anchors cleanly: {pct(ml['m3']['outside'])} of Mathlib
 declarations are used outside their defining file, research formalizations cluster at
@@ -351,35 +355,35 @@ readings need context before judging: Tao's <i>Analysis</i> shows
 the reader, and SciLean's {pct(byk['scilean']['m8']['sorry'])} reflects its explicit
 <code>sorry_proof</code> convention for numerical facts. The curated AI projects are clean
 on both counts (TauCeti: {pct(tc['m7']['dup'])} duplicates, zero sorries; StrongPNT:
-{pct(spnt['m7']['dup'])} duplicates, {pct(spnt['m8']['sorry'])} sorries).</p>""",
+{pct(spnt['m7']['dup'])} duplicates, {pct(spnt['m8']['sorry'])} sorries), while the
+Gauss-completed Sphere Packing ships {pct(byk['spherepacking']['m8']['sorry'])} sorried
+theorems and {pct(byk['spherepacking']['m7']['dup'])} duplicate bodies despite its
+sorry-free headline milestone — the headline was about the blueprint's main theorem, not
+the whole tree.</p>""",
         "discussProse": """
 <p>Calibrated against the declared anchors, the discriminating metrics form a coherent
-family: <b>organization</b> (cross-directory reuse, outside-file reuse), <b>process
-discipline</b> (docstring coverage, granular imports, sorry hygiene), and <b>economy</b>
-(duplication, elaboration cost per line). The metrics that fail — raw reuse counts, depth,
-Mathlib leverage, statement share — are <em>volume</em> metrics that a large or
-machine-generated corpus satisfies incidentally. This mirrors three decades of software
-measurement: volume-derived indices (Halstead, McCabe aggregates, the Maintainability
-Index) predict quality poorly and average away power-law tails, while process signals and
-simple hygiene risk-profiles are the robust predictors. The check-profile here is a
-SIG-style risk profile adapted to Lean — and the amortization exponent (§8) is the
-reuse-native addition: reuse measured as compression, which unlike citation counts cannot
-be gamed by chain-splitting.</p>
-<p>Two honest surprises. First, <b>the heartbeats hypothesis fails</b>: elaboration cost
-per line does not separate the anchors (AUC 0.2, inverted) — sorried or shallow corpora are
-<em>cheap</em> to elaborate, and TauCeti's high cost reflects hard mathematics, not poor
-quality. Cost is a measure of mathematical effort; only the combination "expensive per line
-<em>and</em> nothing reused" is a smell. Second, <b>Mathlib-leverage discriminates against
-the anchors</b> (AUC 1.0) after failing the provenance split — low-quality corpora cite
-Mathlib shallowly per declaration — though part of that gap is the textual tier
-undercounting references for the unbuildable dumps.</p>
-<p>The composite percentile score below makes the quality ordering explicit — and it is
-visibly <em>not</em> a provenance ordering: TauCeti ranks third, LeanPool (mixed authorship)
-sits inside the human band, and the bottom is held by unreviewed corpora regardless of who —
-or what — wrote them. Two low positions are genre artifacts, not quality verdicts: Tao's
-<i>Analysis</i> (exercise sorries by design) and SciLean (<code>sorry_proof</code>
-convention) are penalized by checks that read their conventions literally — a reminder that
-no composite substitutes for knowing what a project is.</p>""",
+family: <b>compounding reuse</b> (the amortization exponent), <b>organization</b>
+(cross-directory and outside-file reuse), <b>process discipline</b> (docstring coverage,
+granular imports, sorry hygiene) and <b>economy</b> (duplication). The failures are all
+<em>volume</em> metrics — raw citation counts, depth, Mathlib leverage, statement share,
+elaboration cost — that a large or machine-generated corpus satisfies incidentally. This
+mirrors three decades of software measurement: volume-derived indices (Halstead, McCabe
+aggregates, the Maintainability Index) predict quality poorly, while process signals and
+threshold risk-profiles hold up. The check-profile here is a SIG-style risk profile
+adapted to Lean.</p>
+<p><b>Sphere Packing is the out-of-sample test.</b> Added after the community's cool
+reception of its Gauss-completed expansion (20k → 80k lines in five days), with the
+prediction that the metrics should rank it low — they do: composite 41/100, fourteenth of
+twenty, directly beside StrongPNT, the other Gauss artifact, with the same signature (9%
+cross-directory reuse, 17% docstring coverage, 4.7% sorries). The metrics reproduced the
+community's judgment without being told it.</p>
+<p>The composite score below is visibly <em>not</em> a provenance ordering: TauCeti and
+LeanPool (65 human / 38 AI / 20 mixed projects) sit inside the human band, while the
+bottom is held by unreviewed or low-curation corpora regardless of who — or what — wrote
+them. Two low positions are genre artifacts, not quality verdicts: Tao's <i>Analysis</i>
+(exercise sorries by design) and SciLean (<code>sorry_proof</code> convention) are
+penalized by checks that read their conventions literally — no composite substitutes for
+knowing what a project is.</p>""",
         "amortProse": f"""
 <p>This is the graph-theoretic formulation under which reuse <em>does</em> discriminate —
 massively. Mathlib's average declaration would cost 10<sup>{ml['m14'].get('mean_log10_cost','?')}</sup>
