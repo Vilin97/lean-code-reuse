@@ -1,0 +1,721 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Measuring Code Reuse in Lean Libraries</title>
+<style>
+:root {
+  color-scheme: light;
+  --plane: #f9f9f7; --surface: #fcfcfb;
+  --ink: #0b0b0b; --ink2: #52514e; --muted: #898781;
+  --grid: #e1e0d9; --axis: #c3c2b7; --hairline: rgba(11,11,11,0.10);
+  --accent: #2a78d6; --critical: #d03b3b; --good: #006300;
+  --g0: #2a78d6; --g1: #008300; --g2: #e87ba4; --g3: #eda100; --g4: #1baf7a;
+  --serif: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
+  --sans: system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    color-scheme: dark;
+    --plane: #0d0d0d; --surface: #1a1a19;
+    --ink: #ffffff; --ink2: #c3c2b7; --muted: #898781;
+    --grid: #2c2c2a; --axis: #383835; --hairline: rgba(255,255,255,0.10);
+    --accent: #3987e5; --critical: #e66767; --good: #0ca30c;
+    --g0: #3987e5; --g1: #008300; --g2: #d55181; --g3: #c98500; --g4: #199e70;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --plane: #0d0d0d; --surface: #1a1a19;
+  --ink: #ffffff; --ink2: #c3c2b7; --muted: #898781;
+  --grid: #2c2c2a; --axis: #383835; --hairline: rgba(255,255,255,0.10);
+  --accent: #3987e5; --critical: #e66767; --good: #0ca30c;
+  --g0: #3987e5; --g1: #008300; --g2: #d55181; --g3: #c98500; --g4: #199e70;
+}
+:root[data-theme="light"] {
+  color-scheme: light;
+  --plane: #f9f9f7; --surface: #fcfcfb;
+  --ink: #0b0b0b; --ink2: #52514e; --muted: #898781;
+  --grid: #e1e0d9; --axis: #c3c2b7; --hairline: rgba(11,11,11,0.10);
+  --accent: #2a78d6; --critical: #d03b3b; --good: #006300;
+  --g0: #2a78d6; --g1: #008300; --g2: #e87ba4; --g3: #eda100; --g4: #1baf7a;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--plane); color: var(--ink);
+  font-family: var(--sans); font-size: 15.5px; line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px 96px; }
+.prose { max-width: 46rem; }
+.prose p { color: var(--ink2); }
+.prose strong { color: var(--ink); }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+code, .mono { font-family: var(--mono); font-size: 0.86em; }
+
+header.hero { padding: 72px 0 40px; border-bottom: 1px solid var(--hairline); }
+.eyebrow {
+  font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--accent); margin-bottom: 14px;
+}
+h1 {
+  font-family: var(--serif); font-weight: 500; font-size: clamp(30px, 4.4vw, 46px);
+  line-height: 1.12; margin: 0 0 14px; text-wrap: balance; letter-spacing: -0.01em;
+}
+.hero .sub { font-size: 17px; color: var(--ink2); max-width: 44rem; margin: 0 0 30px; }
+.tiles { display: flex; flex-wrap: wrap; gap: 12px; }
+.tile {
+  background: var(--surface); border: 1px solid var(--hairline); border-radius: 6px;
+  padding: 12px 18px 10px; min-width: 132px;
+}
+.tile .v { font-size: 26px; font-weight: 600; letter-spacing: -0.01em; }
+.tile .k { font-size: 11.5px; color: var(--muted); font-family: var(--mono);
+  letter-spacing: 0.08em; text-transform: uppercase; margin-top: 2px; }
+
+nav.toc {
+  position: sticky; top: 0; z-index: 30; background: var(--plane);
+  border-bottom: 1px solid var(--hairline); margin: 0 -24px; padding: 0 24px;
+  display: flex; gap: 20px; overflow-x: auto; font-size: 13px;
+}
+nav.toc a { color: var(--ink2); padding: 10px 0; white-space: nowrap; border-bottom: 2px solid transparent; }
+nav.toc a:hover { color: var(--ink); text-decoration: none; }
+
+section { padding-top: 56px; }
+.secno { font-family: var(--mono); color: var(--accent); font-size: 13px; letter-spacing: 0.1em; }
+h2 {
+  font-family: var(--serif); font-weight: 500; font-size: 29px; line-height: 1.15;
+  margin: 6px 0 16px; text-wrap: balance;
+}
+h3 { font-size: 17px; font-weight: 600; margin: 34px 0 8px; }
+.note { font-size: 13px; color: var(--muted); }
+
+.card {
+  background: var(--surface); border: 1px solid var(--hairline);
+  border-radius: 8px; padding: 20px 22px; margin: 22px 0;
+}
+.card h4 { margin: 0 0 4px; font-size: 15px; font-weight: 600; }
+.card .sub { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
+.chartwrap { overflow-x: auto; }
+
+.legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 12.5px; color: var(--ink2); margin: 4px 0 10px; }
+.legend .sw { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+
+table.data {
+  border-collapse: collapse; width: 100%; font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+table.data th {
+  text-align: right; font-family: var(--mono); font-weight: 500; font-size: 10.5px;
+  text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted);
+  padding: 6px 8px; border-bottom: 1px solid var(--axis); cursor: pointer; white-space: nowrap;
+}
+table.data th:first-child, table.data td:first-child { text-align: left; }
+table.data td { padding: 5px 8px; border-bottom: 1px solid var(--grid); text-align: right; white-space: nowrap; }
+table.data tr:hover td { background: color-mix(in srgb, var(--accent) 6%, transparent); }
+.tablewrap { overflow-x: auto; margin: 18px 0; }
+.badge {
+  display: inline-block; padding: 1px 7px; border-radius: 999px; font-size: 10.5px;
+  font-family: var(--mono); letter-spacing: 0.04em; border: 1px solid var(--hairline);
+  color: var(--ink2); vertical-align: 1px;
+}
+.dotb { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 7px; }
+.tiertag { font-family: var(--mono); font-size: 10px; color: var(--muted); }
+
+.mgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; margin: 22px 0; }
+.mcard { background: var(--surface); border: 1px solid var(--hairline); border-radius: 8px; padding: 16px 18px; }
+.mcard .id { font-family: var(--mono); font-size: 11px; color: var(--accent); }
+.mcard h4 { margin: 4px 0 6px; font-size: 15px; }
+.mcard p { margin: 0; font-size: 13px; color: var(--ink2); }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0 2px; }
+.chip {
+  font-family: var(--mono); font-size: 11.5px; padding: 2px 8px; border-radius: 4px;
+  background: color-mix(in srgb, var(--accent) 9%, transparent); color: var(--ink2);
+}
+.chip b { color: var(--ink); font-weight: 600; }
+
+#tooltip {
+  position: fixed; pointer-events: none; z-index: 99; display: none;
+  background: var(--ink); color: var(--plane); font-size: 12px; line-height: 1.4;
+  padding: 6px 9px; border-radius: 5px; max-width: 300px;
+}
+svg text { font-family: var(--sans); }
+svg .mono { font-family: var(--mono); }
+
+.verdict-good { color: var(--good); font-weight: 600; }
+.verdict-bad { color: var(--critical); font-weight: 600; }
+.callout { border-left: 3px solid var(--accent); padding: 2px 0 2px 16px; margin: 18px 0; }
+.callout p { margin: 6px 0; }
+footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairline);
+  font-size: 12.5px; color: var(--muted); }
+@media (prefers-reduced-motion: no-preference) {
+  .tile, .card, .mcard { transition: border-color 0.15s ease; }
+}
+</style>
+
+<div id="tooltip"></div>
+<div class="wrap">
+
+<header class="hero">
+  <div class="eyebrow">An empirical study · 20 repositories · two measurement tiers</div>
+  <h1>Code reuse as a macroscopic signature of Lean library quality</h1>
+  <p class="sub">
+    As AI-generated Lean corpora proliferate, we need statistical measures of library
+    quality that don't require reading the code. This study implements nine families of
+    reuse metrics, extracts exact declaration-level dependency graphs from the elaborated
+    environments of built libraries, and asks which metrics actually separate mature,
+    human-curated libraries from AI-generated ones.
+  </p>
+  <div class="tiles" id="heroTiles"></div>
+</header>
+
+<nav class="toc">
+  <a href="#verdict">Verdict</a>
+  <a href="#corpus">Corpus</a>
+  <a href="#metrics">Metrics</a>
+  <a href="#reuse">Reuse degree</a>
+  <a href="#where">Where reuse lives</a>
+  <a href="#mathlib">Standing on Mathlib</a>
+  <a href="#shape">Graph shape</a>
+  <a href="#hygiene">Hygiene</a>
+  <a href="#discriminate">What discriminates</a>
+  <a href="#validity">Validity</a>
+</nav>
+
+<section id="verdict">
+  <div class="secno">01</div>
+  <h2>Verdict up front</h2>
+  <div class="prose">
+    <p>
+      The headline hypothesis survives in refined form: <strong>reuse separates libraries
+      from AI-generated corpora — but only when you ask <em>where</em> the reuse lives, not
+      how much of it there is.</strong> Raw reuse counts are a coin flip (a bespoke proof
+      split into single-use lemmas chains as densely as a library), and statement-level
+      shares actually invert. What no AI corpus in this study reproduces — curated or not —
+      is Mathlib-style <strong>cross-directory interweaving</strong>; what the uncurated ones
+      additionally fail is a simple hygiene profile (wholesale imports, sorries, duplicates,
+      one-file silos). The curated AI libraries (TauCeti, LeanPool) otherwise land inside the
+      human range, exactly matching their reputation as the high-quality end of AI
+      formalization.
+    </p>
+  </div>
+  <div id="verdictCards" class="mgrid"></div>
+</section>
+
+<section id="corpus">
+  <div class="secno">02</div>
+  <h2>The corpus</h2>
+  <div class="prose">
+    <p>
+      Twenty repositories spanning a provenance gradient: flagship human libraries
+      (Mathlib and the toolchain core), curated domain libraries (CSLib, Physlib, SciLean),
+      research formalizations (FLT, PFR, Tao's <i>Analysis&nbsp;I</i>, Equational Theories),
+      controls (Formal Conjectures — statements only by design; NNG4 — a teaching game),
+      <b>curated AI libraries</b> (TauCeti, LeanPool — AI-implemented but reviewed, and
+      LeanPool absorbs several human projects), and <b>uncurated AI corpora</b>
+      (Meta ATLAS, ByteDance Seed-Prover, DeepMind superhuman, OpenAI's Erdős-90
+      counterexample formalization, Clawristotle). The interesting question is not just
+      human-vs-AI but whether the metrics track the <em>curation gradient inside</em> the
+      AI cohort.
+    </p>
+    <p>
+      Where the repo could be built, metrics come from the <b>exact tier</b>: a Lean
+      metaprogram walks the elaborated environment and reads <code>getUsedConstants</code>
+      off every declaration's type and value — capturing instance uses, notation-mediated
+      references, and dot-notation that textual analysis cannot see. Repos that ship no
+      lakefile (the proof dumps) use the <b>textual tier</b>, an approximate name-resolution
+      parser validated against the exact tier in §9.
+    </p>
+  </div>
+  <div class="legend" id="groupLegend"></div>
+  <div class="tablewrap"><table class="data" id="corpusTable"></table></div>
+  <p class="note">Click a column header to sort. kLOC = non-blank, non-comment source lines (thousands). Decls = source-level declarations after contracting compiler-generated auxiliaries. NNG4 is listed for completeness but excluded from charts: its game-DSL macros (<code>Statement</code>/<code>World</code>) defeat both tiers.</p>
+</section>
+
+<section id="metrics">
+  <div class="secno">03</div>
+  <h2>Nine ways to measure reuse</h2>
+  <div class="mgrid" id="metricCards"></div>
+</section>
+
+<section id="reuse">
+  <div class="secno">04</div>
+  <h2>Reuse degree: necessary, not sufficient</h2>
+  <div class="prose">
+    <p>
+      The base metric: for each reusable declaration, how many <em>distinct</em> other
+      declarations in the same repo reference it. The tail tells the real story — every
+      corpus has hubs, but only libraries have a <em>thick middle</em>: thousands of
+      declarations each reused a handful of times across many files.
+    </p>
+  </div>
+  <div class="card">
+    <h4>CCDF of internal reuse degree (log–log)</h4>
+    <div class="sub">Fraction of declarations with in-degree ≥ x. Exact tier where available.</div>
+    <div class="legend" id="ccdfLegend"></div>
+    <div class="chartwrap" id="ccdfChart"></div>
+  </div>
+  <div class="card">
+    <h4>Share of declarations reused at least twice</h4>
+    <div class="sub">Distinct-user in-degree ≥ 2, as a share of reusable declarations.</div>
+    <div class="chartwrap" id="ge2Chart"></div>
+  </div>
+  <div class="prose" id="reuseProse"></div>
+</section>
+
+<section id="where">
+  <div class="secno">05</div>
+  <h2>Where the reuse lives</h2>
+  <div class="prose">
+    <p>
+      A reference in a <b>statement</b> (a type) or a <b>definition body</b> is load-bearing:
+      it shapes the API others must build on. A reference inside a <b>proof</b> is erasable.
+      Layered mathematics shows up as theorems cited by other <em>statements</em> and
+      definitions built on definitions — proof-dump corpora cite lemmas only inside proofs.
+    </p>
+  </div>
+  <div class="card">
+    <h4>Reference context: signature / definition value / proof</h4>
+    <div class="sub">Occurrence-weighted share of all resolved references (internal + upstream).</div>
+    <div class="legend" id="ctxLegend"></div>
+    <div class="chartwrap" id="ctxChart"></div>
+  </div>
+  <div class="card">
+    <h4>Reuse that crosses file boundaries</h4>
+    <div class="sub">Share of reusable declarations referenced from at least one other file.</div>
+    <div class="chartwrap" id="crossChart"></div>
+  </div>
+  <div class="prose" id="whereProse"></div>
+</section>
+
+<section id="mathlib">
+  <div class="secno">06</div>
+  <h2>Standing on Mathlib's shoulders</h2>
+  <div class="prose">
+    <p>
+      For repos downstream of Mathlib, leaning on it is a virtue: more upstream references
+      per declaration and a broader vocabulary of distinct Mathlib lemmas mean less
+      reinvention. The scatter shows Mathlib references per declaration against the share
+      of declarations never reused internally — the lower-right corner (heavy leverage,
+      everything reused) is where good libraries live.
+    </p>
+  </div>
+  <div class="card">
+    <h4>Mathlib leverage vs internal dead weight</h4>
+    <div class="sub">x: Mathlib references per declaration (log). y: share of declarations never reused internally.</div>
+    <div class="legend" id="scatterLegend"></div>
+    <div class="chartwrap" id="mlScatter"></div>
+  </div>
+  <div id="vocabChips"></div>
+  <div class="prose" id="mlProse"></div>
+</section>
+
+<section id="shape">
+  <div class="secno">07</div>
+  <h2>The shape of the graph</h2>
+  <div class="prose">
+    <p>
+      Two structural measures. <b>Depth</b>: the longest internal chain of declarations each
+      building on the previous — layered theory versus a bag of independent facts.
+      <b>Concentration</b>: how much of all reuse is absorbed by the top 1% of declarations.
+      Both discriminate, in opposite directions: real libraries are deep <em>and</em> spread
+      their reuse; dumps are shallow, or deep only inside single-file towers.
+    </p>
+  </div>
+  <div class="card">
+    <h4>Longest internal dependency chain</h4>
+    <div class="sub">Maximum depth over the declaration DAG (auxiliaries contracted). Dot = max; tick = mean.</div>
+    <div class="chartwrap" id="depthChart"></div>
+  </div>
+  <div class="card">
+    <h4>Reuse concentration: share absorbed by top 1% of declarations</h4>
+    <div class="sub">Occupying the far right means a few hubs get all reuse and the rest is dead weight.</div>
+    <div class="chartwrap" id="giniChart"></div>
+  </div>
+</section>
+
+<section id="hygiene">
+  <div class="secno">08</div>
+  <h2>Hygiene: duplication and <code>sorry</code></h2>
+  <div class="prose">
+    <p>
+      Duplication is anti-reuse: the same normalized declaration body appearing more than
+      once. And a <code>sorry</code> is an unproved claim — fine in a statements-only
+      conjecture list, disqualifying in a corpus presented as proven mathematics.
+    </p>
+  </div>
+  <div class="card">
+    <h4>Exact-duplicate declaration bodies</h4>
+    <div class="sub">Share of whitespace-normalized bodies (≥60 chars) appearing more than once.</div>
+    <div class="chartwrap" id="dupChart"></div>
+  </div>
+  <div class="card">
+    <h4>Sorried theorems</h4>
+    <div class="sub">Share of theorems whose proof (transitively) uses <code>sorryAx</code> — exact tier — or contains a <code>sorry</code> token — textual tier.</div>
+    <div class="chartwrap" id="sorryChart"></div>
+  </div>
+  <div class="prose" id="hygieneProse"></div>
+</section>
+
+<section id="discriminate">
+  <div class="secno">09</div>
+  <h2>Which metrics actually discriminate?</h2>
+  <div class="prose">
+    <p>
+      For each candidate metric: the median for established human libraries versus
+      AI-generated corpora, and the AUC of separating the two groups by that metric alone
+      (1.0 = perfect separation, 0.5 = coin flip). Small samples — read these as effect
+      directions, not significance tests.
+    </p>
+  </div>
+  <div class="tablewrap"><table class="data" id="aucTable"></table></div>
+  <div class="prose" id="discussProse"></div>
+</section>
+
+<section id="validity">
+  <div class="secno">10</div>
+  <h2>Validity, and what this can't see</h2>
+  <div class="prose" id="validityProse"></div>
+  <div class="tablewrap"><table class="data" id="valTable"></table></div>
+</section>
+
+<footer>
+  <div id="footerText"></div>
+</footer>
+</div>
+
+<script>
+const DATA = {"groups": ["Human-built", "Human+AI hybrid", "AI, curated", "AI, uncurated", "Control"], "totals": {"repos": 20, "decls": 637011, "edges": 24537647, "loc": 4075724, "envRepos": 13}, "repos": [{"key": "mathlib4", "label": "Mathlib", "cat": "flagship library", "group": 0, "tier": "exact", "stars": 3628, "url": "https://github.com/leanprover-community/mathlib4", "files": 8027, "loc": 1482285, "decls": 289494, "alldecls": 303281, "edges": 14301915, "excluded": false, "m1": {"mean": 17.653, "median": 1.0, "p90": 10.0, "max": 80283, "never": 0.3498, "ge2": 0.4142, "ccdf": {"1": 0.65016, "2": 0.41416, "3": 0.29203, "5": 0.18704, "10": 0.10379, "20": 0.05836, "50": 0.02636, "100": 0.01444, "200": 0.0079, "500": 0.00356, "1000": 0.00202}, "top": [{"name": "DFunLike", "deg": 80283}, {"name": "Set", "deg": 69951}, {"name": "CategoryTheory.Category", "deg": 56904}, {"name": "PartialOrder", "deg": 56704}, {"name": "Semiring", "deg": 55558}, {"name": "Preorder", "deg": 55320}, {"name": "CommSemiring", "deg": 46197}, {"name": "CategoryTheory.CategoryStruct", "deg": 44675}, {"name": "Quiver", "deg": 44061}, {"name": "AddZeroClass", "deg": 43980}]}, "m2": {"sig": 0.3322, "val": 0.111, "prf": 0.5567, "load": 0.4432, "thmstmt": 0.0193}, "m3": {"crossfile": 0.9044, "crossdir": 0.6156, "outside": 0.3579, "five": 0.0761}, "m4": {"ml_per_decl": 0.0, "vocab": 0, "vocab1k": null, "ext_int": 0.335, "top": []}, "m5": {"gini": 0.9435, "top1": 0.755, "top10": 0.92}, "m6": {"maxd": 247, "meand": 36.471, "p90d": 94.0, "cyc": 0.014}, "m7": {"dup": 0.018, "dupn": 115210, "dupmax": 36, "sdup": 0.0081}, "m8": {"sorry": 0.0, "nsorry": 0, "pl_med": 3.0, "rpp": 36.898}, "m9": {"whole_ml": 0.0, "fanin2": 0.0088}}, {"key": "core", "label": "Lean 4 core", "cat": "core infrastructure", "group": 0, "tier": "exact", "stars": 8512, "url": "https://github.com/leanprover/lean4", "files": 2037, "loc": 0, "decls": 79446, "alldecls": 85234, "edges": 2308635, "excluded": false, "m1": {"mean": 18.28, "median": 1.0, "p90": 9.0, "max": 51770, "never": 0.338, "ge2": 0.3811, "ccdf": {"1": 0.66196, "2": 0.38114, "3": 0.25249, "5": 0.16304, "10": 0.09667, "20": 0.05856, "50": 0.02767, "100": 0.01455, "200": 0.00837, "500": 0.00398, "1000": 0.00237}, "top": [{"name": "Eq", "deg": 51770}, {"name": "Nat", "deg": 32988}, {"name": "Bool", "deg": 29392}, {"name": "OfNat", "deg": 25496}, {"name": "congrArg", "deg": 23941}, {"name": "List", "deg": 19181}, {"name": "Option", "deg": 17917}, {"name": "Eq.trans", "deg": 17730}, {"name": "id", "deg": 15828}, {"name": "of_eq_true", "deg": 14746}]}, "m2": {"sig": 0.271, "val": 0.3181, "prf": 0.4109, "load": 0.5891, "thmstmt": 0.035}, "m3": {"crossfile": 0.9283, "crossdir": 0.701, "outside": 0.4004, "five": 0.0555}, "m4": {"ml_per_decl": 0.0, "vocab": 1, "vocab1k": 1000.0, "ext_int": 0.0, "top": [{"name": "Lean.Environment.findTheoremConstVal?", "refs": 1}]}, "m5": {"gini": 0.9489, "top1": 0.7699, "top10": 0.9321}, "m6": {"maxd": 41, "meand": 11.438, "p90d": 25.0, "cyc": 0.6424}, "m7": {"dup": 0.0563, "dupn": 25120, "dupmax": 18, "sdup": 0.1169}, "m8": {"sorry": 0.0, "nsorry": 0, "pl_med": 3.0, "rpp": 20.47}, "m9": {"whole_ml": 0.0, "fanin2": 0.0}}, {"key": "batteries", "label": "Batteries", "cat": "core infrastructure", "group": 0, "tier": "exact", "stars": 407, "url": "https://github.com/leanprover-community/batteries", "files": 138, "loc": 13714, "decls": 2813, "alldecls": 2901, "edges": 71025, "excluded": false, "m1": {"mean": 1.875, "median": 0.0, "p90": 4.0, "max": 126, "never": 0.5037, "ge2": 0.2552, "ccdf": {"1": 0.49627, "2": 0.25524, "3": 0.15322, "5": 0.08816, "10": 0.03839, "20": 0.01742, "50": 0.00249, "100": 0.00036, "200": 0.0, "500": 0.0, "1000": 0.0}, "top": [{"name": "String.utf8Len", "deg": 126}, {"name": "Batteries.UnionFind", "deg": 76}, {"name": "MLList", "deg": 74}, {"name": "Batteries.BinomialHeap.Imp.Heap", "deg": 65}, {"name": "Batteries.AssocList", "deg": 65}, {"name": "Batteries.PairingHeapImp.Heap", "deg": 58}, {"name": "Substring.Raw.ValidFor", "deg": 57}, {"name": "Batteries.UFNode", "deg": 47}, {"name": "Batteries.UnionFind.size", "deg": 44}, {"name": "Array.scanl", "deg": 42}]}, "m2": {"sig": 0.2509, "val": 0.3242, "prf": 0.4249, "load": 0.5751, "thmstmt": 0.0092}, "m3": {"crossfile": 0.2573, "crossdir": 0.0135, "outside": 0.1056, "five": 0.0}, "m4": {"ml_per_decl": 0.0, "vocab": 0, "vocab1k": null, "ext_int": 8.522, "top": []}, "m5": {"gini": 0.7984, "top1": 0.2395, "top10": 0.6695}, "m6": {"maxd": 18, "meand": 3.184, "p90d": 6.0, "cyc": 0.0579}, "m7": {"dup": 0.0157, "dupn": 892, "dupmax": 4, "sdup": 0.0067}, "m8": {"sorry": 0.0, "nsorry": 0, "pl_med": 3.0, "rpp": 19.262}, "m9": {"whole_ml": 0.0, "fanin2": 0.0145}}, {"key": "aesop", "label": "Aesop", "cat": "core infrastructure", "group": 0, "tier": "exact", "stars": 383, "url": "https://github.com/leanprover-community/aesop", "files": 130, "loc": 12257, "decls": 1662, "alldecls": 2017, "edges": 47325, "excluded": false, "m1": {"mean": 4.958, "median": 1.0, "p90": 10.0, "max": 217, "never": 0.2016, "ge2": 0.4091, "ccdf": {"1": 0.79844, "2": 0.40915, "3": 0.27016, "5": 0.16727, "10": 0.1065, "20": 0.06137, "50": 0.01865, "100": 0.00481, "200": 0.0012, "500": 0.0, "1000": 0.0}, "top": [{"name": "Aesop.BaseM", "deg": 217}, {"name": "Aesop.BaseM.State", "deg": 206}, {"name": "Aesop.Goal", "deg": 183}, {"name": "Aesop.Rapp", "deg": 146}, {"name": "Aesop.MVarCluster", "deg": 117}, {"name": "Aesop.Script.LazyStep", "deg": 107}, {"name": "Aesop.RuleName", "deg": 105}, {"name": "Aesop.UnorderedArraySet", "deg": 102}, {"name": "Aesop.GoalRef", "deg": 93}, {"name": "Aesop.Percent", "deg": 90}]}, "m2": {"sig": 0.1395, "val": 0.8577, "prf": 0.0028, "load": 0.9972, "thmstmt": 0.0}, "m3": {"crossfile": 0.5862, "crossdir": 0.3571, "outside": 0.3893, "five": 0.0656}, "m4": {"ml_per_decl": 0.0, "vocab": 0, "vocab1k": null, "ext_int": 3.008, "top": []}, "m5": {"gini": 0.7725, "top1": 0.2204, "top10": 0.7054}, "m6": {"maxd": 20, "meand": 4.408, "p90d": 10.0, "cyc": 0.0892}, "m7": {"dup": 0.0016, "dupn": 636, "dupmax": 2, "sdup": 0.0}, "m8": {"sorry": 0.0, "nsorry": 0, "pl_med": 2.0, "rpp": 3.25}, "m9": {"whole_ml": 0.0, "fanin2": 0.0923}}, {"key": "cslib", "label": "CSLib", "cat": "curated library", "group": 0, "tier": "exact", "stars": 627, "url": "https://github.com/leanprover/cslib", "files": 163, "loc": 16139, "decls": 2863, "alldecls": 3032, "edges": 66522, "excluded": false, "m1": {"mean": 4.046, "median": 1.0, "p90": 8.0, "max": 339, "never": 0.4345, "ge2": 0.3297, "ccdf": {"1": 0.56549, "2": 0.32972, "3": 0.23612, "5": 0.15648, "10": 0.09151, "20": 0.04645, "50": 0.01327, "100": 0.00454, "200": 0.0014, "500": 0.0, "1000": 0.0}, "top": [{"name": "Cslib.LTS", "deg": 339}, {"name": "Cslib.\u03c9Sequence", "deg": 322}, {"name": "Cslib.SKI", "deg": 217}, {"name": "Cslib.LambdaCalculus.LocallyNameless.Untyped.Term", "deg": 206}, {"name": "Cslib.Logic.CLL.PhaseSpace", "deg": 140}, {"name": "Cslib.HasFresh", "deg": 134}, {"name": "Cslib.Logic.InferenceSystem", "deg": 129}, {"name": "Cslib.Logic.CLL.PhaseSpace.Fact", "deg": 120}, {"name": "Cslib.\u03c9Language", "deg": 116}, {"name": "Cslib.LambdaCalculus.LocallyNameless.Fsub.Ty", "deg": 113}]}, "m2": {"sig": 0.2691, "val": 0.2584, "prf": 0.4725, "load": 0.5275, "thmstmt": 0.0022}, "m3": {"crossfile": 0.5214, "crossdir": 0.1155, "outside": 0.2214, "five": 0.0203}, "m4": {"ml_per_decl": 4.161, "vocab": 1189, "vocab1k": 94.3, "ext_int": 2.44, "top": [{"name": "Set", "refs": 805}, {"name": "Set.instMembership", "refs": 446}, {"name": "DFunLike", "refs": 355}, {"name": "Finset", "refs": 350}, {"name": "SetLike.instMembership", "refs": 331}, {"name": "Relation.ReflTransGen", "refs": 295}, {"name": "Finset.instSetLike", "refs": 256}, {"name": "Language", "refs": 251}, {"name": "Set.Elem", "refs": 181}, {"name": "PartialOrder", "refs": 171}]}, "m5": {"gini": 0.8339, "top1": 0.2815, "top10": 0.7418}, "m6": {"maxd": 24, "meand": 4.815, "p90d": 9.0, "cyc": 0.0}, "m7": {"dup": 0.0083, "dupn": 1079, "dupmax": 2, "sdup": 0.0035}, "m8": {"sorry": 0.0, "nsorry": 0, "pl_med": 4.0, "rpp": 17.882}, "m9": {"whole_ml": 0.0, "fanin2": 0.0}}, {"key": "scilean", "label": "SciLean", "cat": "curated library", "group": 0, "tier": "textual", "stars": 517, "url": "https://github.com/lecopivo/SciLean", "files": 452, "loc": 44019, "decls": 4416, "alldecls": 6011, "edges": 21611, "excluded": false, "m1": {"mean": 2.344, "median": 0.0, "p90": 5.0, "max": 329, "never": 0.6531, "ge2": 0.2104, "ccdf": {"1": 0.34692, "2": 0.21037, "3": 0.15784, "5": 0.1053, "10": 0.05322, "20": 0.02378, "50": 0.00634, "100": 0.00204, "200": 0.00045, "500": 0.0, "1000": 0.0}, "top": [{"name": "SciLean.p", "deg": 329}, {"name": "SciLean.m", "deg": 268}, {"name": "SciLean.Idx", "deg": 191}, {"name": "SciLean.w", "deg": 191}, {"name": "SciLean.IndexType", "deg": 180}, {"name": "SciLean.adjoint", "deg": 131}, {"name": "SciLean.IsContinuousLinearMap", "deg": 117}, {"name": "AdjointSpace", "deg": 109}, {"name": "SciLean.fwdFDeriv", "deg": 100}, {"name": "SciLean.Dims", "deg": 94}]}, "m2": {"sig": 0.5738, "val": 0.3104, "prf": 0.1158, "load": 0.8842, "thmstmt": 0.0046}, "m3": {"crossfile": 0.5, "crossdir": 0.1931, "outside": 0.1427, "five": 0.0181}, "m4": {"ml_per_decl": 0.906, "vocab": 406, "vocab1k": 97.6, "ext_int": 0.85, "top": [{"name": "NormedAddCommGroup", "refs": 325}, {"name": "Differentiable", "refs": 167}, {"name": "Set", "refs": 166}, {"name": "Module", "refs": 150}, {"name": "DifferentiableAt", "refs": 147}, {"name": "AddCommGroup", "refs": 137}, {"name": "NormedSpace", "refs": 130}, {"name": "deriv", "refs": 104}, {"name": "RCLike", "refs": 100}, {"name": "MeasureTheory.Measure", "refs": 95}]}, "m5": {"gini": 0.8892, "top1": 0.3476, "top10": 0.8096}, "m6": {"maxd": 14, "meand": 3.914, "p90d": 8.0, "cyc": 0.1038}, "m7": {"dup": 0.0827, "dupn": 1813, "dupmax": 6, "sdup": 0.0168}, "m8": {"sorry": 0.4678, "nsorry": 909, "pl_med": 3.0, "rpp": 1.857}, "m9": {"whole_ml": 0.0088, "fanin2": 0.4093}}, {"key": "flt", "label": "FLT", "cat": "research formalization", "group": 0, "tier": "exact", "stars": 943, "url": "https://github.com/ImperialCollegeLondon/FLT", "files": 254, "loc": 40824, "decls": 3804, "alldecls": 4063, "edges": 381083, "excluded": false, "m1": {"mean": 3.29, "median": 1.0, "p90": 6.0, "max": 254, "never": 0.2258, "ge2": 0.4056, "ccdf": {"1": 0.77419, "2": 0.40563, "3": 0.25605, "5": 0.14196, "10": 0.05994, "20": 0.02629, "50": 0.0071, "100": 0.0021, "200": 0.00079, "500": 0.0, "1000": 0.0}, "top": [{"name": "Dickson.K", "deg": 254}, {"name": "IsQuaternionAlgebra.NumberField.WithRigidification", "deg": 214}, {"name": "Dickson.PGLOf", "deg": 211}, {"name": "TotallyDefiniteQuaternionAlgebra.WeightTwoAutomorphicForm", "deg": 160}, {"name": "Dickson.ProjectiveLine", "deg": 148}, {"name": "TotallyDefiniteQuaternionAlgebra.WeightTwoAutomorphicForm.LevelStruct", "deg": 126}, {"name": "TotallyDefiniteQuaternionAlgebra.WeightTwoAutomorphicForm.LevelStruct.form", "deg": 113}, {"name": "TensorProduct.RightActions.instTopologicalSpaceOfFinite_fLT", "deg": 100}, {"name": "InverseLimit", "deg": 92}, {"name": "Hurwitz", "deg": 91}]}, "m2": {"sig": 0.2821, "val": 0.1519, "prf": 0.566, "load": 0.434, "thmstmt": 0.0357}, "m3": {"crossfile": 0.4393, "crossdir": 0.1659, "outside": 0.3039, "five": 0.0081}, "m4": {"ml_per_decl": 69.075, "vocab": 9602, "vocab1k": 34.2, "ext_int": 16.175, "top": [{"name": "Semiring", "refs": 3876}, {"name": "CommSemiring", "refs": 3846}, {"name": "CommRing.toCommSemiring", "refs": 3439}, {"name": "DFunLike", "refs": 3231}, {"name": "Field.toSemifield", "refs": 3096}, {"name": "CommRing", "refs": 2989}, {"name": "DivisionSemiring", "refs": 2799}, {"name": "Field", "refs": 2747}, {"name": "Algebra", "refs": 2587}, {"name": "Semiring.toNonAssocSemiring", "refs": 2575}]}, "m5": {"gini": 0.7136, "top1": 0.2479, "top10": 0.6117}, "m6": {"maxd": 76, "meand": 6.605, "p90d": 14.0, "cyc": 0.0}, "m7": {"dup": 0.0084, "dupn": 2137, "dupmax": 4, "sdup": 0.004}, "m8": {"sorry": 0.0131, "nsorry": 37, "pl_med": 6.0, "rpp": 83.925}, "m9": {"whole_ml": 0.0, "fanin2": 0.0669}}, {"key": "pfr", "label": "PFR", "cat": "research formalization", "group": 0, "tier": "exact", "stars": 220, "url": "https://github.com/teorth/pfr", "files": 69, "loc": 18117, "decls": 1299, "alldecls": 1307, "edges": 115146, "excluded": false, "m1": {"mean": 3.738, "median": 1.0, "p90": 6.0, "max": 255, "never": 0.2841, "ge2": 0.4049, "ccdf": {"1": 0.71594, "2": 0.40493, "3": 0.25327, "5": 0.1455, "10": 0.06005, "20": 0.02925, "50": 0.01001, "100": 0.00385, "200": 0.00154, "500": 0.0, "1000": 0.0}, "top": [{"name": "ProbabilityTheory.entropy", "deg": 255}, {"name": "FiniteRange", "deg": 220}, {"name": "rdist", "deg": 176}, {"name": "prod", "deg": 146}, {"name": "ProbabilityTheory.Kernel.entropy", "deg": 103}, {"name": "ProbabilityTheory.FiniteSupport", "deg": 94}, {"name": "ProbabilityTheory.condEntropy", "deg": 92}, {"name": "ProbabilityTheory.measureEntropy", "deg": 88}, {"name": "ProbabilityTheory.Kernel.AEFiniteKernelSupport", "deg": 73}, {"name": "instFiniteRangeOfFinite", "deg": 70}]}, "m2": {"sig": 0.1883, "val": 0.0713, "prf": 0.7404, "load": 0.2596, "thmstmt": 0.0}, "m3": {"crossfile": 0.613, "crossdir": 0.3252, "outside": 0.3911, "five": 0.0339}, "m4": {"ml_per_decl": 56.806, "vocab": 3209, "vocab1k": 43.2, "ext_int": 16.888, "top": [{"name": "MeasurableSpace", "refs": 1817}, {"name": "MeasureTheory.Measure", "refs": 1475}, {"name": "Real", "refs": 1320}, {"name": "MeasurableSingletonClass", "refs": 1068}, {"name": "Measurable", "refs": 971}, {"name": "AddCommGroup", "refs": 781}, {"name": "Set", "refs": 728}, {"name": "Prod.instMeasurableSpace", "refs": 699}, {"name": "Countable", "refs": 674}, {"name": "MeasureTheory.IsProbabilityMeasure", "refs": 654}]}, "m5": {"gini": 0.7692, "top1": 0.2976, "top10": 0.6734}, "m6": {"maxd": 35, "meand": 6.038, "p90d": 15.0, "cyc": 0.0}, "m7": {"dup": 0.0025, "dupn": 788, "dupmax": 2, "sdup": 0.0069}, "m8": {"sorry": 0.0049, "nsorry": 5, "pl_med": 8.0, "rpp": 90.726}, "m9": {"whole_ml": 0.0, "fanin2": 0.0}}, {"key": "analysis", "label": "Tao Analysis I", "cat": "research formalization", "group": 0, "tier": "exact", "stars": 1821, "url": "https://github.com/teorth/analysis", "files": 98, "loc": 30059, "decls": 3705, "alldecls": 3705, "edges": 183741, "excluded": false, "m1": {"mean": 4.116, "median": 1.0, "p90": 8.0, "max": 601, "never": 0.4381, "ge2": 0.3279, "ccdf": {"1": 0.56194, "2": 0.32794, "3": 0.23185, "5": 0.15277, "10": 0.08502, "20": 0.04103, "50": 0.01323, "100": 0.00459, "200": 0.00135, "500": 0.00027, "1000": 0.0}, "top": [{"name": "EuclideanSpace'", "deg": 601}, {"name": "Chapter3.SetTheory", "deg": 467}, {"name": "Chapter5.Real", "deg": 255}, {"name": "Chapter3.SetTheory.Set.toSubtype", "deg": 251}, {"name": "Chapter11.BoundedInterval", "deg": 244}, {"name": "BoundedInterval", "deg": 191}, {"name": "Chapter6.Sequence", "deg": 180}, {"name": "Chapter3.SetTheory.objects_mem_sets", "deg": 166}, {"name": "Box", "deg": 154}, {"name": "UnitsSystem", "deg": 151}]}, "m2": {"sig": 0.217, "val": 0.0963, "prf": 0.6867, "load": 0.3133, "thmstmt": 0.0263}, "m3": {"crossfile": 0.4643, "crossdir": 0.0035, "outside": 0.1946, "five": 0.014}, "m4": {"ml_per_decl": 25.445, "vocab": 3408, "vocab1k": 36.1, "ext_int": 6.781, "top": [{"name": "Real", "refs": 3176}, {"name": "Set", "refs": 1723}, {"name": "Real.instZero", "refs": 1011}, {"name": "PartialOrder", "refs": 928}, {"name": "PseudoMetricSpace", "refs": 843}, {"name": "Preorder", "refs": 829}, {"name": "Set.instMembership", "refs": 823}, {"name": "Real.pseudoMetricSpace", "refs": 816}, {"name": "UniformSpace", "refs": 715}, {"name": "EReal", "refs": 712}]}, "m5": {"gini": 0.8428, "top1": 0.3279, "top10": 0.7542}, "m6": {"maxd": 39, "meand": 7.511, "p90d": 15.0, "cyc": 0.0124}, "m7": {"dup": 0.0216, "dupn": 1250, "dupmax": 8, "sdup": 0.0097}, "m8": {"sorry": 0.4478, "nsorry": 1193, "pl_med": 4.0, "rpp": 47.772}, "m9": {"whole_ml": 0.0408, "fanin2": 0.2347}}, {"key": "physlib", "label": "Physlib", "cat": "curated library", "group": 1, "tier": "exact", "stars": 649, "url": "https://github.com/leanprover-community/physlib", "files": 533, "loc": 103587, "decls": 11497, "alldecls": 11973, "edges": 1195373, "excluded": false, "m1": {"mean": 6.58, "median": 1.0, "p90": 10.0, "max": 1234, "never": 0.2511, "ge2": 0.4332, "ccdf": {"1": 0.74889, "2": 0.43316, "3": 0.30512, "5": 0.19614, "10": 0.10777, "20": 0.05471, "50": 0.02105, "100": 0.01052, "200": 0.00531, "500": 0.00096, "1000": 9e-05}, "top": [{"name": "Space", "deg": 1234}, {"name": "HermitianMat", "deg": 994}, {"name": "FieldSpecification", "deg": 791}, {"name": "Time", "deg": 729}, {"name": "HermitianMat.mat", "deg": 715}, {"name": "ACCSystemCharges.Charges", "deg": 699}, {"name": "Lorentz.Vector", "deg": 684}, {"name": "ACCSystem", "deg": 607}, {"name": "SpaceTime", "deg": 601}, {"name": "ACCSystemQuad", "deg": 582}]}, "m2": {"sig": 0.2718, "val": 0.1096, "prf": 0.6187, "load": 0.3814, "thmstmt": 0.0183}, "m3": {"crossfile": 0.7099, "crossdir": 0.2398, "outside": 0.3692, "five": 0.0466}, "m4": {"ml_per_decl": 63.928, "vocab": 9565, "vocab1k": 12.5, "ext_int": 7.004, "top": [{"name": "Real", "refs": 10153}, {"name": "DFunLike", "refs": 8074}, {"name": "Semiring.toNonAssocSemiring", "refs": 7517}, {"name": "Complex", "refs": 6579}, {"name": "RingHom.id", "refs": 6467}, {"name": "Semiring", "refs": 5843}, {"name": "AddCommGroup.toAddCommMonoid", "refs": 5545}, {"name": "CommSemiring", "refs": 5136}, {"name": "PseudoMetricSpace", "refs": 4674}, {"name": "NormedAddCommGroup.toSeminormedAddCommGroup", "refs": 4666}]}, "m5": {"gini": 0.8272, "top1": 0.3959, "top10": 0.7564}, "m6": {"maxd": 46, "meand": 9.633, "p90d": 20.0, "cyc": 0.0029}, "m7": {"dup": 0.0281, "dupn": 6620, "dupmax": 8, "sdup": 0.0076}, "m8": {"sorry": 0.001, "nsorry": 9, "pl_med": 6.0, "rpp": 88.419}, "m9": {"whole_ml": 0.0, "fanin2": 0.0}}, {"key": "equational_theories", "label": "Equational Theories", "cat": "research formalization", "group": 1, "tier": "exact", "stars": 540, "url": "https://github.com/teorth/equational_theories", "files": 1275, "loc": 139188, "decls": 46385, "alldecls": 46385, "edges": 724829, "excluded": false, "m1": {"mean": 6.719, "median": 1.0, "p90": 9.0, "max": 34067, "never": 0.3274, "ge2": 0.3588, "ccdf": {"1": 0.67259, "2": 0.35882, "3": 0.30954, "5": 0.26103, "10": 0.08927, "20": 0.02913, "50": 0.01684, "100": 0.00606, "200": 0.00149, "500": 0.00034, "1000": 0.00024}, "top": [{"name": "Magma", "deg": 34067}, {"name": "satisfies", "deg": 15683}, {"name": "Law.MagmaLaw.implies", "deg": 10677}, {"name": "Law.MagmaLaw", "deg": 7315}, {"name": "Law.NatMagmaLaw", "deg": 7154}, {"name": "FreeMagma", "deg": 5223}, {"name": "models_iff_n", "deg": 4714}, {"name": "Law.MagmaLaw.IsDual", "deg": 4694}, {"name": "Law.MagmaLaw.dual", "deg": 2400}, {"name": "Law.MagmaLaw.reindex_iff", "deg": 2389}]}, "m2": {"sig": 0.3186, "val": 0.1075, "prf": 0.5739, "load": 0.4261, "thmstmt": 0.0003}, "m3": {"crossfile": 0.8695, "crossdir": 0.839, "outside": 0.3305, "five": 0.1355}, "m4": {"ml_per_decl": 0.895, "vocab": 1949, "vocab1k": 47.0, "ext_int": 0.616, "top": [{"name": "Finite", "refs": 2467}, {"name": "List.getI", "refs": 2388}, {"name": "Finset", "refs": 1179}, {"name": "Fin.fintype", "refs": 1146}, {"name": "Finite.of_fintype", "refs": 1125}, {"name": "Set", "refs": 785}, {"name": "Finset.instSetLike", "refs": 716}, {"name": "SetLike.instMembership", "refs": 708}, {"name": "Set.instMembership", "refs": 696}, {"name": "DFunLike", "refs": 457}]}, "m5": {"gini": 0.8524, "top1": 0.5047, "top10": 0.7557}, "m6": {"maxd": 45, "meand": 6.581, "p90d": 11.0, "cyc": 0.0004}, "m7": {"dup": 0.1401, "dupn": 6630, "dupmax": 150, "sdup": 0.0164}, "m8": {"sorry": 0.0, "nsorry": 0, "pl_med": 3.0, "rpp": 15.469}, "m9": {"whole_ml": 0.0, "fanin2": 0.0227}}, {"key": "tauceti", "label": "TauCeti", "cat": "AI-generated library", "group": 2, "tier": "exact", "stars": 17, "url": "https://github.com/TauCetiProject/TauCeti", "files": 536, "loc": 60991, "decls": 7073, "alldecls": 7173, "edges": 504988, "excluded": false, "m1": {"mean": 3.793, "median": 1.0, "p90": 6.0, "max": 554, "never": 0.3382, "ge2": 0.3672, "ccdf": {"1": 0.66181, "2": 0.36717, "3": 0.23017, "5": 0.13771, "10": 0.07168, "20": 0.0345, "50": 0.01089, "100": 0.0041, "200": 0.00141, "500": 0.00028, "1000": 0.0}, "top": [{"name": "TauCeti.GridState", "deg": 554}, {"name": "TauCeti.AlgebraicGeometry.WeilDivisor", "deg": 518}, {"name": "TauCeti.AlmostComplexStructure", "deg": 430}, {"name": "TauCeti.GridDiagram", "deg": 361}, {"name": "TauCeti.Comodule", "deg": 360}, {"name": "TauCeti.Comodule.Hom", "deg": 301}, {"name": "TauCeti.Deck", "deg": 301}, {"name": "TauCeti.SymplecticForm", "deg": 250}, {"name": "TauCeti.AlgebraicGeometry.WeilDivisor.OrderSystem", "deg": 225}, {"name": "TauCeti.ComoduleCat", "deg": 224}]}, "m2": {"sig": 0.3363, "val": 0.0586, "prf": 0.6052, "load": 0.3949, "thmstmt": 0.011}, "m3": {"crossfile": 0.5343, "crossdir": 0.0143, "outside": 0.2758, "five": 0.0246}, "m4": {"ml_per_decl": 48.773, "vocab": 7799, "vocab1k": 22.3, "ext_int": 10.524, "top": [{"name": "DFunLike", "refs": 5458}, {"name": "CommSemiring", "refs": 4672}, {"name": "Real", "refs": 4587}, {"name": "Semiring.toNonAssocSemiring", "refs": 3719}, {"name": "Semiring", "refs": 3296}, {"name": "SetLike.instMembership", "refs": 3137}, {"name": "Module", "refs": 2965}, {"name": "Set", "refs": 2699}, {"name": "RingHom.id", "refs": 2542}, {"name": "AddCommMonoid", "refs": 2242}]}, "m5": {"gini": 0.801, "top1": 0.3228, "top10": 0.7141}, "m6": {"maxd": 22, "meand": 6.008, "p90d": 11.0, "cyc": 0.0}, "m7": {"dup": 0.0073, "dupn": 4365, "dupmax": 2, "sdup": 0.008}, "m8": {"sorry": 0.0, "nsorry": 0, "pl_med": 5.0, "rpp": 49.725}, "m9": {"whole_ml": 0.0, "fanin2": 0.0541}}, {"key": "lean-pool", "label": "LeanPool", "cat": "AI-generated library", "group": 2, "tier": "exact", "stars": 68, "url": "https://github.com/Vilin97/lean-pool", "files": 1762, "loc": 487096, "decls": 44301, "alldecls": 44301, "edges": 3445148, "excluded": false, "m1": {"mean": 6.403, "median": 1.0, "p90": 9.0, "max": 3099, "never": 0.2289, "ge2": 0.4213, "ccdf": {"1": 0.77113, "2": 0.42128, "3": 0.29313, "5": 0.18796, "10": 0.09934, "20": 0.05086, "50": 0.01944, "100": 0.00804, "200": 0.0037, "500": 0.00102, "1000": 0.00027}, "top": [{"name": "LO.FirstOrder.Language.oRing", "deg": 3099}, {"name": "LO.ORingStruc", "deg": 2784}, {"name": "LO.FirstOrder.Arith.standardModel", "deg": 2736}, {"name": "LO.FirstOrder.ModelsTheory", "deg": 2687}, {"name": "LO.Arith.instNonempty_leanPool", "deg": 2549}, {"name": "LO.FirstOrder.Theory.iSigma", "deg": 2158}, {"name": "LO.LogicalConnective", "deg": 2032}, {"name": "LO.FirstOrder.Language", "deg": 1597}, {"name": "LO.FirstOrder.Semiformula.instLogicalConnective", "deg": 1269}, {"name": "LO.Entailment", "deg": 1235}]}, "m2": {"sig": 0.2435, "val": 0.1028, "prf": 0.6537, "load": 0.3463, "thmstmt": 0.0134}, "m3": {"crossfile": 0.6296, "crossdir": 0.0005, "outside": 0.2854, "five": 0.0329}, "m4": {"ml_per_decl": 45.422, "vocab": 22352, "vocab1k": 11.1, "ext_int": 7.386, "top": [{"name": "Real", "refs": 23097}, {"name": "Semiring", "refs": 15466}, {"name": "DFunLike", "refs": 15417}, {"name": "Set", "refs": 14136}, {"name": "CommSemiring", "refs": 14030}, {"name": "Semiring.toNonAssocSemiring", "refs": 13798}, {"name": "Complex", "refs": 12792}, {"name": "SetLike.instMembership", "refs": 12189}, {"name": "AddMonoidWithOne", "refs": 11580}, {"name": "Field.toSemifield", "refs": 11182}]}, "m5": {"gini": 0.8258, "top1": 0.4165, "top10": 0.761}, "m6": {"maxd": 163, "meand": 11.575, "p90d": 24.0, "cyc": 0.0032}, "m7": {"dup": 0.0149, "dupn": 24566, "dupmax": 16, "sdup": 0.0174}, "m8": {"sorry": 0.0, "nsorry": 0, "pl_med": 6.0, "rpp": 77.482}, "m9": {"whole_ml": 0.0, "fanin2": 0.3575}}, {"key": "atlas", "label": "Meta ATLAS", "cat": "AI-generated library", "group": 3, "tier": "textual", "stars": 273, "url": "https://github.com/facebookresearch/atlas-lean", "files": 2653, "loc": 483917, "decls": 35537, "alldecls": 37055, "edges": 328021, "excluded": false, "m1": {"mean": 2.293, "median": 1.0, "p90": 4.0, "max": 848, "never": 0.3019, "ge2": 0.2858, "ccdf": {"1": 0.69806, "2": 0.28579, "3": 0.17962, "5": 0.09905, "10": 0.03993, "20": 0.01424, "50": 0.00332, "100": 0.00093, "200": 0.00031, "500": 6e-05, "1000": 0.0}, "top": [{"name": "TriangularDecomposition", "deg": 848}, {"name": "DifferentialFormSpace", "deg": 538}, {"name": "PositiveRootData", "deg": 449}, {"name": "WeylGroupData", "deg": 402}, {"name": "SimplicialComplex", "deg": 353}, {"name": "Building", "deg": 341}, {"name": "RayClassField.Modulus", "deg": 305}, {"name": "ConeSupport.E", "deg": 239}, {"name": "ContinuousRep", "deg": 225}, {"name": "IsCategoryO", "deg": 224}]}, "m2": {"sig": 0.3998, "val": 0.0728, "prf": 0.5274, "load": 0.4726, "thmstmt": 0.0041}, "m3": {"crossfile": 0.2959, "crossdir": 0.0033, "outside": 0.1131, "five": 0.0068}, "m4": {"ml_per_decl": 8.006, "vocab": 13689, "vocab1k": 46.9, "ext_int": 2.904, "top": [{"name": "Set", "refs": 7071}, {"name": "Finset", "refs": 7051}, {"name": "Field", "refs": 5011}, {"name": "linarith", "refs": 4980}, {"name": "EuclideanSpace", "refs": 3768}, {"name": "Algebra", "refs": 3479}, {"name": "CommRing", "refs": 3140}, {"name": "Real.exp", "refs": 2595}, {"name": "symm", "refs": 2586}, {"name": "AddCommGroup", "refs": 2585}]}, "m5": {"gini": 0.7157, "top1": 0.255, "top10": 0.6107}, "m6": {"maxd": 40, "meand": 3.795, "p90d": 8.0, "cyc": 0.023}, "m7": {"dup": 0.0229, "dupn": 21485, "dupmax": 5, "sdup": 0.0399}, "m8": {"sorry": 0.1251, "nsorry": 2914, "pl_med": 7.0, "rpp": 11.542}, "m9": {"whole_ml": 0.1142, "fanin2": 0.4308}}, {"key": "seed-prover", "label": "Seed-Prover", "cat": "AI proof dump", "group": 3, "tier": "textual", "stars": 435, "url": "https://github.com/ByteDance-Seed/Seed-Prover", "files": 553, "loc": 102320, "decls": 14961, "alldecls": 16026, "edges": 76671, "excluded": false, "m1": {"mean": 1.863, "median": 0.0, "p90": 2.0, "max": 877, "never": 0.8112, "ge2": 0.102, "ccdf": {"1": 0.18876, "2": 0.102, "3": 0.07834, "5": 0.05508, "10": 0.03075, "20": 0.01711, "50": 0.00608, "100": 0.00294, "200": 0.00154, "500": 0.0002, "1000": 0.0}, "top": [{"name": "s", "deg": 877}, {"name": "c", "deg": 806}, {"name": "Set.Annulus.oo", "deg": 541}, {"name": "Set.Annulus.co", "deg": 491}, {"name": "Set.Annulus.cc", "deg": 479}, {"name": "Set.Annulus.oc", "deg": 478}, {"name": "\u03c8", "deg": 460}, {"name": "ConNF.Support", "deg": 447}, {"name": "Valuation", "deg": 407}, {"name": "E", "deg": 337}]}, "m2": {"sig": 0.3627, "val": 0.0851, "prf": 0.5522, "load": 0.4478, "thmstmt": 0.0041}, "m3": {"crossfile": 0.802, "crossdir": 0.0087, "outside": 0.0945, "five": 0.0273}, "m4": {"ml_per_decl": 2.867, "vocab": 2631, "vocab1k": 60.9, "ext_int": 1.345, "top": [{"name": "Set", "refs": 2163}, {"name": "linarith", "refs": 1561}, {"name": "Finset", "refs": 959}, {"name": "Set.mem_union", "refs": 737}, {"name": "ENNReal.ofReal", "refs": 660}, {"name": "Finset.range", "refs": 601}, {"name": "lt_of_le_of_lt", "refs": 536}, {"name": "Metric.ball", "refs": 512}, {"name": "Set.mem_setOf_eq", "refs": 463}, {"name": "norm_num", "refs": 456}]}, "m5": {"gini": 0.9591, "top1": 0.6062, "top10": 0.9513}, "m6": {"maxd": 13, "meand": 2.723, "p90d": 5.0, "cyc": 0.2306}, "m7": {"dup": 0.6034, "dupn": 7276, "dupmax": 47, "sdup": 0.6728}, "m8": {"sorry": 0.0166, "nsorry": 203, "pl_med": 4.0, "rpp": 5.087}, "m9": {"whole_ml": 0.0145, "fanin2": 0.0}}, {"key": "superhuman", "label": "DeepMind superhuman", "cat": "AI proof dump", "group": 3, "tier": "textual", "stars": 774, "url": "https://github.com/google-deepmind/superhuman", "files": 58, "loc": 36935, "decls": 2527, "alldecls": 2535, "edges": 18677, "excluded": false, "m1": {"mean": 2.789, "median": 1.0, "p90": 2.0, "max": 374, "never": 0.034, "ge2": 0.1626, "ccdf": {"1": 0.96597, "2": 0.16264, "3": 0.0926, "5": 0.05975, "10": 0.03443, "20": 0.02058, "50": 0.00712, "100": 0.00356, "200": 0.00158, "500": 0.0, "1000": 0.0}, "top": [{"name": "m", "deg": 374}, {"name": "a", "deg": 347}, {"name": "b", "deg": 258}, {"name": "A", "deg": 247}, {"name": "u", "deg": 189}, {"name": "d", "deg": 161}, {"name": "v", "deg": 151}, {"name": "f", "deg": 124}, {"name": "P", "deg": 105}, {"name": "S", "deg": 89}]}, "m2": {"sig": 0.2698, "val": 0.0098, "prf": 0.7203, "load": 0.2796, "thmstmt": 0.0013}, "m3": {"crossfile": 0.3199, "crossdir": 0.0, "outside": 0.0142, "five": 0.0059}, "m4": {"ml_per_decl": 4.968, "vocab": 1132, "vocab1k": 90.2, "ext_int": 0.654, "top": [{"name": "Polynomial.X", "refs": 697}, {"name": "Finset", "refs": 580}, {"name": "ZMod", "refs": 537}, {"name": "Polynomial.C", "refs": 457}, {"name": "linarith", "refs": 413}, {"name": "Finset.Icc", "refs": 374}, {"name": "norm_num", "refs": 274}, {"name": "Finset.range", "refs": 250}, {"name": "Set", "refs": 238}, {"name": "Finset.univ", "refs": 206}]}, "m5": {"gini": 0.6425, "top1": 0.4059, "top10": 0.6669}, "m6": {"maxd": 21, "meand": 3.936, "p90d": 7.0, "cyc": 0.0213}, "m7": {"dup": 0.003, "dupn": 1688, "dupmax": 2, "sdup": 0.0193}, "m8": {"sorry": 0.0009, "nsorry": 2, "pl_med": 8.0, "rpp": 15.485}, "m9": {"whole_ml": 1.0, "fanin2": 0.0}}, {"key": "erdos90", "label": "Erdos90 (OpenAI)", "cat": "AI proof project", "group": 3, "tier": "textual", "stars": 15, "url": "https://github.com/plby/Erdos90", "files": 2638, "loc": 976264, "decls": 50589, "alldecls": 54198, "edges": 498576, "excluded": false, "m1": {"mean": 3.884, "median": 1.0, "p90": 6.0, "max": 3321, "never": 0.3372, "ge2": 0.3604, "ccdf": {"1": 0.66279, "2": 0.36037, "3": 0.23634, "5": 0.13576, "10": 0.06187, "20": 0.02665, "50": 0.00834, "100": 0.00378, "200": 0.00146, "500": 0.00057, "1000": 0.0002}, "top": [{"name": "Submission.TCTex.BCWta", "deg": 3321}, {"name": "Submission.CWord", "deg": 3269}, {"name": "Submission.D", "deg": 1932}, {"name": "Submission.TCTex.SPFactora", "deg": 1341}, {"name": "Submission.CantEick.ParameterIndex", "deg": 1298}, {"name": "Submission.TCTex.HEAddres", "deg": 1210}, {"name": "Submission.TCTex.SPFactor", "deg": 1199}, {"name": "Submission.TCTex.concreteBasicCommutators", "deg": 1192}, {"name": "Submission.TCTex.HEFam", "deg": 1066}, {"name": "Submission.TCTex.PEAddres.weight", "deg": 1055}]}, "m2": {"sig": 0.439, "val": 0.0979, "prf": 0.4631, "load": 0.5369, "thmstmt": 0.0127}, "m3": {"crossfile": 0.5074, "crossdir": 0.0, "outside": 0.1986, "five": 0.0262}, "m4": {"ml_per_decl": 6.272, "vocab": 9784, "vocab1k": 30.2, "ext_int": 1.369, "top": [{"name": "Group", "refs": 13437}, {"name": "NumberField.RingOfIntegers", "refs": 7097}, {"name": "symm", "refs": 6891}, {"name": "ZMod", "refs": 6533}, {"name": "Algebra", "refs": 5620}, {"name": "Fact", "refs": 5131}, {"name": "Field", "refs": 4827}, {"name": "Set", "refs": 4626}, {"name": "Subgroup", "refs": 4478}, {"name": "NumberField", "refs": 3901}]}, "m5": {"gini": 0.8108, "top1": 0.4077, "top10": 0.7216}, "m6": {"maxd": 62, "meand": 8.75, "p90d": 20.0, "cyc": 0.0274}, "m7": {"dup": 0.0483, "dupn": 37625, "dupmax": 58, "sdup": 0.0241}, "m8": {"sorry": 0.0, "nsorry": 1, "pl_med": 8.0, "rpp": 9.573}, "m9": {"whole_ml": 0.047, "fanin2": 0.0}}, {"key": "clawristotle", "label": "Clawristotle", "cat": "AI proof project", "group": 3, "tier": "textual", "stars": 26, "url": "https://github.com/Vilin97/Clawristotle", "files": 51, "loc": 12334, "decls": 480, "alldecls": 506, "edges": 7849, "excluded": false, "m1": {"mean": 3.177, "median": 1.0, "p90": 6.0, "max": 68, "never": 0.0938, "ge2": 0.4146, "ccdf": {"1": 0.90625, "2": 0.41458, "3": 0.2375, "5": 0.13958, "10": 0.06875, "20": 0.02917, "50": 0.00417, "100": 0.0, "200": 0.0, "500": 0.0, "1000": 0.0}, "top": [{"name": "VML.normSq", "deg": 68}, {"name": "Torus3", "deg": 55}, {"name": "VML.landauMatrix", "deg": 45}, {"name": "VML.vGrad", "deg": 44}, {"name": "periodicLift", "deg": 33}, {"name": "VML.FlatTorus3", "deg": 32}, {"name": "VML.coulombKernel", "deg": 32}, {"name": "VML.cross", "deg": 29}, {"name": "TopCat.Sheaf.zeroOutsideInt", "deg": 29}, {"name": "VML.VMLInput", "deg": 24}]}, "m2": {"sig": 0.2512, "val": 0.0651, "prf": 0.6837, "load": 0.3163, "thmstmt": 0.0}, "m3": {"crossfile": 0.6191, "crossdir": 0.0, "outside": 0.4875, "five": 0.0458}, "m4": {"ml_per_decl": 16.817, "vocab": 961, "vocab1k": 115.9, "ext_int": 2.803, "top": [{"name": "AddCommGrpCat", "refs": 433}, {"name": "Real.log", "refs": 378}, {"name": "Matrix.dotProduct", "refs": 289}, {"name": "CategoryTheory.ConcreteCategory", "refs": 190}, {"name": "TopCat", "refs": 186}, {"name": "linarith", "refs": 181}, {"name": "Real.exp", "refs": 169}, {"name": "MeasureTheory.Integrable", "refs": 161}, {"name": "TopCat.Sheaf", "refs": 142}, {"name": "CategoryTheory.Sheaf.H", "refs": 140}]}, "m5": {"gini": 0.6325, "top1": 0.139, "top10": 0.5633}, "m6": {"maxd": 18, "meand": 4.174, "p90d": 8.0, "cyc": 0.0}, "m7": {"dup": 0.0, "dupn": 419, "dupmax": 1, "sdup": 0.0}, "m8": {"sorry": 0.0053, "nsorry": 2, "pl_med": 17.0, "rpp": 25.804}, "m9": {"whole_ml": 0.0784, "fanin2": 0.0}}, {"key": "formal-conjectures", "label": "Formal Conjectures", "cat": "statements only", "group": 4, "tier": "exact", "stars": 1052, "url": "https://github.com/google-deepmind/formal-conjectures", "files": 970, "loc": 12733, "decls": 5120, "alldecls": 5206, "edges": 240298, "excluded": false, "m1": {"mean": 1.134, "median": 0.0, "p90": 4.0, "max": 60, "never": 0.6518, "ge2": 0.1994, "ccdf": {"1": 0.34824, "2": 0.19941, "3": 0.13262, "5": 0.0752, "10": 0.01641, "20": 0.00313, "50": 0.00078, "100": 0.0, "200": 0.0, "500": 0.0, "1000": 0.0}, "top": [{"name": "IsSidon", "deg": 60}, {"name": "Set.HasDensity", "deg": 59}, {"name": "MonochromaticQuantumGraph.WeightsN", "deg": 56}, {"name": "MonochromaticQuantumGraph.EqSystemN", "deg": 52}, {"name": "Green14.W", "deg": 46}, {"name": "OpenQuantumProblem35.Config", "deg": 40}, {"name": "Set.IsAPOfLength", "deg": 36}, {"name": "Nat.Composite", "deg": 29}, {"name": "OpenQuantumProblem35.ExistsAME", "deg": 29}, {"name": "Set.IsAsymptoticAddBasisOfOrder", "deg": 26}]}, "m2": {"sig": 0.308, "val": 0.1309, "prf": 0.5611, "load": 0.4389, "thmstmt": 0.0039}, "m3": {"crossfile": 0.1882, "crossdir": 0.1823, "outside": 0.0559, "five": 0.0057}, "m4": {"ml_per_decl": 23.541, "vocab": 4911, "vocab1k": 40.1, "ext_int": 23.917, "top": [{"name": "Real", "refs": 3482}, {"name": "Set", "refs": 2196}, {"name": "Nat.instPreorder", "refs": 2037}, {"name": "Real.instNatCast", "refs": 2009}, {"name": "Filter.atTop", "refs": 1523}, {"name": "Finset", "refs": 1426}, {"name": "instOfNatAtLeastTwo", "refs": 1324}, {"name": "DivInvMonoid", "refs": 1284}, {"name": "Monoid.toNatPow", "refs": 1263}, {"name": "Real.instOne", "refs": 1235}]}, "m5": {"gini": 0.8227, "top1": 0.1891, "top10": 0.6632}, "m6": {"maxd": 11, "meand": 2.468, "p90d": 5.0, "cyc": 0.0}, "m7": {"dup": 0.0135, "dupn": 1486, "dupmax": 5, "sdup": 0.0011}, "m8": {"sorry": 0.658, "nsorry": 2347, "pl_med": 6.0, "rpp": 37.738}, "m9": {"whole_ml": 0.0, "fanin2": 0.0144}}, {"key": "nng4", "label": "Natural Number Game", "cat": "teaching", "group": 4, "tier": "textual", "stars": 348, "url": "https://github.com/leanprover-community/NNG4", "files": 173, "loc": 2945, "decls": 60, "alldecls": 102, "edges": 214, "excluded": true, "m1": {"mean": 1.433, "median": 1.0, "p90": 3.0, "max": 30, "never": 0.4333, "ge2": 0.2167, "ccdf": {"1": 0.56667, "2": 0.21667, "3": 0.16667, "5": 0.03333, "10": 0.01667, "20": 0.01667, "50": 0.0, "100": 0.0, "200": 0.0, "500": 0.0, "1000": 0.0}, "top": [{"name": "MyNat", "deg": 30}, {"name": "pred", "deg": 5}, {"name": "MyNat.zero_eq_0", "deg": 3}, {"name": "is_zero", "deg": 3}, {"name": "MyNat.add_zero", "deg": 3}, {"name": "MyNat.add_succ", "deg": 3}, {"name": "Lean.Parser.Term.haveIdLhs'", "deg": 3}, {"name": "Game.Tactic.haveLetCore", "deg": 3}, {"name": "f", "deg": 3}, {"name": "MyNat.le", "deg": 3}]}, "m2": {"sig": 0.3034, "val": 0.4719, "prf": 0.2247, "load": 0.7753, "thmstmt": 0.037}, "m3": {"crossfile": 0.5, "crossdir": 0.2596, "outside": 0.1333, "five": 0.0167}, "m4": {"ml_per_decl": 0.116, "vocab": 6, "vocab1k": 750.0, "ext_int": 0.867, "top": [{"name": "Mathlib.Tactic.ElimApp.evalNames", "refs": 2}, {"name": "try", "refs": 2}, {"name": "norm_num", "refs": 1}, {"name": "by_contra", "refs": 1}, {"name": "toNat", "refs": 1}, {"name": "Mathlib.Tactic.runUse", "refs": 1}]}, "m5": {"gini": 0.7174, "top1": 0.3488, "top10": 0.5465}, "m6": {"maxd": 4, "meand": 1.796, "p90d": 3.0, "cyc": 0.0882}, "m7": {"dup": 0.0, "dupn": 23, "dupmax": 1, "sdup": 0.0}, "m8": {"sorry": 0.0, "nsorry": 0, "pl_med": 3.0, "rpp": 2.222}, "m9": {"whole_ml": 0.0, "fanin2": 0.4682}}], "ccdf": [{"label": "Mathlib", "group": 0, "dash": false, "pts": [[1, 0.65016], [2, 0.41416], [3, 0.29203], [5, 0.18704], [10, 0.10379], [20, 0.05836], [50, 0.02636], [100, 0.01444], [200, 0.0079], [500, 0.00356], [1000, 0.00202]], "dy": 0.0}, {"label": "Physlib", "group": 1, "dash": false, "pts": [[1, 0.74889], [2, 0.43316], [3, 0.30512], [5, 0.19614], [10, 0.10777], [20, 0.05471], [50, 0.02105], [100, 0.01052], [200, 0.00531], [500, 0.00096], [1000, 9e-05]], "dy": 19.3}, {"label": "TauCeti", "group": 2, "dash": false, "pts": [[1, 0.66181], [2, 0.36717], [3, 0.23017], [5, 0.13771], [10, 0.07168], [20, 0.0345], [50, 0.01089], [100, 0.0041], [200, 0.00141], [500, 0.00028], [1000, 0.0]], "dy": 0.0}, {"label": "LeanPool", "group": 2, "dash": false, "pts": [[1, 0.77113], [2, 0.42128], [3, 0.29313], [5, 0.18796], [10, 0.09934], [20, 0.05086], [50, 0.01944], [100, 0.00804], [200, 0.0037], [500, 0.00102], [1000, 0.00027]], "dy": 12.7}, {"label": "Meta ATLAS", "group": 3, "dash": true, "pts": [[1, 0.69806], [2, 0.28579], [3, 0.17962], [5, 0.09905], [10, 0.03993], [20, 0.01424], [50, 0.00332], [100, 0.00093], [200, 0.00031], [500, 6e-05], [1000, 0.0]], "dy": 33.3}, {"label": "Erdos90 (OpenAI)", "group": 3, "dash": true, "pts": [[1, 0.66279], [2, 0.36037], [3, 0.23634], [5, 0.13576], [10, 0.06187], [20, 0.02665], [50, 0.00834], [100, 0.00378], [200, 0.00146], [500, 0.00057], [1000, 0.0002]], "dy": 16.0}, {"label": "Seed-Prover", "group": 3, "dash": true, "pts": [[1, 0.18876], [2, 0.102], [3, 0.07834], [5, 0.05508], [10, 0.03075], [20, 0.01711], [50, 0.00608], [100, 0.00294], [200, 0.00154], [500, 0.0002], [1000, 0.0]], "dy": 30.0}], "vocab": [{"label": "Physlib", "vocab": 9565, "top": [{"name": "Real", "refs": 10153}, {"name": "DFunLike", "refs": 8074}, {"name": "Semiring.toNonAssocSemiring", "refs": 7517}, {"name": "Complex", "refs": 6579}, {"name": "RingHom.id", "refs": 6467}, {"name": "Semiring", "refs": 5843}, {"name": "AddCommGroup.toAddCommMonoid", "refs": 5545}, {"name": "CommSemiring", "refs": 5136}, {"name": "PseudoMetricSpace", "refs": 4674}, {"name": "NormedAddCommGroup.toSeminormedAddCommGroup", "refs": 4666}]}, {"label": "FLT", "vocab": 9602, "top": [{"name": "Semiring", "refs": 3876}, {"name": "CommSemiring", "refs": 3846}, {"name": "CommRing.toCommSemiring", "refs": 3439}, {"name": "DFunLike", "refs": 3231}, {"name": "Field.toSemifield", "refs": 3096}, {"name": "CommRing", "refs": 2989}, {"name": "DivisionSemiring", "refs": 2799}, {"name": "Field", "refs": 2747}, {"name": "Algebra", "refs": 2587}, {"name": "Semiring.toNonAssocSemiring", "refs": 2575}]}, {"label": "TauCeti", "vocab": 7799, "top": [{"name": "DFunLike", "refs": 5458}, {"name": "CommSemiring", "refs": 4672}, {"name": "Real", "refs": 4587}, {"name": "Semiring.toNonAssocSemiring", "refs": 3719}, {"name": "Semiring", "refs": 3296}, {"name": "SetLike.instMembership", "refs": 3137}, {"name": "Module", "refs": 2965}, {"name": "Set", "refs": 2699}, {"name": "RingHom.id", "refs": 2542}, {"name": "AddCommMonoid", "refs": 2242}]}, {"label": "LeanPool", "vocab": 22352, "top": [{"name": "Real", "refs": 23097}, {"name": "Semiring", "refs": 15466}, {"name": "DFunLike", "refs": 15417}, {"name": "Set", "refs": 14136}, {"name": "CommSemiring", "refs": 14030}, {"name": "Semiring.toNonAssocSemiring", "refs": 13798}, {"name": "Complex", "refs": 12792}, {"name": "SetLike.instMembership", "refs": 12189}, {"name": "AddMonoidWithOne", "refs": 11580}, {"name": "Field.toSemifield", "refs": 11182}]}, {"label": "Erdos90 (OpenAI)", "vocab": 9784, "top": [{"name": "Group", "refs": 13437}, {"name": "NumberField.RingOfIntegers", "refs": 7097}, {"name": "symm", "refs": 6891}, {"name": "ZMod", "refs": 6533}, {"name": "Algebra", "refs": 5620}, {"name": "Fact", "refs": 5131}, {"name": "Field", "refs": 4827}, {"name": "Set", "refs": 4626}, {"name": "Subgroup", "refs": 4478}, {"name": "NumberField", "refs": 3901}]}], "auc": [{"label": "M3 \u00b7 edges crossing directories", "dir": "\u2191 human", "medH": "19.3%", "medC": "0.7%", "medA": "0.0%", "auc": 0.978}, {"label": "M9 \u00b7 files importing all of Mathlib", "dir": "\u2193 human", "medH": "0.0%", "medC": "0.0%", "medA": "7.8%", "auc": 0.978}, {"label": "M2 \u00b7 statement share of refs", "dir": "\u2191 human", "medH": "26.9%", "medC": "29.0%", "medA": "36.3%", "auc": 0.267}, {"label": "M8 \u00b7 sorried theorems", "dir": "\u2193 human", "medH": "0.0%", "medC": "0.0%", "medA": "0.5%", "auc": 0.722}, {"label": "M3 \u00b7 decls used outside their file", "dir": "\u2191 human", "medH": "30.4%", "medC": "28.1%", "medA": "11.3%", "auc": 0.711}, {"label": "M2 \u00b7 theorems cited by other statements", "dir": "\u2191 human", "medH": "0.9%", "medC": "1.2%", "medA": "0.4%", "auc": 0.689}, {"label": "M1 \u00b7 share reused \u22652", "dir": "\u2191 human", "medH": "38.1%", "medC": "39.4%", "medA": "28.6%", "auc": 0.667}, {"label": "M1 \u00b7 share never reused", "dir": "\u2193 human", "medH": "35.0%", "medC": "28.4%", "medA": "30.2%", "auc": 0.333}, {"label": "M4 \u00b7 Mathlib refs per decl (downstream only)", "dir": "\u2191 human", "medH": "25.45", "medC": "47.10", "medA": "6.27", "auc": 0.64}, {"label": "M6 \u00b7 max dependency depth", "dir": "\u2191 human", "medH": "35", "medC": "92.50", "medA": "21", "auc": 0.611}, {"label": "M7 \u00b7 duplicate bodies", "dir": "\u2193 human", "medH": "1.6%", "medC": "1.1%", "medA": "2.3%", "auc": 0.556}, {"label": "M5 \u00b7 top-1% reuse share", "dir": "\u2193 human", "medH": "29.8%", "medC": "37.0%", "medA": "40.6%", "auc": 0.533}, {"label": "M1 \u00b7 median in-degree", "dir": "\u2191 human", "medH": "1.00", "medC": "1.00", "medA": "1.00", "auc": 0.489}], "validation": {"aesop": {"n_joined": 1232, "join_rate_env": 0.7413, "spearman_indeg": 0.589, "pearson_log1p": 0.771, "never_textual": 0.4359, "never_env": 0.1461, "mean_deg_textual": 2.67, "mean_deg_env": 6.169, "textual_zero_env_nonzero": 0.3174, "env_zero_textual_nonzero": 0.0276}, "analysis": {"n_joined": 3419, "join_rate_env": 0.9228, "spearman_indeg": 0.692, "pearson_log1p": 0.775, "never_textual": 0.5823, "never_env": 0.4475, "mean_deg_textual": 2.435, "mean_deg_env": 3.782, "textual_zero_env_nonzero": 0.1647, "env_zero_textual_nonzero": 0.0298}, "batteries": {"n_joined": 2198, "join_rate_env": 0.7814, "spearman_indeg": 0.714, "pearson_log1p": 0.77, "never_textual": 0.5905, "never_env": 0.4832, "mean_deg_textual": 1.319, "mean_deg_env": 2.069, "textual_zero_env_nonzero": 0.1379, "env_zero_textual_nonzero": 0.0305}, "core": {"n_joined": 56288, "join_rate_env": 0.7085, "spearman_indeg": 0.693, "pearson_log1p": 0.75, "never_textual": 0.4009, "never_env": 0.3193, "mean_deg_textual": 5.722, "mean_deg_env": 24.334, "textual_zero_env_nonzero": 0.1287, "env_zero_textual_nonzero": 0.0471}, "cslib": {"n_joined": 2504, "join_rate_env": 0.8746, "spearman_indeg": 0.712, "pearson_log1p": 0.781, "never_textual": 0.3822, "never_env": 0.3666, "mean_deg_textual": 2.621, "mean_deg_env": 4.6, "textual_zero_env_nonzero": 0.1014, "env_zero_textual_nonzero": 0.0859}, "equational_theories": {"n_joined": 16379, "join_rate_env": 0.3531, "spearman_indeg": 0.53, "pearson_log1p": 0.618, "never_textual": 0.7588, "never_env": 0.1177, "mean_deg_textual": 2.684, "mean_deg_env": 8.02, "textual_zero_env_nonzero": 0.6444, "env_zero_textual_nonzero": 0.0033}, "flt": {"n_joined": 2937, "join_rate_env": 0.7721, "spearman_indeg": 0.77, "pearson_log1p": 0.786, "never_textual": 0.2489, "never_env": 0.1828, "mean_deg_textual": 2.186, "mean_deg_env": 3.483, "textual_zero_env_nonzero": 0.0909, "env_zero_textual_nonzero": 0.0249}, "formal-conjectures": {"n_joined": 4864, "join_rate_env": 0.95, "spearman_indeg": 0.869, "pearson_log1p": 0.904, "never_textual": 0.6287, "never_env": 0.6507, "mean_deg_textual": 1.049, "mean_deg_env": 1.15, "textual_zero_env_nonzero": 0.0306, "env_zero_textual_nonzero": 0.0526}, "lean-pool": {"n_joined": 37451, "join_rate_env": 0.8454, "spearman_indeg": 0.763, "pearson_log1p": 0.764, "never_textual": 0.2258, "never_env": 0.1736, "mean_deg_textual": 4.696, "mean_deg_env": 6.121, "textual_zero_env_nonzero": 0.0778, "env_zero_textual_nonzero": 0.0256}, "mathlib4": {"n_joined": 225776, "join_rate_env": 0.7799, "spearman_indeg": 0.757, "pearson_log1p": 0.809, "never_textual": 0.4063, "never_env": 0.2945, "mean_deg_textual": 4.709, "mean_deg_env": 20.276, "textual_zero_env_nonzero": 0.1359, "env_zero_textual_nonzero": 0.0242}, "pfr": {"n_joined": 998, "join_rate_env": 0.7683, "spearman_indeg": 0.774, "pearson_log1p": 0.778, "never_textual": 0.2224, "never_env": 0.1443, "mean_deg_textual": 2.529, "mean_deg_env": 4.466, "textual_zero_env_nonzero": 0.0992, "env_zero_textual_nonzero": 0.021}, "physlib": {"n_joined": 10444, "join_rate_env": 0.9084, "spearman_indeg": 0.789, "pearson_log1p": 0.833, "never_textual": 0.2882, "never_env": 0.2196, "mean_deg_textual": 3.498, "mean_deg_env": 6.829, "textual_zero_env_nonzero": 0.0955, "env_zero_textual_nonzero": 0.0269}, "tauceti": {"n_joined": 6900, "join_rate_env": 0.9755, "spearman_indeg": 0.79, "pearson_log1p": 0.834, "never_textual": 0.453, "never_env": 0.3367, "mean_deg_textual": 2.305, "mean_deg_env": 3.771, "textual_zero_env_nonzero": 0.1258, "env_zero_textual_nonzero": 0.0094}}, "verdicts": [{"good": true, "title": "Cross-directory reuse (M3)", "text": "The strongest single separator (AUC 0.98). Human libraries interweave their directories (Mathlib: 62% of reuse edges cross top-level dirs); every AI corpus \u2014 curated included \u2014 sits below 1.5%. LeanPool has 93 directories and 0.1% cross-directory reuse: an archipelago of disconnected projects, not a web."}, {"good": true, "title": "Import granularity (M9)", "text": "Wholesale `import Mathlib` instead of granular imports: AUC 0.98. No established human library does it; most uncurated AI corpora do (superhuman: every file). Trivially lintable \u2014 which also means trivially gameable once known."}, {"good": true, "title": "The five-check profile", "text": "No single number separates cleanly, but a profile does: cross-dir reuse, wholesale imports, outside-file reuse, sorries, duplicates. Established human libraries fail 0 checks; curated AI fails exactly 1; every uncurated AI corpus fails 2\u20134 \u2014 and each failure names its pathology."}, {"good": false, "title": "Raw reuse counts (M1)", "text": "Median in-degree: AUC 0.49 \u2014 a coin flip. Never-reused share even inverts: superhuman's bespoke proof towers reuse 97% of their lemmas once. High reuse counts cannot tell a cathedral from scaffolding."}, {"good": false, "title": "Statement share (M2) \u2014 inverts", "text": "Uncurated AI corpora show a *higher* share of references in statements (AUC 0.27 against the expected direction): restated hypothesis-heavy problem statements dominate their reference mass. Load-bearing share is genre-confounded, not a quality scalar."}, {"good": false, "title": "Duplication, depth, leverage alone", "text": "Each catches one pathology and misses others: duplication nails Seed-Prover (60%) but superhuman is clean (0.3%); depth is inherited with vendored code (LeanPool ~163); Mathlib leverage is universal \u2014 every AI pipeline already imports fluently."}], "prose": {"reuseProse": "\n<p>Mathlib's curve is the reference: a heavy tail (its hubs \u2014 <code>DFunLike</code>,\n<code>Set</code>, <code>PartialOrder</code> \u2014 each serve tens of thousands of declarations)\nriding on a thick middle: 41.4% of its 289,494 reusable declarations\nare used by at least two others. But notice <b>superhuman</b>: an AI proof dump of 58 files\nwith one of the <em>lowest</em> never-reused rates in the corpus\n(3.4%). Its files are single deep towers \u2014 every lemma feeds the next\nstep of one bespoke proof. Raw in-degree cannot tell a cathedral from scaffolding; it needs\nthe cross-file and statement-level lenses below. The curated AI libraries sit in the human\nband here (TauCeti 36.7% reused \u22652, LeanPool 42.1%) \u2014\nconsistent with their review processes, and with LeanPool absorbing several human\nprojects (its most-reused declarations are a vendored first-order-logic library,\n<code>LO.FirstOrder.*</code>).</p>", "whereProse": "\n<p>The exact tier makes the split sharp from the file system's side:\n35.8% of Mathlib declarations are used outside their defining file, and\nthe established human repos cluster between roughly 20% and 40%. Seed-Prover sits at\n9.4% and superhuman at 1.4% \u2014 their reuse never\nleaves the problem file. Meta ATLAS, structured as a library, still only reaches\n11.3%. One instructive exception: Clawristotle reaches\n48.8% \u2014 a well-run single-theorem AI project is structured like a small\nresearch formalization, and file-locality metrics respect that. Structure metrics measure\nthe artifact, not its author.</p>", "mlProse": "\n<p>The AI corpora are not naive about the ecosystem: TauCeti cites\n49 Mathlib references per declaration across a vocabulary of\n7,799 distinct lemmas; LeanPool's vocabulary of 22,352 is the\nlargest measured (inflated by its absorbed human projects); Erd\u0151s-90 uses\n9,784 distinct Mathlib lemmas. Mathlib leverage therefore measures\n<em>participation</em>, not quality \u2014 reinvention would show as a low ratio, and none of\nthese corpora reinvent. The discriminating signal in this chart is the vertical axis: at\ncomparable leverage, human and reviewed libraries keep their internal dead weight lower.</p>\n<p class=\"note\">One hygiene aside: LeanPool redeclares Mathlib names (<code>LieHom.snd</code>),\nwhich makes it impossible to import alongside full Mathlib \u2014 discovered when the extractor\ntried exactly that.</p>", "hygieneProse": "\n<p>Seed-Prover's 60.3% duplicate-body rate is the extreme: the same proof\nbodies restated across problem files. Meta ATLAS carries 2,914 sorried\ntheorems (12.5%) in a corpus presented as compiled textbook mathematics,\nand Erd\u0151s-90's submission tree still duplicates 4.8% of bodies. Two\ncaveats read differently once provenance is known: Tao's <i>Analysis</i> shows\n44.8% sorries because exercises are deliberately left to the\nreader, and SciLean's 46.8% reflects its explicit\n<code>sorry_proof</code> convention for numerical facts \u2014 context matters before reading\nhygiene numbers as verdicts. The curated AI libraries are clean on both counts\n(TauCeti: 0.7% duplicates, zero sorries).</p>", "discussProse": "\n<p>Taken one at a time, most candidate metrics fail \u2014 several in instructive ways.\n<b>Cross-directory reuse</b> and <b>import granularity</b> are the two near-perfect\nseparators (AUC 0.98): human libraries interweave their directory structure (Mathlib sends\n61.6% of reuse edges across top-level directories) while every AI corpus stays below 1.5% \u2014\nLeanPool has 93 directories and 0.1% cross-directory reuse, an <em>archipelago</em> of\nside-by-side projects rather than a web. Meanwhile <b>statement share inverts</b>: uncurated\ncorpora put a <em>higher</em> share of references in statements, because restated,\nhypothesis-heavy problem statements dominate their reference mass. Raw degree statistics are\na coin flip, duplication misses the corpora that generate clean one-shot proofs, and depth\ncan be vendored in.</p>\n<p>The workable instrument is a <b>five-check profile</b> \u2014 cross-directory reuse,\nwholesale <code>import Mathlib</code>, declarations used outside their file, sorry rate,\nduplicate-body rate. On this corpus: established human libraries fail 0 checks (Tao's\n<i>Analysis</i> fails 2, both explained by being a chapter-structured book with exercises\nleft as sorries); curated AI libraries fail exactly 1 (the archipelago signal); every\nuncurated AI corpus fails 2\u20134, and each failure names its pathology \u2014 ATLAS's sorries,\nSeed-Prover's 60% duplication, superhuman's one-file silos, Erd\u0151s-90's flat directory\nstructure.</p>\n<p>Two calibration points matter. First, the <b>curated AI libraries land in the human\nrange on nearly every per-declaration metric</b> \u2014 the metrics rank TauCeti and LeanPool\nwhere their reputations say they belong, evidence that they track quality rather than\nprovenance. Second, <b>Clawristotle shows the limit</b>: a disciplined single-theorem AI\nproject is structurally indistinguishable from a small human research formalization (PFR)\non graph shape; what remains is breadth \u2014 a Mathlib vocabulary of\n961 distinct lemmas versus PFR's 3,209 at\ncomparable declaration count \u2014 and organization, which is exactly what the cross-directory\ncheck measures.</p>", "validityProse": "\n<p><b>Tier agreement.</b> Where both tiers exist they correlate strongly at the declaration\nlevel (Spearman \u03c1 0.757 across Mathlib's\n225,776 joined declarations; 0.789 on Physlib;\n0.76\u20130.79 across every repo checked) \u2014 the textual tier under-counts dot-notation and\ninstance uses (~40% of dotted tokens in a Mathlib sample are type-directed method calls it\ncannot resolve) but preserves ranking, which justifies using it for the five unbuildable or\nstill-compiling corpora (Seed-Prover, superhuman, Erd\u0151s-90, Clawristotle, ATLAS).</p>\n<p><b>What the exact tier taught us.</b> Getting truth out of oleans required: reading\ntheorem proofs via constructor fields (newer toolchains hide them behind\n<code>value?</code>'s <code>allowOpaque</code>); contracting ~20 families of\ncompiler/attribute-generated constants, with a source-text whitelist protecting handwritten\nnames like <code>False.elim</code>; and folding definitional plumbing same-module-only with\na plumbing-only path rule \u2014 lazily <em>realized</em> equation lemmas and attribute-generated\nlemmas otherwise manufacture acyclicity violations. After these, exact graphs are \u226597.7%\nDAG everywhere except Lean core's bootstrap (excluded from depth comparisons).</p>\n<p><b>Limitations.</b> Single snapshot (2026-07-18). Size confounds: Mathlib is 30\u00d7 most\nrepos; depth and vocabulary grow with size. Genre confounds: core is a compiler; Equational\nTheories machine-generates proofs by design (visible as 14.0%\nduplicate bodies \u2014 textual \u2014 and 14% in its textual tier). Erd\u0151s-90 is measured on its\n<code>src/submission</code> tree only (the repo also ships the raw <code>original</code>).\nSection-variable references are invisible to the textual tier. NNG4's game DSL defeats both\ntiers and is excluded from charts. Group sizes are small \u2014 read AUCs as effect directions,\nnot significance tests.</p>"}, "footer": "Generated 2026-07-18 by the <span class=\"mono\">lean_reuse</span> toolkit \u2014 textual tier: regex/scoping parser; exact tier: Lean metaprogram over elaborated environments (getUsedConstants on types and values, compiler-generated auxiliaries contracted). Repos pinned at their 2026-07-18 checkouts; Mathlib graph extracted from the v4.32.0-rc1 build vendored in lean-pool. Metrics code: one module per metric, lean_reuse/metrics/."};
+
+const GROUPS = DATA.groups;
+const GCOL = i => `var(--g${i})`;
+const fmtPct = v => (v*100).toFixed(v*100 >= 10 ? 0 : 1) + '%';
+const fmtNum = v => v >= 1e6 ? (v/1e6).toFixed(1)+'M' : v >= 1000 ? (v/1000).toFixed(v >= 10000 ? 0 : 1)+'k' : (typeof v === 'number' ? (Number.isInteger(v) ? v : v.toFixed(1)) : v);
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+
+const tooltip = document.getElementById('tooltip');
+function showTip(ev, html) {
+  tooltip.innerHTML = html; tooltip.style.display = 'block';
+  const pad = 14;
+  let x = ev.clientX + pad, y = ev.clientY + pad;
+  const r = tooltip.getBoundingClientRect();
+  if (x + r.width > innerWidth - 8) x = ev.clientX - r.width - pad;
+  if (y + r.height > innerHeight - 8) y = ev.clientY - r.height - pad;
+  tooltip.style.left = x + 'px'; tooltip.style.top = y + 'px';
+}
+function hideTip() { tooltip.style.display = 'none'; }
+
+function svgEl(tag, attrs, parent) {
+  const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+  for (const k in attrs) el.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(el);
+  return el;
+}
+
+// ---------- hero tiles ----------
+(function() {
+  const t = DATA.totals;
+  const tiles = [
+    [t.repos, 'repositories'], [fmtNum(t.decls), 'declarations'],
+    [fmtNum(t.edges), 'dependency edges'], [t.envRepos, 'exact-tier repos'],
+    [fmtNum(t.loc), 'lines analyzed'],
+  ];
+  document.getElementById('heroTiles').innerHTML = tiles.map(([v,k]) =>
+    `<div class="tile"><div class="v">${v}</div><div class="k">${k}</div></div>`).join('');
+})();
+
+// ---------- group legend ----------
+function legendHTML(groups) {
+  return groups.map((g,i) => `<span><span class="sw" style="background:${GCOL(i)}"></span>${g}</span>`).join('');
+}
+document.getElementById('groupLegend').innerHTML = legendHTML(GROUPS);
+
+// ---------- corpus table ----------
+(function() {
+  const cols = [
+    ['Repository', r => `<span class="dotb" style="background:${GCOL(r.group)}"></span><a href="${r.url}">${r.label}</a>`, r => r.label],
+    ['tier', r => `<span class="tiertag">${r.tier}</span>`, r => r.tier],
+    ['★', r => fmtNum(r.stars), r => r.stars],
+    ['files', r => r.files, r => r.files],
+    ['kLOC', r => (r.loc/1000).toFixed(0), r => r.loc],
+    ['decls', r => fmtNum(r.decls), r => r.decls],
+    ['med deg', r => r.m1.median, r => r.m1.median],
+    ['reused ≥2', r => fmtPct(r.m1.ge2), r => r.m1.ge2],
+    ['x-file', r => fmtPct(r.m3.outside), r => r.m3.outside],
+    ['stmt share', r => fmtPct(r.m2.sig), r => r.m2.sig],
+    ['ML refs/decl', r => r.m4.ml_per_decl ? r.m4.ml_per_decl.toFixed(1) : '—', r => r.m4.ml_per_decl||0],
+    ['depth', r => r.m6.maxd, r => r.m6.maxd],
+    ['dup', r => fmtPct(r.m7.dup), r => r.m7.dup],
+    ['sorry', r => fmtPct(r.m8.sorry), r => r.m8.sorry],
+  ];
+  const tbl = document.getElementById('corpusTable');
+  let sortCol = -1, sortDir = -1;
+  function render() {
+    const rows = [...DATA.repos];
+    if (sortCol >= 0) rows.sort((a,b) => {
+      const va = cols[sortCol][2](a), vb = cols[sortCol][2](b);
+      return (va > vb ? 1 : va < vb ? -1 : 0) * sortDir;
+    });
+    tbl.innerHTML = '<tr>' + cols.map((c,i) =>
+      `<th data-i="${i}">${c[0]}${i===sortCol ? (sortDir>0?' ↑':' ↓') : ''}</th>`).join('') + '</tr>' +
+      rows.map(r => '<tr>' + cols.map(c => `<td>${c[1](r)}</td>`).join('') + '</tr>').join('');
+    tbl.querySelectorAll('th').forEach(th => th.onclick = () => {
+      const i = +th.dataset.i;
+      if (sortCol === i) sortDir *= -1; else { sortCol = i; sortDir = -1; }
+      render();
+    });
+  }
+  render();
+})();
+
+// ---------- metric cards ----------
+(function() {
+  const M = [
+    ['M1','Internal reuse degree','Distinct-user in-degree per reusable declaration: mean, median, tails, CCDF, share never reused.'],
+    ['M2','Statement vs proof reuse','Do references live in types and definition bodies (load-bearing) or only inside proofs (erasable)?'],
+    ['M3','Cross-file reuse','Share of reuse crossing file/directory boundaries; declarations used outside their defining file.'],
+    ['M4','Upstream (Mathlib) reuse','Mathlib references per declaration and distinct-lemma vocabulary: leaning on the ecosystem vs reinventing it.'],
+    ['M5','Concentration','Gini and top-1% share of reuse: broad shared vocabulary vs a few hubs plus dead weight.'],
+    ['M6','Dependency depth','Longest internal build-on chain in the declaration DAG.'],
+    ['M7','Duplication','Exact-duplicate normalized bodies and theorem statements — the anti-reuse.'],
+    ['M8','Proof economy & hygiene','Proof length, distinct lemmas per proof, sorry rate.'],
+    ['M9','Import granularity','File fan-in and wholesale <code>import Mathlib</code> vs granular imports.'],
+  ];
+  document.getElementById('metricCards').innerHTML = M.map(([id,t,d]) =>
+    `<div class="mcard"><span class="id">${id}</span><h4>${t}</h4><p>${d}</p></div>`).join('');
+})();
+
+// ---------- generic dot-rank chart ----------
+function dotRank(elId, rows, opts = {}) {
+  const el = document.getElementById(elId);
+  const W = Math.max(640, Math.min(el.clientWidth || 900, 980));
+  const rowH = 26, padL = 172, padR = 90, padT = 8, padB = 26;
+  const H = rows.length * rowH + padT + padB;
+  const maxV = opts.max ?? Math.max(...rows.map(r => r.value)) * 1.06;
+  const x = v => padL + (opts.log
+    ? (Math.log10(Math.max(v, opts.logMin ?? 0.1)) - Math.log10(opts.logMin ?? 0.1)) / (Math.log10(maxV) - Math.log10(opts.logMin ?? 0.1)) * (W - padL - padR)
+    : v / maxV * (W - padL - padR));
+  const svg = svgEl('svg', { width: W, height: H, viewBox: `0 0 ${W} ${H}` }, el);
+  const fmt = opts.fmt || fmtNum;
+  // gridlines + axis labels
+  const ticks = opts.ticks || 5;
+  for (let i = 0; i <= ticks; i++) {
+    const v = maxV * i / ticks, gx = x(v);
+    svgEl('line', { x1: gx, y1: padT, x2: gx, y2: H - padB, stroke: 'var(--grid)', 'stroke-width': 1 }, svg);
+    const t = svgEl('text', { x: gx, y: H - 8, 'text-anchor': 'middle', 'font-size': 11, fill: 'var(--muted)' }, svg);
+    t.textContent = fmt(v);
+  }
+  rows.forEach((r, i) => {
+    const cy = padT + i * rowH + rowH / 2;
+    const lbl = svgEl('text', { x: padL - 10, y: cy + 4, 'text-anchor': 'end', 'font-size': 12.5, fill: 'var(--ink2)' }, svg);
+    lbl.textContent = r.label;
+    svgEl('line', { x1: padL, y1: cy, x2: x(r.value), y2: cy, stroke: GCOL(r.group), 'stroke-width': 2, opacity: 0.45 }, svg);
+    if (r.tick != null)
+      svgEl('line', { x1: x(r.tick), y1: cy - 6, x2: x(r.tick), y2: cy + 6, stroke: GCOL(r.group), 'stroke-width': 2 }, svg);
+    const dot = svgEl('circle', { cx: x(r.value), cy, r: 5.5, fill: GCOL(r.group), stroke: 'var(--surface)', 'stroke-width': 2 }, svg);
+    const vt = svgEl('text', { x: x(r.value) + 10, y: cy + 4, 'font-size': 11.5, fill: 'var(--ink2)', class: 'mono' }, svg);
+    vt.textContent = fmt(r.value) + (r.suffix || '');
+    const hit = svgEl('rect', { x: 0, y: padT + i * rowH, width: W, height: rowH, fill: 'transparent' }, svg);
+    hit.addEventListener('mousemove', ev => showTip(ev, r.tip || `<b>${esc(r.label)}</b><br>${fmt(r.value)}`));
+    hit.addEventListener('mouseleave', hideTip);
+  });
+}
+
+// ---------- CCDF chart ----------
+function ccdfChart(elId, series) {
+  const el = document.getElementById(elId);
+  const W = Math.max(640, Math.min(el.clientWidth || 900, 980)), H = 380;
+  const padL = 56, padR = 128, padT = 12, padB = 40;
+  const xmax = 1000, ymin = 1e-4;
+  const x = v => padL + Math.log10(Math.max(v,1)) / Math.log10(xmax) * (W - padL - padR);
+  const y = v => padT + (1 - Math.log10(Math.max(v, ymin)) / Math.log10(ymin) * -1 - 1) * 0; // placeholder
+  const yl = v => padT + (Math.log10(1) - Math.log10(Math.max(v, ymin))) / (Math.log10(1) - Math.log10(ymin)) * (H - padT - padB);
+  const svg = svgEl('svg', { width: W, height: H, viewBox: `0 0 ${W} ${H}` }, el);
+  [1,2,5,10,20,50,100,500,1000].forEach(v => {
+    const gx = x(v);
+    svgEl('line', { x1: gx, y1: padT, x2: gx, y2: H - padB, stroke: 'var(--grid)' }, svg);
+    const t = svgEl('text', { x: gx, y: H - 14, 'text-anchor': 'middle', 'font-size': 11, fill: 'var(--muted)' }, svg);
+    t.textContent = v;
+  });
+  [1, 0.1, 0.01, 0.001, 0.0001].forEach(v => {
+    const gy = yl(v);
+    svgEl('line', { x1: padL, y1: gy, x2: W - padR, y2: gy, stroke: 'var(--grid)' }, svg);
+    const t = svgEl('text', { x: padL - 8, y: gy + 4, 'text-anchor': 'end', 'font-size': 11, fill: 'var(--muted)' }, svg);
+    t.textContent = v >= 0.01 ? (v*100) + '%' : (v*100).toFixed(v===0.001?1:2) + '%';
+  });
+  const xt = svgEl('text', { x: (padL + W - padR)/2, y: H - 0.5, 'text-anchor': 'middle', 'font-size': 11.5, fill: 'var(--muted)' }, svg);
+  xt.textContent = 'internal in-degree ≥ x';
+  series.forEach(s => {
+    const pts = s.pts.filter(p => p[1] > 0);
+    const d = pts.map((p,i) => (i ? 'L' : 'M') + x(p[0]).toFixed(1) + ',' + yl(p[1]).toFixed(1)).join(' ');
+    const path = svgEl('path', { d, fill: 'none', stroke: GCOL(s.group), 'stroke-width': 2,
+      'stroke-dasharray': s.dash ? '5 4' : 'none', 'stroke-linejoin': 'round' }, svg);
+    const last = pts[pts.length-1];
+    const lt = svgEl('text', { x: x(last[0]) + 8, y: yl(last[1]) + 4 + (s.dy||0), 'font-size': 11.5, fill: GCOL(s.group), 'font-weight': 600 }, svg);
+    lt.textContent = s.label;
+    path.addEventListener('mousemove', ev => showTip(ev, `<b>${esc(s.label)}</b><br>` +
+      pts.map(p => `≥${p[0]}: ${(p[1]*100).toFixed(2)}%`).slice(0,7).join('<br>')));
+    path.addEventListener('mouseleave', hideTip);
+  });
+}
+
+// ---------- stacked context chart ----------
+function stackedChart(elId, rows) {
+  const el = document.getElementById(elId);
+  const W = Math.max(640, Math.min(el.clientWidth || 900, 980));
+  const rowH = 26, padL = 172, padR = 40, padT = 6, padB = 24;
+  const H = rows.length * rowH + padT + padB;
+  const svg = svgEl('svg', { width: W, height: H, viewBox: `0 0 ${W} ${H}` }, el);
+  const CTX = ['statement', 'definition value', 'proof'];
+  const COLS = ['var(--g0)', 'var(--g4)', 'var(--muted)'];
+  rows.forEach((r, i) => {
+    const cy = padT + i * rowH;
+    const lbl = svgEl('text', { x: padL - 10, y: cy + rowH/2 + 4, 'text-anchor': 'end', 'font-size': 12.5, fill: 'var(--ink2)' }, svg);
+    lbl.textContent = r.label;
+    let xx = padL;
+    r.parts.forEach((p, j) => {
+      const w = Math.max(0, p * (W - padL - padR) - 2);
+      const rect = svgEl('rect', { x: xx, y: cy + 5, width: w, height: rowH - 10, rx: 3, fill: COLS[j] }, svg);
+      rect.addEventListener('mousemove', ev => showTip(ev, `<b>${esc(r.label)}</b><br>${CTX[j]}: ${(p*100).toFixed(1)}%`));
+      rect.addEventListener('mouseleave', hideTip);
+      if (p > 0.09) {
+        const t = svgEl('text', { x: xx + w/2, y: cy + rowH/2 + 3.5, 'text-anchor': 'middle', 'font-size': 10.5, fill: '#fff', 'font-weight': 600 }, svg);
+        t.textContent = Math.round(p*100) + '%';
+      }
+      xx += p * (W - padL - padR);
+    });
+  });
+  document.getElementById('ctxLegend').innerHTML =
+    CTX.map((c,j) => `<span><span class="sw" style="background:${COLS[j]}"></span>${c}</span>`).join('');
+}
+
+// ---------- scatter ----------
+function scatterChart(elId, pts, opts) {
+  const el = document.getElementById(elId);
+  const W = Math.max(640, Math.min(el.clientWidth || 900, 980)), H = 420;
+  const padL = 60, padR = 30, padT = 14, padB = 46;
+  const xmin = opts.xmin ?? 0.5, xmax = opts.xmax ?? Math.max(...pts.map(p => p.x)) * 1.3;
+  const x = v => padL + (Math.log10(Math.max(v, xmin)) - Math.log10(xmin)) / (Math.log10(xmax) - Math.log10(xmin)) * (W - padL - padR);
+  const y = v => padT + (1 - v) * (H - padT - padB);
+  const svg = svgEl('svg', { width: W, height: H, viewBox: `0 0 ${W} ${H}` }, el);
+  (opts.xticks || [1,2,5,10,20,50]).forEach(v => {
+    const gx = x(v);
+    svgEl('line', { x1: gx, y1: padT, x2: gx, y2: H - padB, stroke: 'var(--grid)' }, svg);
+    const t = svgEl('text', { x: gx, y: H - 26, 'text-anchor': 'middle', 'font-size': 11, fill: 'var(--muted)' }, svg);
+    t.textContent = v;
+  });
+  [0, 0.25, 0.5, 0.75, 1].forEach(v => {
+    const gy = y(v);
+    svgEl('line', { x1: padL, y1: gy, x2: W - padR, y2: gy, stroke: 'var(--grid)' }, svg);
+    const t = svgEl('text', { x: padL - 8, y: gy + 4, 'text-anchor': 'end', 'font-size': 11, fill: 'var(--muted)' }, svg);
+    t.textContent = (v*100) + '%';
+  });
+  const xt = svgEl('text', { x: (padL+W-padR)/2, y: H - 6, 'text-anchor': 'middle', 'font-size': 11.5, fill: 'var(--muted)' }, svg);
+  xt.textContent = opts.xlabel;
+  const yt = svgEl('text', { x: 14, y: (padT+H-padB)/2, 'font-size': 11.5, fill: 'var(--muted)',
+    transform: `rotate(-90 14 ${(padT+H-padB)/2})`, 'text-anchor': 'middle' }, svg);
+  yt.textContent = opts.ylabel;
+  pts.forEach(p => {
+    const c = svgEl('circle', { cx: x(p.x), cy: y(p.y), r: 6, fill: GCOL(p.group), stroke: 'var(--surface)', 'stroke-width': 2 }, svg);
+    const t = svgEl('text', { x: x(p.x) + 9, y: y(p.y) + (p.dy ?? 4), 'font-size': 11, fill: 'var(--ink2)' }, svg);
+    t.textContent = p.label;
+    c.addEventListener('mousemove', ev => showTip(ev, `<b>${esc(p.label)}</b><br>${opts.xlabel}: ${p.x.toFixed(1)}<br>${opts.ylabel}: ${fmtPct(p.y)}`));
+    c.addEventListener('mouseleave', hideTip);
+  });
+}
+
+// ================= render everything from DATA =================
+const charted = DATA.repos.filter(r => !r.excluded);
+const byKey = {}; DATA.repos.forEach(r => byKey[r.key] = r);
+
+// 04 — CCDF
+ccdfChart('ccdfChart', DATA.ccdf);
+document.getElementById('ccdfLegend').innerHTML = legendHTML(GROUPS) +
+  '<span class="note" style="margin-left:8px">dashed = textual tier (unbuildable repo)</span>';
+
+// 04 — reused >= 2
+dotRank('ge2Chart', charted.map(r => ({
+  label: r.label, value: r.m1.ge2, group: r.group,
+  tip: `<b>${esc(r.label)}</b> <span class="tiertag">(${r.tier})</span><br>reused ≥2: ${fmtPct(r.m1.ge2)}<br>never reused: ${fmtPct(r.m1.never)}<br>median in-degree: ${r.m1.median} · mean: ${r.m1.mean}`
+})).sort((a,b) => b.value - a.value), { fmt: fmtPct, max: 1, ticks: 4 });
+
+// 05 — context stack
+stackedChart('ctxChart', charted.map(r => ({
+  label: r.label, group: r.group, parts: [r.m2.sig, r.m2.val, r.m2.prf]
+})).sort((a,b) => (b.parts[0]+b.parts[1]) - (a.parts[0]+a.parts[1])));
+
+// 05 — cross-file
+dotRank('crossChart', charted.map(r => ({
+  label: r.label, value: r.m3.outside, group: r.group,
+  tip: `<b>${esc(r.label)}</b><br>used outside defining file: ${fmtPct(r.m3.outside)}<br>edges crossing files: ${fmtPct(r.m3.crossfile)}<br>edges crossing top dirs: ${fmtPct(r.m3.crossdir)}`
+})).sort((a,b) => b.value - a.value), { fmt: fmtPct, max: 1, ticks: 4 });
+
+// 06 — mathlib scatter
+const downstream = charted.filter(r => r.m4.ml_per_decl > 0 && r.group < 4);
+scatterChart('mlScatter', downstream.map(r => ({
+  x: r.m4.ml_per_decl, y: r.m1.never, label: r.label, group: r.group, dy: r.sdy
+})), { xlabel: 'Mathlib references per declaration', ylabel: 'declarations never reused internally',
+       xticks: [1,2,5,10,20,50,100], xmin: 0.5, xmax: 150 });
+document.getElementById('scatterLegend').innerHTML = legendHTML(GROUPS);
+
+// 06 — vocab chips
+document.getElementById('vocabChips').innerHTML = DATA.vocab.map(v =>
+  `<div class="card"><h4>${esc(v.label)} — top Mathlib declarations used</h4>
+   <div class="sub">${fmtNum(v.vocab)} distinct Mathlib declarations referenced</div>
+   <div class="chips">${v.top.map(t => `<span class="chip">${esc(t.name)} <b>${fmtNum(t.refs)}</b></span>`).join('')}</div></div>`).join('');
+
+// 07 — depth
+dotRank('depthChart', charted.map(r => ({
+  label: r.label, value: r.m6.maxd, tick: r.m6.meand, group: r.group,
+  tip: `<b>${esc(r.label)}</b><br>max depth: ${r.m6.maxd}<br>mean depth: ${r.m6.meand}<br>p90: ${r.m6.p90d}`
+})).sort((a,b) => b.value - a.value), { ticks: 5 });
+
+// 07 — concentration
+dotRank('giniChart', charted.map(r => ({
+  label: r.label, value: r.m5.top1 ?? 0, group: r.group,
+  tip: `<b>${esc(r.label)}</b><br>top 1% share: ${fmtPct(r.m5.top1 ?? 0)}<br>top 10% share: ${fmtPct(r.m5.top10 ?? 0)}<br>Gini: ${r.m5.gini ?? '—'}`
+})).sort((a,b) => b.value - a.value), { fmt: fmtPct, max: 1, ticks: 4 });
+
+// 08 — duplication + sorry
+dotRank('dupChart', charted.map(r => ({
+  label: r.label, value: r.m7.dup, group: r.group,
+  tip: `<b>${esc(r.label)}</b><br>duplicate bodies: ${fmtPct(r.m7.dup)} of ${fmtNum(r.m7.dupn)}<br>largest clone cluster: ${r.m7.dupmax}<br>duplicate statements: ${fmtPct(r.m7.sdup)}`
+})).sort((a,b) => b.value - a.value), { fmt: fmtPct, ticks: 4 });
+
+dotRank('sorryChart', charted.map(r => ({
+  label: r.label, value: r.m8.sorry, group: r.group,
+  tip: `<b>${esc(r.label)}</b><br>sorried theorems: ${fmtPct(r.m8.sorry)} (${fmtNum(r.m8.nsorry)})`
+})).sort((a,b) => b.value - a.value), { fmt: fmtPct, max: 1, ticks: 4 });
+
+// 09 — AUC table
+(function() {
+  const tbl = document.getElementById('aucTable');
+  tbl.innerHTML = '<tr><th>metric</th><th>direction</th><th>median · human libs</th><th>median · curated AI</th><th>median · uncurated AI</th><th>AUC</th><th></th></tr>' +
+    DATA.auc.map(a => `<tr><td>${a.label}</td><td style="text-align:center">${a.dir}</td>` +
+      `<td>${a.medH}</td><td>${a.medC ?? '—'}</td><td>${a.medA}</td><td>${a.auc.toFixed(2)}</td>` +
+      `<td style="text-align:left">${a.auc >= 0.85 ? '<span class="verdict-good">discriminates</span>' : a.auc >= 0.7 ? 'weak' : '<span class="verdict-bad">does not</span>'}</td></tr>`).join('');
+})();
+
+// verdict cards
+document.getElementById('verdictCards').innerHTML = DATA.verdicts.map(v =>
+  `<div class="mcard"><span class="id" style="color:${v.good ? 'var(--good)' : 'var(--critical)'}">${v.good ? '✓ discriminates' : '✗ gameable'}</span>
+   <h4>${v.title}</h4><p>${v.text}</p></div>`).join('');
+
+// prose fills
+for (const [id, html] of Object.entries(DATA.prose)) {
+  const el = document.getElementById(id);
+  if (el) el.innerHTML = html;
+}
+
+// validation table
+(function() {
+  const rows = Object.entries(DATA.validation).filter(([k,v]) => v.n_joined);
+  const tbl = document.getElementById('valTable');
+  tbl.innerHTML = '<tr><th>repo</th><th>joined decls</th><th>spearman ρ (in-degree)</th><th>never-reused · textual</th><th>never-reused · exact</th><th>mean deg · textual</th><th>mean deg · exact</th></tr>' +
+    rows.map(([k,v]) => `<tr><td>${byKey[k] ? byKey[k].label : k}</td><td>${fmtNum(v.n_joined)}</td>` +
+      `<td>${v.spearman_indeg.toFixed(2)}</td><td>${fmtPct(v.never_textual)}</td><td>${fmtPct(v.never_env)}</td>` +
+      `<td>${v.mean_deg_textual.toFixed(1)}</td><td>${v.mean_deg_env.toFixed(1)}</td></tr>`).join('');
+})();
+
+document.getElementById('footerText').innerHTML = DATA.footer;
+</script>
