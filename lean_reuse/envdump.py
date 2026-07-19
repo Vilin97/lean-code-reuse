@@ -54,6 +54,10 @@ ENV_SELF_PREFIXES = {
     "pedigree": ("MembershipProject", "Backup"),
     "rubik": ("RubiksCube",),
     "gblean": ("GB",),
+    "statlearn": ("SLT",),
+    "econlib": ("Econlib",),
+    "econcs": ("EconCSLib",),
+    "asympstat": ("AsymptoticStatistics",),
 }
 
 # Auto-generated last name components. Only applied to names NOT found in the
