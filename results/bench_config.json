@@ -1,0 +1,12 @@
+{
+ "mathlib4": {"build_dir": "/Users/vasil/Github/lean-pool", "src_prefix": ".lake/packages/mathlib"},
+ "physlib": {"build_dir": "/Users/vasil/Github/physlib"},
+ "lean-pool": {"build_dir": "/Users/vasil/Github/lean-pool"},
+ "cslib": {"build_dir": "/private/tmp/claude-501/-Users-vasil-Github-lean-code-reuse/5ef23ef1-e80e-49c3-8c1a-c8d7bb35f0fa/scratchpad/repos/cslib"},
+ "tauceti": {"build_dir": "/private/tmp/claude-501/-Users-vasil-Github-lean-code-reuse/5ef23ef1-e80e-49c3-8c1a-c8d7bb35f0fa/scratchpad/repos/tauceti"},
+ "pfr": {"build_dir": "/private/tmp/claude-501/-Users-vasil-Github-lean-code-reuse/5ef23ef1-e80e-49c3-8c1a-c8d7bb35f0fa/scratchpad/repos/pfr"},
+ "analysis": {"build_dir": "/private/tmp/claude-501/-Users-vasil-Github-lean-code-reuse/5ef23ef1-e80e-49c3-8c1a-c8d7bb35f0fa/scratchpad/repos/analysis"},
+ "flt": {"build_dir": "/private/tmp/claude-501/-Users-vasil-Github-lean-code-reuse/5ef23ef1-e80e-49c3-8c1a-c8d7bb35f0fa/scratchpad/repos/flt"},
+ "equational_theories": {"build_dir": "/private/tmp/claude-501/-Users-vasil-Github-lean-code-reuse/5ef23ef1-e80e-49c3-8c1a-c8d7bb35f0fa/scratchpad/repos/equational_theories"},
+ "atlas": {"build_dir": "/private/tmp/claude-501/-Users-vasil-Github-lean-code-reuse/5ef23ef1-e80e-49c3-8c1a-c8d7bb35f0fa/scratchpad/repos/atlas-lean"}
+}

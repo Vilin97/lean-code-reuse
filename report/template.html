@@ -1,0 +1,1038 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Measuring Code Reuse in Lean Libraries</title>
+<style>
+:root {
+  color-scheme: light;
+  --plane: #f9f9f7; --surface: #fcfcfb;
+  --ink: #0b0b0b; --ink2: #52514e; --muted: #898781;
+  --grid: #e1e0d9; --axis: #c3c2b7; --hairline: rgba(11,11,11,0.10);
+  --accent: #2a78d6; --critical: #d03b3b; --good: #006300;
+  --g0: #2a78d6; --g1: #008300; --g2: #e87ba4; --g3: #eda100; --g4: #1baf7a;
+  --serif: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
+  --sans: system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    color-scheme: dark;
+    --plane: #0d0d0d; --surface: #1a1a19;
+    --ink: #ffffff; --ink2: #c3c2b7; --muted: #898781;
+    --grid: #2c2c2a; --axis: #383835; --hairline: rgba(255,255,255,0.10);
+    --accent: #3987e5; --critical: #e66767; --good: #0ca30c;
+    --g0: #3987e5; --g1: #008300; --g2: #d55181; --g3: #c98500; --g4: #199e70;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --plane: #0d0d0d; --surface: #1a1a19;
+  --ink: #ffffff; --ink2: #c3c2b7; --muted: #898781;
+  --grid: #2c2c2a; --axis: #383835; --hairline: rgba(255,255,255,0.10);
+  --accent: #3987e5; --critical: #e66767; --good: #0ca30c;
+  --g0: #3987e5; --g1: #008300; --g2: #d55181; --g3: #c98500; --g4: #199e70;
+}
+:root[data-theme="light"] {
+  color-scheme: light;
+  --plane: #f9f9f7; --surface: #fcfcfb;
+  --ink: #0b0b0b; --ink2: #52514e; --muted: #898781;
+  --grid: #e1e0d9; --axis: #c3c2b7; --hairline: rgba(11,11,11,0.10);
+  --accent: #2a78d6; --critical: #d03b3b; --good: #006300;
+  --g0: #2a78d6; --g1: #008300; --g2: #e87ba4; --g3: #eda100; --g4: #1baf7a;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--plane); color: var(--ink);
+  font-family: var(--sans); font-size: 15.5px; line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px 96px; }
+.prose { max-width: 46rem; }
+.prose p { color: var(--ink2); }
+.prose strong { color: var(--ink); }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+code, .mono { font-family: var(--mono); font-size: 0.86em; }
+
+header.hero { padding: 72px 0 40px; border-bottom: 1px solid var(--hairline); }
+.eyebrow {
+  font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--accent); margin-bottom: 14px;
+}
+h1 {
+  font-family: var(--serif); font-weight: 500; font-size: clamp(30px, 4.4vw, 46px);
+  line-height: 1.12; margin: 0 0 14px; text-wrap: balance; letter-spacing: -0.01em;
+}
+.hero .sub { font-size: 17px; color: var(--ink2); max-width: 44rem; margin: 0 0 30px; }
+.tiles { display: flex; flex-wrap: wrap; gap: 12px; }
+.tile {
+  background: var(--surface); border: 1px solid var(--hairline); border-radius: 6px;
+  padding: 12px 18px 10px; min-width: 132px;
+}
+.tile .v { font-size: 26px; font-weight: 600; letter-spacing: -0.01em; }
+.tile .k { font-size: 11.5px; color: var(--muted); font-family: var(--mono);
+  letter-spacing: 0.08em; text-transform: uppercase; margin-top: 2px; }
+
+nav.toc {
+  position: sticky; top: 0; z-index: 30; background: var(--plane);
+  border-bottom: 1px solid var(--hairline); margin: 0 -24px; padding: 0 24px;
+  display: flex; gap: 20px; overflow-x: auto; font-size: 13px;
+}
+nav.toc a { color: var(--ink2); padding: 10px 0; white-space: nowrap; border-bottom: 2px solid transparent; }
+nav.toc a:hover { color: var(--ink); text-decoration: none; }
+
+section { padding-top: 56px; }
+.secno { font-family: var(--mono); color: var(--accent); font-size: 13px; letter-spacing: 0.1em; }
+h2 {
+  font-family: var(--serif); font-weight: 500; font-size: 29px; line-height: 1.15;
+  margin: 6px 0 16px; text-wrap: balance;
+}
+h3 { font-size: 17px; font-weight: 600; margin: 34px 0 8px; }
+.note { font-size: 13px; color: var(--muted); }
+
+.card {
+  background: var(--surface); border: 1px solid var(--hairline);
+  border-radius: 8px; padding: 20px 22px; margin: 22px 0;
+}
+.card h4 { margin: 0 0 4px; font-size: 15px; font-weight: 600; }
+.card .sub { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
+.chartwrap { overflow-x: auto; }
+
+.legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 12.5px; color: var(--ink2); margin: 4px 0 10px; }
+.legend .sw { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+
+table.data {
+  border-collapse: collapse; width: 100%; font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+table.data th {
+  text-align: right; font-family: var(--mono); font-weight: 500; font-size: 10.5px;
+  text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted);
+  padding: 6px 8px; border-bottom: 1px solid var(--axis); cursor: pointer; white-space: nowrap;
+}
+table.data th:first-child, table.data td:first-child { text-align: left; }
+table.data td { padding: 5px 8px; border-bottom: 1px solid var(--grid); text-align: right; white-space: nowrap; }
+table.data tr:hover td { background: color-mix(in srgb, var(--accent) 6%, transparent); }
+.tablewrap { overflow-x: auto; margin: 18px 0; }
+.badge {
+  display: inline-block; padding: 1px 7px; border-radius: 999px; font-size: 10.5px;
+  font-family: var(--mono); letter-spacing: 0.04em; border: 1px solid var(--hairline);
+  color: var(--ink2); vertical-align: 1px;
+}
+.dotb { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 7px; }
+.tiertag { font-family: var(--mono); font-size: 10px; color: var(--muted); }
+
+.mgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; margin: 22px 0; }
+.mcard { background: var(--surface); border: 1px solid var(--hairline); border-radius: 8px; padding: 16px 18px; }
+.mcard .id { font-family: var(--mono); font-size: 11px; color: var(--accent); }
+.mcard h4 { margin: 4px 0 6px; font-size: 15px; }
+.mcard p { margin: 0; font-size: 13px; color: var(--ink2); }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0 2px; }
+.chip {
+  font-family: var(--mono); font-size: 11.5px; padding: 2px 8px; border-radius: 4px;
+  background: color-mix(in srgb, var(--accent) 9%, transparent); color: var(--ink2);
+}
+.chip b { color: var(--ink); font-weight: 600; }
+
+details.how { margin: 10px 0 4px; font-size: 13px; color: var(--ink2); }
+details.how summary { cursor: pointer; color: var(--accent); font-size: 12.5px;
+  font-family: var(--mono); letter-spacing: 0.03em; }
+details.how[open] { background: color-mix(in srgb, var(--accent) 4%, transparent);
+  border-radius: 6px; padding: 8px 12px; margin: 10px 0; }
+details.how p { margin: 8px 0 2px; }
+#tooltip {
+  position: fixed; pointer-events: none; z-index: 99; display: none;
+  background: var(--ink); color: var(--plane); font-size: 12px; line-height: 1.4;
+  padding: 6px 9px; border-radius: 5px; max-width: 300px;
+}
+svg text { font-family: var(--sans); }
+svg .mono { font-family: var(--mono); }
+
+.verdict-good { color: var(--good); font-weight: 600; }
+.verdict-bad { color: var(--critical); font-weight: 600; }
+.callout { border-left: 3px solid var(--accent); padding: 2px 0 2px 16px; margin: 18px 0; }
+.callout p { margin: 6px 0; }
+footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairline);
+  font-size: 12.5px; color: var(--muted); }
+@media (prefers-reduced-motion: no-preference) {
+  .tile, .card, .mcard { transition: border-color 0.15s ease; }
+}
+</style>
+
+<div id="tooltip"></div>
+<div class="wrap">
+
+<header class="hero">
+  <div class="eyebrow" id="eyebrow">An empirical study · formalization projects · two measurement tiers</div>
+  <h1>Macroscopic quality signatures of Lean formalization projects</h1>
+  <p class="sub">
+    As AI-generated Lean corpora proliferate, we need statistical measures of quality that
+    don't require reading the code — and that measure the artifact, not its author. This
+    study implements fourteen metric families (reuse structure, hygiene, documentation,
+    elaboration cost, and an amortization exponent that measures reuse as compression),
+    extracts exact declaration-level dependency graphs from elaborated environments,
+    calibrates every metric against declared high/low quality anchors, and asks which ones
+    actually discriminate.
+  </p>
+  <div class="tiles" id="heroTiles"></div>
+</header>
+
+<nav class="toc">
+  <a href="#reuse">Reuse CCDF</a>
+  <a href="#amortization">Amortization</a>
+  <a href="#elabcost">Elab cost</a>
+  <a href="#discriminate">PCA & composite</a>
+  <a href="#corpus">Corpus</a>
+  <a href="#metrics">Metrics</a>
+  <a href="#where">Where reuse lives</a>
+  <a href="#mathlib">Standing on Mathlib</a>
+  <a href="#shape">Graph shape</a>
+  <a href="#hygiene">Hygiene</a>
+  <a href="#classic">Classic metrics</a>
+  <a href="#taxonomy">Expert review</a>
+  <a href="#validity">Validity</a>
+</nav>
+
+<section id="reuse">
+  <div class="secno">01</div>
+  <h2>Reuse degree: necessary, not sufficient</h2>
+  <div class="prose">
+    <p>
+      The base metric: for each reusable declaration, how many <em>distinct</em> other
+      declarations in the same repo reference it. The tail tells the real story — every
+      corpus has hubs, but only libraries have a <em>thick middle</em>: thousands of
+      declarations each reused a handful of times across many files.
+    </p>
+  </div>
+  <div class="card">
+    <h4>CCDF of internal reuse degree (log–log)</h4>
+    <div class="sub">All 20 corpus repos; fraction of declarations with in-degree ≥ x. Dashed = textual tier.</div>
+    <div class="legend" id="ccdfLegend"></div>
+    <div class="chartwrap" id="ccdfChart"></div>
+    <div class="sub" style="margin-top:10px">Per-repo aggregate: average internal in-degree (distinct users per declaration), sorted:</div>
+    <div class="chips" id="ccdfAgg"></div>
+  </div>
+  <div class="card">
+    <h4>Share of declarations reused at least twice</h4>
+    <div class="sub">Distinct-user in-degree ≥ 2, as a share of reusable declarations.</div>
+    <div class="chartwrap" id="ge2Chart"></div>
+  </div>
+  <div class="prose" id="reuseProse"></div>
+</section>
+<section id="amortization">
+  <div class="secno">02</div>
+  <h2>Reuse as compression: the amortization exponent</h2>
+  <div class="prose">
+    <p>
+      If reuse is Mathlib's central design philosophy, the right measurement is not how
+      often a declaration is cited but <strong>how much work sharing avoids</strong>.
+      Define the fully-inlined cost of a declaration recursively —
+      <code>cost(v) = 1 + Σ cost(deps)</code>, <em>with repetition</em> — the size its
+      dependency tree would have if every lemma were re-proved at every use site. In a flat
+      corpus this is chain length; in a shared library it grows exponentially, so we report
+      <code>log₁₀ cost</code>: the number of <em>orders of magnitude of duplication that
+      sharing eliminates</em>.
+    </p>
+  </div>
+  <div class="card">
+    <h4>Amortization exponent (log₁₀ of fully-inlined dependency-tree size)</h4>
+    <div class="sub">Dot = mean over declarations; tick = p90. A value of 7 means the average declaration sits on a tree 10⁷ nodes large if nothing were shared.</div>
+    <div class="chartwrap" id="amortChart"></div>
+  </div>
+  <div class="prose" id="amortProse"></div>
+</section>
+<section id="elabcost">
+  <div class="secno">03</div>
+  <h2>Elaboration cost per kLOC</h2>
+  <div class="prose">
+    <p>
+      The heartbeats hypothesis — that low-quality corpora make the elaborator work harder
+      per line — measured by re-elaborating sampled built files with import-loading
+      baselines subtracted. The result inverts the hypothesis: shallow or sorried content
+      elaborates cheaply, while high cost tracks genuinely hard mathematics being worked.
+      Cost is an effort meter, not a quality meter; the smell is expensive-per-line
+      <em>combined with</em> nothing-reused.
+    </p>
+  </div>
+  <div class="card">
+    <h4>Elaboration cost per kLOC (heartbeats proxy)</h4>
+    <div class="sub">Median seconds to re-elaborate 1,000 source lines, from 12 sampled built files per repo; import-loading baseline subtracted. Only repos with working builds.</div>
+    <div class="chartwrap" id="elabChart"></div>
+  </div>
+</section>
+
+<section id="discriminate">
+  <div class="secno">04</div>
+  <h2>The metric space, and a composite of mechanical checks</h2>
+  <div class="prose">
+    <p>
+      Rather than fitting to labels, this section lets the metrics speak jointly: a PCA of
+      the full battery (no imputation — only metrics computed for every corpus repo enter),
+      and an unweighted composite of the mechanical checks. Neither is a quality
+      certificate; §12 documents the Gauss-PR case where every mechanical check passes and
+      community review still said no.
+    </p>
+  </div>
+  <div class="card">
+    <h4>The metric space, flattened: PCA of all metrics</h4>
+    <div class="sub" id="pcaSub"></div>
+    <div class="legend" id="pcaLegend"></div>
+    <div class="chartwrap" id="pcaChart"></div>
+    <div class="note" id="pcaLoadings" style="margin-top:8px"></div>
+  </div>
+  <div class="card">
+    <h4>Composite of mechanical checks</h4>
+    <div class="sub">Mean percentile rank across ten mechanical checks (cross-dir reuse, outside-file reuse, granular imports, sorries, duplication, doc coverage, elaboration economy, amortization, no trivial statements, Mathlib vocabulary breadth). Purely descriptive — §12 shows exactly what it cannot certify.</div>
+    <div class="legend" id="compLegend"></div>
+    <div class="chartwrap" id="compChart"></div>
+  </div>
+  <div class="prose" id="discussProse"></div>
+</section>
+<section id="corpus">
+  <div class="secno">05</div>
+  <h2>The corpus</h2>
+  <div class="prose">
+    <p>
+      Twenty-two corpora — formalization projects plus a declared slop calibration set.
+      Compiler internals, teaching games and statements-only conjecture lists are excluded
+      by design, and so are SciLean and Tao's <i>Analysis I</i>: their
+      <code>sorry_proof</code> and exercises-for-the-reader conventions are deliberate
+      choices that hygiene checks misread. The corpus spans Mathlib and its reviewed
+      satellites (FLT, PFR, AddCombi, Carleson, PNT+, CSLib, Physlib, Equational Theories,
+      the community Sphere Packing project), mixed-authorship pools (LeanPool — 65 human /
+      38 AI / 20 mixed projects), curated AI projects (TauCeti, Math&nbsp;Inc's StrongPNT),
+      low-curation AI corpora (Meta ATLAS, Seed-Prover, DeepMind superhuman, OpenAI's
+      Erdős-90, Clawristotle, and Math&nbsp;Inc's Gauss PR measured separately against the
+      community Sphere Packing repo it targeted), and three community-flagged slop repos
+      for calibration (Pedigree Polytopes' axiomatized P=NP, Rubik Cube Group, GBLean).
+      Provenance is shown as color, but it is <em>not</em> the analysis axis: the question
+      is what separates low-quality from high-quality corpora, whoever wrote them.
+    </p>
+    <p>
+      Where the repo could be built, metrics come from the <b>exact tier</b>: a Lean
+      metaprogram walks the elaborated environment and reads <code>getUsedConstants</code>
+      off every declaration's type and value — capturing instance uses, notation-mediated
+      references, and dot-notation that textual analysis cannot see. Repos that ship no
+      lakefile (the proof dumps) use the <b>textual tier</b>, an approximate name-resolution
+      parser validated against the exact tier in §9.
+    </p>
+  </div>
+  <div class="legend" id="groupLegend"></div>
+  <div class="tablewrap"><table class="data" id="corpusTable"></table></div>
+  <p class="note">Click a column header to sort. kLOC = non-blank, non-comment source lines (thousands). Decls = source-level declarations after contracting compiler-generated auxiliaries. NNG4 is listed for completeness but excluded from charts: its game-DSL macros (<code>Statement</code>/<code>World</code>) defeat both tiers.</p>
+</section>
+<section id="metrics">
+  <div class="secno">06</div>
+  <h2>Fourteen ways to measure quality</h2>
+  <div class="mgrid" id="metricCards"></div>
+</section>
+<section id="where">
+  <div class="secno">07</div>
+  <h2>Where the reuse lives</h2>
+  <div class="prose">
+    <p>
+      A reference in a <b>statement</b> (a type) or a <b>definition body</b> is load-bearing:
+      it shapes the API others must build on. A reference inside a <b>proof</b> is erasable.
+      Layered mathematics shows up as theorems cited by other <em>statements</em> and
+      definitions built on definitions — proof-dump corpora cite lemmas only inside proofs.
+    </p>
+  </div>
+  <div class="card">
+    <h4>Reference context: signature / definition value / proof</h4>
+    <div class="sub">Occurrence-weighted share of all resolved references (internal + upstream).</div>
+    <div class="legend" id="ctxLegend"></div>
+    <div class="chartwrap" id="ctxChart"></div>
+  </div>
+  <div class="card">
+    <h4>Reuse that crosses file boundaries</h4>
+    <div class="sub">Share of reusable declarations referenced from at least one other file.</div>
+    <div class="chartwrap" id="crossChart"></div>
+  </div>
+  <div class="prose" id="whereProse"></div>
+</section>
+<section id="mathlib">
+  <div class="secno">08</div>
+  <h2>Standing on Mathlib's shoulders</h2>
+  <div class="prose">
+    <p>
+      For repos downstream of Mathlib, leaning on it is a virtue: more upstream references
+      per declaration and a broader vocabulary of distinct Mathlib lemmas mean less
+      reinvention. The scatter shows Mathlib references per declaration against the share
+      of declarations never reused internally — the lower-right corner (heavy leverage,
+      everything reused) is where good libraries live.
+    </p>
+  </div>
+  <div class="card">
+    <h4>Mathlib leverage vs internal dead weight</h4>
+    <div class="sub">x: Mathlib references per declaration (log). y: share of declarations never reused internally.</div>
+    <div class="legend" id="scatterLegend"></div>
+    <div class="chartwrap" id="mlScatter"></div>
+  </div>
+  <div id="vocabChips"></div>
+  <div class="prose" id="mlProse"></div>
+</section>
+<section id="shape">
+  <div class="secno">09</div>
+  <h2>The shape of the graph</h2>
+  <div class="prose">
+    <p>
+      Two structural measures. <b>Depth</b>: the longest internal chain of declarations each
+      building on the previous — layered theory versus a bag of independent facts.
+      <b>Concentration</b>: how much of all reuse is absorbed by the top 1% of declarations.
+      Both discriminate, in opposite directions: real libraries are deep <em>and</em> spread
+      their reuse; dumps are shallow, or deep only inside single-file towers.
+    </p>
+  </div>
+  <div class="card">
+    <h4>Longest internal dependency chain</h4>
+    <div class="sub">Maximum depth over the declaration DAG (auxiliaries contracted). Dot = max; tick = mean.</div>
+    <div class="chartwrap" id="depthChart"></div>
+  </div>
+  <div class="card">
+    <h4>Reuse concentration: share absorbed by top 1% of declarations</h4>
+    <div class="sub">Occupying the far right means a few hubs get all reuse and the rest is dead weight.</div>
+    <div class="chartwrap" id="giniChart"></div>
+  </div>
+</section>
+<section id="hygiene">
+  <div class="secno">10</div>
+  <h2>Hygiene: duplication and <code>sorry</code></h2>
+  <div class="prose">
+    <p>
+      Duplication is anti-reuse: the same normalized declaration body appearing more than
+      once. And a <code>sorry</code> is an unproved claim — fine in a statements-only
+      conjecture list, disqualifying in a corpus presented as proven mathematics.
+    </p>
+  </div>
+  <div class="card">
+    <h4>Exact-duplicate declaration bodies</h4>
+    <div class="sub">Share of whitespace-normalized bodies (≥60 chars) appearing more than once.</div>
+    <div class="chartwrap" id="dupChart"></div>
+  </div>
+  <div class="card">
+    <h4>Sorried theorems</h4>
+    <div class="sub">Share of theorems whose proof (transitively) uses <code>sorryAx</code> — exact tier — or contains a <code>sorry</code> token — textual tier.</div>
+    <div class="chartwrap" id="sorryChart"></div>
+  </div>
+  <div class="card">
+    <h4>Trivial and vacuous theorems (M15)</h4>
+    <div class="sub">Share of theorems proved by a bare one-liner (<code>trivial</code>/<code>rfl</code>/<code>decide</code>/<code>norm_num</code>/<code>simp</code>). Tooltip shows statements that normalize to <code>True</code>/numerals-only and statements referencing zero declarations.</div>
+    <div class="chartwrap" id="trivChart"></div>
+  </div>
+  <div class="card">
+    <h4>Docstring coverage on definitions</h4>
+    <div class="sub">Share of public defs/structures/classes carrying a <code>/-- ... -/</code> docstring. Mathlib enforces this by linter — a process signal.</div>
+    <div class="chartwrap" id="docChart"></div>
+  </div>
+  <div class="prose" id="hygieneProse"></div>
+</section>
+<section id="classic">
+  <div class="secno">11</div>
+  <h2>Classical software metrics, adapted</h2>
+  <div class="prose">
+    <p>
+      Software engineering has measured code quality for fifty years; the honest summary of
+      that literature is that <b>volume-derived indices predict quality poorly</b> —
+      McCabe's cyclomatic complexity rests on weak theoretical footing, and the composite
+      Maintainability Index is widely criticized for averaging away the power-law tails
+      where risk lives — while <b>process signals (churn, review activity) and threshold
+      "risk profiles"</b> (the SIG maintainability model) hold up empirically. The
+      adaptations below follow that lesson: keep the simple, distribution-aware checks;
+      skip the composite indices.
+    </p>
+  </div>
+  <div class="tablewrap"><table class="data" id="classicTable"></table></div>
+  <h3>Unit sizes: statements, proofs, files</h3>
+  <div class="card">
+    <h4>Statement length (lines)</h4>
+    <div class="sub">Theorem signatures only. Dot = median; tick = p90. Long tails suggest hypothesis-heavy, over-specific statements.</div>
+    <div class="chartwrap" id="stmtLenChart"></div>
+  </div>
+  <div class="card">
+    <h4>Proof length (lines)</h4>
+    <div class="sub">Non-empty proofs. Dot = median; tick = p90.</div>
+    <div class="chartwrap" id="proofLenChart"></div>
+  </div>
+  <div class="card">
+    <h4>File length (LOC)</h4>
+    <div class="sub">Non-empty source files. Dot = median; tick = p90.</div>
+    <div class="chartwrap" id="fileLenChart"></div>
+  </div>
+  <p class="note">
+    Grounding: van Deursen, <i>Think twice before using the Maintainability Index</i>;
+    Heitlager, Kuipers &amp; Visser, <i>A practical model for measuring maintainability</i>
+    (the SIG model); Nagappan &amp; Ball, <i>Use of relative code churn measures to predict
+    system defect density</i> (process &gt; product metrics).
+  </p>
+</section>
+<section id="taxonomy">
+  <div class="secno">12</div>
+  <h2>What expert review sees that these metrics don't</h2>
+  <div class="prose">
+    <p>
+      Ilin &amp; Nugent's expert-review case study
+      (<a href="https://arxiv.org/abs/2606.13925">arXiv:2606.13925</a>) examined a
+      semi-autonomous formalization of Grothendieck's vanishing theorem — a project that is
+      <em>in this corpus</em> (half of Clawristotle) — and found that compiling, sorry-free
+      code still failed expert review on four axes. That gives us a rare labeled instance to
+      test against:
+    </p>
+  </div>
+  <div class="tablewrap"><table class="data" id="taxonomyTable"></table></div>
+  <h3>Forensics: what does measurably distinguish the Gauss PR?</h3>
+  <div class="prose">
+    <p>
+      Since the Gauss PR tops the headline checks, we hunted for residual quantitative
+      tells against its own target repo and the human research projects. Two survive:
+      <b>Mathlib-vocabulary poverty per citation</b> — it draws on the narrowest set of
+      distinct Mathlib lemmas per 1,000 references in the corpus, the signature of
+      hammering workhorse lemmas instead of finding the precise API — and a
+      <b>heavier proof-length tail</b> than the community repo it targets. Statement
+      duplication, branching, and chain-shape all look clean.
+    </p>
+  </div>
+  <div class="tablewrap"><table class="data" id="gaussTable"></table></div>
+  <div class="prose">
+    <p>
+      The scorecard is humbling and confirms the paper's thesis: Clawristotle lands
+      mid-pack on our composite — structural metrics see its clean file-level organization
+      and zero duplication, and are <em>blind</em> to the definition-quality and API-design
+      deficiencies the reviewers found. Two of four issue classes are partially visible
+      (organization; reusability via never-reused definitions), two are invisible
+      (definition quality, theorem generality). Mechanically checkable metrics bound quality
+      from below; they do not certify it. The GitClear findings on AI-assisted code — clone
+      blocks up 4–8×, cross-file calls down 35% — are the software-engineering shadow of the
+      same phenomenon, and match the two metrics this study found most discriminating.
+    </p>
+  </div>
+</section>
+<section id="validity">
+  <div class="secno">13</div>
+  <h2>Validity, and what this can't see</h2>
+  <div class="prose" id="validityProse"></div>
+  <div class="tablewrap"><table class="data" id="valTable"></table></div>
+</section>
+
+<footer>
+  <div id="footerText"></div>
+</footer>
+</div>
+
+<script>
+const DATA = /*__DATA__*/;
+
+const GROUPS = DATA.groups;
+const GCOL = i => `var(--g${i})`;
+const fmtPct = v => (v*100).toFixed(v*100 >= 10 ? 0 : 1) + '%';
+const fmtNum = v => v >= 1e6 ? (v/1e6).toFixed(1)+'M' : v >= 1000 ? (v/1000).toFixed(v >= 10000 ? 0 : 1)+'k' : (typeof v === 'number' ? (Number.isInteger(v) ? v : v.toFixed(1)) : v);
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+
+const tooltip = document.getElementById('tooltip');
+function showTip(ev, html) {
+  tooltip.innerHTML = html; tooltip.style.display = 'block';
+  const pad = 14;
+  let x = ev.clientX + pad, y = ev.clientY + pad;
+  const r = tooltip.getBoundingClientRect();
+  if (x + r.width > innerWidth - 8) x = ev.clientX - r.width - pad;
+  if (y + r.height > innerHeight - 8) y = ev.clientY - r.height - pad;
+  tooltip.style.left = x + 'px'; tooltip.style.top = y + 'px';
+}
+function hideTip() { tooltip.style.display = 'none'; }
+
+function svgEl(tag, attrs, parent) {
+  const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+  for (const k in attrs) el.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(el);
+  return el;
+}
+
+// ---------- hero tiles ----------
+(function() {
+  const t = DATA.totals;
+  const tiles = [
+    [t.repos, 'repositories'], [fmtNum(t.decls), 'declarations'],
+    [fmtNum(t.edges), 'dependency edges'], [t.envRepos, 'exact-tier repos'],
+    [fmtNum(t.loc), 'lines analyzed'],
+  ];
+  document.getElementById('heroTiles').innerHTML = tiles.map(([v,k]) =>
+    `<div class="tile"><div class="v">${v}</div><div class="k">${k}</div></div>`).join('');
+})();
+
+// ---------- group legend ----------
+function legendHTML(groups) {
+  return groups.map((g,i) => g === '—' ? '' : `<span><span class="sw" style="background:${GCOL(i)}"></span>${g}</span>`).join('');
+}
+document.getElementById('groupLegend').innerHTML = legendHTML(GROUPS);
+
+// ---------- corpus table ----------
+(function() {
+  const cols = [
+    ['Repository', r => `<span class="dotb" style="background:${GCOL(r.group)}"></span><a href="${r.url}">${r.label}</a>`, r => r.label],
+    ['tier', r => `<span class="tiertag">${r.tier}</span>`, r => r.tier],
+    ['★', r => fmtNum(r.stars), r => r.stars],
+    ['files', r => r.files, r => r.files],
+    ['kLOC', r => (r.loc/1000).toFixed(0), r => r.loc],
+    ['decls', r => fmtNum(r.decls), r => r.decls],
+    ['med deg', r => r.m1.median, r => r.m1.median],
+    ['reused ≥2', r => fmtPct(r.m1.ge2), r => r.m1.ge2],
+    ['x-file', r => fmtPct(r.m3.outside), r => r.m3.outside],
+    ['doc %', r => r.m10 && r.m10.pct_defs_with_doc != null ? fmtPct(r.m10.pct_defs_with_doc) : '—', r => (r.m10 && r.m10.pct_defs_with_doc) || 0],
+    ['ML refs/decl', r => r.m4.ml_per_decl ? r.m4.ml_per_decl.toFixed(1) : '—', r => r.m4.ml_per_decl||0],
+    ['s/kLOC', r => r.m13 && r.m13.secs_per_kloc_median != null ? r.m13.secs_per_kloc_median : '—', r => (r.m13 && r.m13.secs_per_kloc_median) || 0],
+    ['depth', r => r.m6.maxd, r => r.m6.maxd],
+    ['dup', r => fmtPct(r.m7.dup), r => r.m7.dup],
+    ['sorry', r => fmtPct(r.m8.sorry), r => r.m8.sorry],
+  ];
+  const tbl = document.getElementById('corpusTable');
+  let sortCol = -1, sortDir = -1;
+  function render() {
+    const rows = [...DATA.repos];
+    if (sortCol >= 0) rows.sort((a,b) => {
+      const va = cols[sortCol][2](a), vb = cols[sortCol][2](b);
+      return (va > vb ? 1 : va < vb ? -1 : 0) * sortDir;
+    });
+    tbl.innerHTML = '<tr>' + cols.map((c,i) =>
+      `<th data-i="${i}">${c[0]}${i===sortCol ? (sortDir>0?' ↑':' ↓') : ''}</th>`).join('') + '</tr>' +
+      rows.map(r => '<tr>' + cols.map(c => `<td>${c[1](r)}</td>`).join('') + '</tr>').join('');
+    tbl.querySelectorAll('th').forEach(th => th.onclick = () => {
+      const i = +th.dataset.i;
+      if (sortCol === i) sortDir *= -1; else { sortCol = i; sortDir = -1; }
+      render();
+    });
+  }
+  render();
+})();
+
+// ---------- metric cards ----------
+(function() {
+  const M = [
+    ['M1','Internal reuse degree','Distinct-user in-degree per reusable declaration: mean, median, tails, CCDF, share never reused.'],
+    ['M2','Statement vs proof reuse','Do references live in types and definition bodies (load-bearing) or only inside proofs (erasable)?'],
+    ['M3','Cross-file reuse','Share of reuse crossing file/directory boundaries; declarations used outside their defining file.'],
+    ['M4','Upstream (Mathlib) reuse','Mathlib references per declaration and distinct-lemma vocabulary: leaning on the ecosystem vs reinventing it.'],
+    ['M5','Concentration','Gini and top-1% share of reuse: broad shared vocabulary vs a few hubs plus dead weight.'],
+    ['M6','Dependency depth','Longest internal build-on chain in the declaration DAG.'],
+    ['M7','Duplication','Exact-duplicate normalized bodies and theorem statements — the anti-reuse.'],
+    ['M8','Proof economy & hygiene','Proof length, distinct lemmas per proof, sorry rate.'],
+    ['M9','Import granularity','File fan-in and wholesale <code>import Mathlib</code> vs granular imports.'],
+    ['M10','Documentation coverage','Docstrings on public definitions, comment density — the process signal Mathlib enforces by linter.'],
+    ['M11','Proof complexity','Branching tactic tokens per proof — McCabe cyclomatic complexity, adapted.'],
+    ['M12','Trust base','Declared axioms and <code>native_decide</code> reliance beyond the standard axioms.'],
+    ['M13','Elaboration cost','Seconds per kLOC to re-elaborate sampled files, import baseline subtracted — the heartbeats proxy.'],
+    ['M14','Amortization exponent','log₁₀ of the fully-inlined dependency-tree size: reuse measured as compression.'],
+  ];
+  document.getElementById('metricCards').innerHTML = M.map(([id,t,d]) =>
+    `<div class="mcard"><span class="id">${id}</span><h4>${t}</h4><p>${d}</p></div>`).join('');
+})();
+
+// ---------- generic dot-rank chart ----------
+function dotRank(elId, rows, opts = {}) {
+  const el = document.getElementById(elId);
+  const W = Math.max(640, Math.min(el.clientWidth || 900, 980));
+  const rowH = 26, padL = 205, padR = 90, padT = 8, padB = 26;
+  const H = rows.length * rowH + padT + padB;
+  const maxV = opts.max ?? Math.max(...rows.map(r => r.value)) * 1.06;
+  const x = v => padL + (opts.log
+    ? (Math.log10(Math.max(v, opts.logMin ?? 0.1)) - Math.log10(opts.logMin ?? 0.1)) / (Math.log10(maxV) - Math.log10(opts.logMin ?? 0.1)) * (W - padL - padR)
+    : v / maxV * (W - padL - padR));
+  const svg = svgEl('svg', { width: W, height: H, viewBox: `0 0 ${W} ${H}` }, el);
+  const fmt = opts.fmt || fmtNum;
+  // gridlines + axis labels
+  const ticks = opts.ticks || 5;
+  for (let i = 0; i <= ticks; i++) {
+    const v = maxV * i / ticks, gx = x(v);
+    svgEl('line', { x1: gx, y1: padT, x2: gx, y2: H - padB, stroke: 'var(--grid)', 'stroke-width': 1 }, svg);
+    const t = svgEl('text', { x: gx, y: H - 8, 'text-anchor': 'middle', 'font-size': 11, fill: 'var(--muted)' }, svg);
+    t.textContent = fmt(v);
+  }
+  rows.forEach((r, i) => {
+    const cy = padT + i * rowH + rowH / 2;
+    const lbl = svgEl('text', { x: padL - 10, y: cy + 4, 'text-anchor': 'end', 'font-size': 12.5, fill: 'var(--ink2)' }, svg);
+    lbl.textContent = r.label;
+    svgEl('line', { x1: padL, y1: cy, x2: x(r.value), y2: cy, stroke: GCOL(r.group), 'stroke-width': 2, opacity: 0.45 }, svg);
+    if (r.tick != null)
+      svgEl('line', { x1: x(r.tick), y1: cy - 6, x2: x(r.tick), y2: cy + 6, stroke: GCOL(r.group), 'stroke-width': 2 }, svg);
+    const dot = svgEl('circle', { cx: x(r.value), cy, r: 5.5, fill: GCOL(r.group), stroke: 'var(--surface)', 'stroke-width': 2 }, svg);
+    const vt = svgEl('text', { x: x(r.value) + 10, y: cy + 4, 'font-size': 11.5, fill: 'var(--ink2)', class: 'mono' }, svg);
+    vt.textContent = fmt(r.value) + (r.suffix || '');
+    const hit = svgEl('rect', { x: 0, y: padT + i * rowH, width: W, height: rowH, fill: 'transparent' }, svg);
+    hit.addEventListener('mousemove', ev => showTip(ev, r.tip || `<b>${esc(r.label)}</b><br>${fmt(r.value)}`));
+    hit.addEventListener('mouseleave', hideTip);
+  });
+}
+
+// ---------- CCDF chart ----------
+function ccdfChart(elId, series) {
+  const el = document.getElementById(elId);
+  const W = Math.max(640, Math.min(el.clientWidth || 900, 980)), H = 380;
+  const padL = 56, padR = 168, padT = 12, padB = 40;
+  const xmax = 1000, ymin = 1e-4;
+  const x = v => padL + Math.log10(Math.max(v,1)) / Math.log10(xmax) * (W - padL - padR);
+  const y = v => padT + (1 - Math.log10(Math.max(v, ymin)) / Math.log10(ymin) * -1 - 1) * 0; // placeholder
+  const yl = v => padT + (Math.log10(1) - Math.log10(Math.max(v, ymin))) / (Math.log10(1) - Math.log10(ymin)) * (H - padT - padB);
+  const svg = svgEl('svg', { width: W, height: H, viewBox: `0 0 ${W} ${H}` }, el);
+  [1,2,5,10,20,50,100,500,1000].forEach(v => {
+    const gx = x(v);
+    svgEl('line', { x1: gx, y1: padT, x2: gx, y2: H - padB, stroke: 'var(--grid)' }, svg);
+    const t = svgEl('text', { x: gx, y: H - 14, 'text-anchor': 'middle', 'font-size': 11, fill: 'var(--muted)' }, svg);
+    t.textContent = v;
+  });
+  [1, 0.1, 0.01, 0.001, 0.0001].forEach(v => {
+    const gy = yl(v);
+    svgEl('line', { x1: padL, y1: gy, x2: W - padR, y2: gy, stroke: 'var(--grid)' }, svg);
+    const t = svgEl('text', { x: padL - 8, y: gy + 4, 'text-anchor': 'end', 'font-size': 11, fill: 'var(--muted)' }, svg);
+    t.textContent = v >= 0.01 ? (v*100) + '%' : (v*100).toFixed(v===0.001?1:2) + '%';
+  });
+  const xt = svgEl('text', { x: (padL + W - padR)/2, y: H - 0.5, 'text-anchor': 'middle', 'font-size': 11.5, fill: 'var(--muted)' }, svg);
+  xt.textContent = 'internal in-degree ≥ x';
+  series.forEach(s => {
+    const pts = s.pts.filter(p => p[1] > 0);
+    const d = pts.map((p,i) => (i ? 'L' : 'M') + x(p[0]).toFixed(1) + ',' + yl(p[1]).toFixed(1)).join(' ');
+    const path = svgEl('path', { d, fill: 'none', stroke: GCOL(s.group), 'stroke-width': 2,
+      'stroke-dasharray': s.dash ? '5 4' : 'none', 'stroke-linejoin': 'round' }, svg);
+    const last = pts[pts.length-1];
+    const lt = svgEl('text', { x: x(last[0]) + 8, y: yl(last[1]) + 4 + (s.dy||0), 'font-size': 11.5, fill: GCOL(s.group), 'font-weight': 600 }, svg);
+    lt.textContent = s.label;
+    path.addEventListener('mousemove', ev => showTip(ev, `<b>${esc(s.label)}</b><br>` +
+      pts.map(p => `≥${p[0]}: ${(p[1]*100).toFixed(2)}%`).slice(0,7).join('<br>')));
+    path.addEventListener('mouseleave', hideTip);
+  });
+}
+
+// ---------- stacked context chart ----------
+function stackedChart(elId, rows) {
+  const el = document.getElementById(elId);
+  const W = Math.max(640, Math.min(el.clientWidth || 900, 980));
+  const rowH = 26, padL = 205, padR = 40, padT = 6, padB = 24;
+  const H = rows.length * rowH + padT + padB;
+  const svg = svgEl('svg', { width: W, height: H, viewBox: `0 0 ${W} ${H}` }, el);
+  const CTX = ['statement', 'definition value', 'proof'];
+  const COLS = ['var(--g0)', 'var(--g4)', 'var(--muted)'];
+  rows.forEach((r, i) => {
+    const cy = padT + i * rowH;
+    const lbl = svgEl('text', { x: padL - 10, y: cy + rowH/2 + 4, 'text-anchor': 'end', 'font-size': 12.5, fill: 'var(--ink2)' }, svg);
+    lbl.textContent = r.label;
+    let xx = padL;
+    r.parts.forEach((p, j) => {
+      const w = Math.max(0, p * (W - padL - padR) - 2);
+      const rect = svgEl('rect', { x: xx, y: cy + 5, width: w, height: rowH - 10, rx: 3, fill: COLS[j] }, svg);
+      rect.addEventListener('mousemove', ev => showTip(ev, `<b>${esc(r.label)}</b><br>${CTX[j]}: ${(p*100).toFixed(1)}%`));
+      rect.addEventListener('mouseleave', hideTip);
+      if (p > 0.09) {
+        const t = svgEl('text', { x: xx + w/2, y: cy + rowH/2 + 3.5, 'text-anchor': 'middle', 'font-size': 10.5, fill: '#fff', 'font-weight': 600 }, svg);
+        t.textContent = Math.round(p*100) + '%';
+      }
+      xx += p * (W - padL - padR);
+    });
+  });
+  document.getElementById('ctxLegend').innerHTML =
+    CTX.map((c,j) => `<span><span class="sw" style="background:${COLS[j]}"></span>${c}</span>`).join('');
+}
+
+// ---------- scatter ----------
+function scatterChart(elId, pts, opts) {
+  const el = document.getElementById(elId);
+  const W = Math.max(640, Math.min(el.clientWidth || 900, 980)), H = 420;
+  const padL = 60, padR = 30, padT = 14, padB = 46;
+  const xmin = opts.xmin ?? 0.5, xmax = opts.xmax ?? Math.max(...pts.map(p => p.x)) * 1.3;
+  const x = v => padL + (Math.log10(Math.max(v, xmin)) - Math.log10(xmin)) / (Math.log10(xmax) - Math.log10(xmin)) * (W - padL - padR);
+  const y = v => padT + (1 - v) * (H - padT - padB);
+  const svg = svgEl('svg', { width: W, height: H, viewBox: `0 0 ${W} ${H}` }, el);
+  (opts.xticks || [1,2,5,10,20,50]).forEach(v => {
+    const gx = x(v);
+    svgEl('line', { x1: gx, y1: padT, x2: gx, y2: H - padB, stroke: 'var(--grid)' }, svg);
+    const t = svgEl('text', { x: gx, y: H - 26, 'text-anchor': 'middle', 'font-size': 11, fill: 'var(--muted)' }, svg);
+    t.textContent = v;
+  });
+  [0, 0.25, 0.5, 0.75, 1].forEach(v => {
+    const gy = y(v);
+    svgEl('line', { x1: padL, y1: gy, x2: W - padR, y2: gy, stroke: 'var(--grid)' }, svg);
+    const t = svgEl('text', { x: padL - 8, y: gy + 4, 'text-anchor': 'end', 'font-size': 11, fill: 'var(--muted)' }, svg);
+    t.textContent = (v*100) + '%';
+  });
+  const xt = svgEl('text', { x: (padL+W-padR)/2, y: H - 6, 'text-anchor': 'middle', 'font-size': 11.5, fill: 'var(--muted)' }, svg);
+  xt.textContent = opts.xlabel;
+  const yt = svgEl('text', { x: 14, y: (padT+H-padB)/2, 'font-size': 11.5, fill: 'var(--muted)',
+    transform: `rotate(-90 14 ${(padT+H-padB)/2})`, 'text-anchor': 'middle' }, svg);
+  yt.textContent = opts.ylabel;
+  pts.forEach(p => {
+    const c = svgEl('circle', { cx: x(p.x), cy: y(p.y), r: 6, fill: GCOL(p.group), stroke: 'var(--surface)', 'stroke-width': 2 }, svg);
+    const t = svgEl('text', { x: x(p.x) + 9, y: y(p.y) + (p.dy ?? 4), 'font-size': 11, fill: 'var(--ink2)' }, svg);
+    t.textContent = p.label;
+    c.addEventListener('mousemove', ev => showTip(ev, `<b>${esc(p.label)}</b><br>${opts.xlabel}: ${p.x.toFixed(1)}<br>${opts.ylabel}: ${fmtPct(p.y)}`));
+    c.addEventListener('mouseleave', hideTip);
+  });
+}
+
+// ================= render everything from DATA =================
+const charted = DATA.repos.filter(r => !r.excluded);
+const byKey = {}; DATA.repos.forEach(r => byKey[r.key] = r);
+
+// 04 — CCDF
+ccdfChart('ccdfChart', DATA.ccdf);
+document.getElementById('ccdfLegend').innerHTML = legendHTML(GROUPS) +
+  '<span class="note" style="margin-left:8px">dashed = textual tier (unbuildable repo)</span>';
+// aggregate readout: one chip per repo, sorted by share reused >=2
+(function() {
+  const el = document.getElementById('ccdfAgg');
+  if (!el) return;
+  const rows = [...charted].sort((a,b) => b.m1.mean - a.m1.mean);
+  el.innerHTML = rows.map(r =>
+    `<span class="chip" title="${esc(r.label)}"><span class="sw" style="background:${GCOL(r.group)};display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px"></span>` +
+    `${esc(r.label)} avg <b>${r.m1.mean.toFixed(1)}</b></span>`).join('');
+})();
+
+// 04 — reused >= 2
+dotRank('ge2Chart', charted.map(r => ({
+  label: r.label, value: r.m1.ge2, group: r.group,
+  tip: `<b>${esc(r.label)}</b> <span class="tiertag">(${r.tier})</span><br>reused ≥2: ${fmtPct(r.m1.ge2)}<br>never reused: ${fmtPct(r.m1.never)}<br>median in-degree: ${r.m1.median} · mean: ${r.m1.mean}`
+})).sort((a,b) => b.value - a.value), { fmt: fmtPct, max: 1, ticks: 4 });
+
+// 05 — context stack
+stackedChart('ctxChart', charted.map(r => ({
+  label: r.label, group: r.group, parts: [r.m2.sig, r.m2.val, r.m2.prf]
+})).sort((a,b) => (b.parts[0]+b.parts[1]) - (a.parts[0]+a.parts[1])));
+
+// 05 — cross-file
+dotRank('crossChart', charted.map(r => ({
+  label: r.label, value: r.m3.outside, group: r.group,
+  tip: `<b>${esc(r.label)}</b><br>used outside defining file: ${fmtPct(r.m3.outside)}<br>edges crossing files: ${fmtPct(r.m3.crossfile)}<br>edges crossing top dirs: ${fmtPct(r.m3.crossdir)}`
+})).sort((a,b) => b.value - a.value), { fmt: fmtPct, max: 1, ticks: 4 });
+
+// 06 — mathlib scatter
+const downstream = charted.filter(r => r.m4.ml_per_decl > 0 && r.group < 4);
+scatterChart('mlScatter', downstream.map(r => ({
+  x: r.m4.ml_per_decl, y: r.m1.never, label: r.label, group: r.group, dy: r.sdy
+})), { xlabel: 'Mathlib references per declaration', ylabel: 'declarations never reused internally',
+       xticks: [1,2,5,10,20,50,100], xmin: 0.5, xmax: 150 });
+document.getElementById('scatterLegend').innerHTML = legendHTML(GROUPS);
+
+// 06 — vocab chips
+document.getElementById('vocabChips').innerHTML = DATA.vocab.map(v =>
+  `<div class="card"><h4>${esc(v.label)} — top Mathlib declarations used</h4>
+   <div class="sub">${fmtNum(v.vocab)} distinct Mathlib declarations referenced</div>
+   <div class="chips">${v.top.map(t => `<span class="chip">${esc(t.name)} <b>${fmtNum(t.refs)}</b></span>`).join('')}</div></div>`).join('');
+
+// 07 — depth
+dotRank('depthChart', charted.map(r => ({
+  label: r.label, value: r.m6.maxd, tick: r.m6.meand, group: r.group,
+  tip: `<b>${esc(r.label)}</b><br>max depth: ${r.m6.maxd}<br>mean depth: ${r.m6.meand}<br>p90: ${r.m6.p90d}`
+})).sort((a,b) => b.value - a.value), { ticks: 5 });
+
+// 07 — concentration
+dotRank('giniChart', charted.map(r => ({
+  label: r.label, value: r.m5.top1 ?? 0, group: r.group,
+  tip: `<b>${esc(r.label)}</b><br>top 1% share: ${fmtPct(r.m5.top1 ?? 0)}<br>top 10% share: ${fmtPct(r.m5.top10 ?? 0)}<br>Gini: ${r.m5.gini ?? '—'}`
+})).sort((a,b) => b.value - a.value), { fmt: fmtPct, max: 1, ticks: 4 });
+
+// 08 — duplication + sorry
+dotRank('dupChart', charted.map(r => ({
+  label: r.label, value: r.m7.dup, group: r.group,
+  tip: `<b>${esc(r.label)}</b><br>duplicate bodies: ${fmtPct(r.m7.dup)} of ${fmtNum(r.m7.dupn)}<br>largest clone cluster: ${r.m7.dupmax}<br>duplicate statements: ${fmtPct(r.m7.sdup)}`
+})).sort((a,b) => b.value - a.value), { fmt: fmtPct, ticks: 4 });
+
+dotRank('sorryChart', charted.map(r => ({
+  label: r.label, value: r.m8.sorry, group: r.group,
+  tip: `<b>${esc(r.label)}</b><br>sorried theorems: ${fmtPct(r.m8.sorry)} (${fmtNum(r.m8.nsorry)})`
+})).sort((a,b) => b.value - a.value), { fmt: fmtPct, max: 1, ticks: 4 });
+
+// eyebrow
+document.getElementById('eyebrow').textContent =
+  `An empirical study · ${DATA.totals.repos} formalization projects · two measurement tiers`;
+
+// 08 — doc coverage + elaboration cost
+dotRank('docChart', charted.filter(r => r.m10 && r.m10.pct_defs_with_doc != null).map(r => ({
+  label: r.label, value: r.m10.pct_defs_with_doc, group: r.group,
+  tip: `<b>${esc(r.label)}</b><br>defs with docstring: ${fmtPct(r.m10.pct_defs_with_doc)}<br>theorems with docstring: ${r.m10.pct_theorems_with_doc != null ? fmtPct(r.m10.pct_theorems_with_doc) : '—'}<br>comment density: ${r.m10.comment_density != null ? fmtPct(r.m10.comment_density) : '—'}`
+})).sort((a,b) => b.value - a.value), { fmt: fmtPct, max: 1, ticks: 4 });
+
+dotRank('elabChart', charted.filter(r => r.m13 && r.m13.secs_per_kloc != null).map(r => ({
+  label: r.label, value: r.m13.secs_per_kloc_median ?? r.m13.secs_per_kloc, group: r.group,
+  tip: `<b>${esc(r.label)}</b><br>median: ${r.m13.secs_per_kloc_median} s/kLOC · mean: ${r.m13.secs_per_kloc}<br>${r.m13.files_sampled} files, ${fmtNum(r.m13.loc_sampled)} LOC sampled`
+})).sort((a,b) => b.value - a.value), { ticks: 5 });
+
+// gauss forensics table
+(function() {
+  const tbl = document.getElementById('gaussTable');
+  if (!tbl) return;
+  const keys = ['sphere-gauss','spherepacking','mathlib4','flt','pfr','carleson'];
+  const rows = keys.map(k => byKey[k]).filter(Boolean);
+  const cols = [
+    ['', r => r.label],
+    ['ML vocab / 1k refs', r => r.m4.vocab1k ?? '—'],
+    ['proof p90 (lines)', r => r.m8.pl_stats ? r.m8.pl_stats.p90 : '—'],
+    ['stmt p90 (lines)', r => r.m8.stmt_lines ? r.m8.stmt_lines.p90 : '—'],
+    ['reused ≥2', r => fmtPct(r.m1.ge2)],
+    ['cross-dir', r => fmtPct(r.m3.crossdir)],
+    ['doc %', r => r.m10.pct_defs_with_doc != null ? fmtPct(r.m10.pct_defs_with_doc) : '—'],
+    ['sorry', r => fmtPct(r.m8.sorry)],
+  ];
+  tbl.innerHTML = '<tr>' + cols.map(c => `<th>${c[0]}</th>`).join('') + '</tr>' +
+    rows.map(r => '<tr>' + cols.map(c => `<td>${c[1](r)}</td>`).join('') + '</tr>').join('');
+})();
+
+dotRank('trivChart', charted.filter(r => r.m15 && r.m15.pct_trivial_proofs != null).map(r => ({
+  label: r.label, value: r.m15.pct_trivial_proofs, group: r.group,
+  tip: `<b>${esc(r.label)}</b><br>one-liner trivial proofs: ${fmtPct(r.m15.pct_trivial_proofs)}<br>True/numeral-only statements: ${r.m15.n_trivial_statements ?? 0} (${fmtPct(r.m15.pct_trivial_statements ?? 0)})<br>statements referencing nothing: ${fmtPct(r.m15.pct_statements_no_refs ?? 0)}`
+})).sort((a,b) => b.value - a.value), { fmt: fmtPct, ticks: 4 });
+
+// size panels
+function sizePanel(id, get) {
+  dotRank(id, charted.filter(r => get(r)).map(r => {
+    const st = get(r);
+    return { label: r.label, value: st.median, tick: st.p90, group: r.group,
+      tip: `<b>${esc(r.label)}</b><br>mean ${st.mean} · median ${st.median} · p90 ${st.p90}${st.max ? ' · max ' + st.max : ''}` };
+  }).sort((a,b) => b.value - a.value), { ticks: 5 });
+}
+sizePanel('stmtLenChart', r => r.m8.stmt_lines);
+sizePanel('proofLenChart', r => r.m8.pl_stats);
+sizePanel('fileLenChart', r => r.m9.file_stats);
+
+// PCA scatter
+(function() {
+  const P = DATA.pca;
+  if (!P) return;
+  document.getElementById('pcaSub').textContent =
+    `Metrics with complete coverage across all repos (no imputation), standardized to unit variance, projected onto the first two principal components — PC1 explains ${(P.expl[0]*100).toFixed(0)}% of variance, PC2 ${(P.expl[1]*100).toFixed(0)}%.`;
+  document.getElementById('pcaLegend').innerHTML = legendHTML(GROUPS);
+  document.getElementById('pcaLoadings').innerHTML =
+    '<b>PC1 strongest loadings:</b> ' + P.load1.map(l => `${esc(l.m)} (${l.w > 0 ? '+' : ''}${l.w})`).join(' · ') +
+    '<br><b>PC2 strongest loadings:</b> ' + P.load2.map(l => `${esc(l.m)} (${l.w > 0 ? '+' : ''}${l.w})`).join(' · ') +
+    '<br><b>Metrics included (complete coverage only):</b> ' + P.included.map(esc).join(' · ');
+  const el = document.getElementById('pcaChart');
+  const W = Math.max(640, Math.min(el.clientWidth || 900, 980)), H = 480;
+  const padL = 50, padR = 40, padT = 16, padB = 36;
+  const xs = P.points.map(p => p.x), ys = P.points.map(p => p.y);
+  const xmin = Math.min(...xs), xmax = Math.max(...xs), ymin = Math.min(...ys), ymax = Math.max(...ys);
+  const xpad = (xmax - xmin) * 0.12, ypad = (ymax - ymin) * 0.15;
+  const x = v => padL + (v - xmin + xpad) / (xmax - xmin + 2*xpad) * (W - padL - padR);
+  const y = v => padT + (1 - (v - ymin + ypad) / (ymax - ymin + 2*ypad)) * (H - padT - padB);
+  const svg = svgEl('svg', { width: W, height: H, viewBox: `0 0 ${W} ${H}` }, el);
+  svgEl('line', { x1: x(0), y1: padT, x2: x(0), y2: H - padB, stroke: 'var(--grid)' }, svg);
+  svgEl('line', { x1: padL, y1: y(0), x2: W - padR, y2: y(0), stroke: 'var(--grid)' }, svg);
+  const xt = svgEl('text', { x: (padL+W-padR)/2, y: H - 8, 'text-anchor': 'middle', 'font-size': 11.5, fill: 'var(--muted)' }, svg);
+  xt.textContent = `PC1 (${(P.expl[0]*100).toFixed(0)}% var) →`;
+  const yt = svgEl('text', { x: 14, y: (padT+H-padB)/2, 'font-size': 11.5, fill: 'var(--muted)',
+    transform: `rotate(-90 14 ${(padT+H-padB)/2})`, 'text-anchor': 'middle' }, svg);
+  yt.textContent = `PC2 (${(P.expl[1]*100).toFixed(0)}% var) →`;
+  // label de-collision: sort by y, nudge
+  const pts = [...P.points].sort((a,b) => y(a.y) - y(b.y));
+  let prevY = -1e9, prevX = -1e9;
+  pts.forEach(p => {
+    const cx = x(p.x), cy = y(p.y);
+    const c = svgEl('circle', { cx, cy, r: 6, fill: GCOL(p.group), stroke: 'var(--surface)', 'stroke-width': 2 }, svg);
+    let ly = cy + 4;
+    if (Math.abs(cy - prevY) < 12 && Math.abs(cx - prevX) < 180) ly = prevY + 13;
+    const mark = p.anchor === 'high' ? '▲ ' : p.anchor === 'low' ? '▼ ' : '';
+    const t = svgEl('text', { x: cx + 9, y: ly, 'font-size': 11, fill: 'var(--ink2)' }, svg);
+    t.textContent = mark + p.label;
+    prevY = ly; prevX = cx;
+    c.addEventListener('mousemove', ev => showTip(ev, `<b>${esc(p.label)}</b> <span class="tiertag">(${p.tier})</span><br>PC1 ${p.x} · PC2 ${p.y}`));
+    c.addEventListener('mouseleave', hideTip);
+  });
+})();
+
+// 10 — composite quality score
+document.getElementById('compLegend').innerHTML = legendHTML(GROUPS.slice(0,4));
+dotRank('compChart', DATA.composite.map(c => ({
+  label: (c.anchor === 'high' ? '▲ ' : c.anchor === 'low' ? '▼ ' : '') + c.label,
+  value: c.score, group: c.group,
+  tip: `<b>${esc(c.label)}</b> <span class="tiertag">(${c.tier})</span><br>composite percentile: ${(c.score*100).toFixed(0)}<br>${c.n_metrics} of 7 checks measured${c.anchor ? '<br>anchor: ' + c.anchor : ''}`
+})), { fmt: v => (v*100).toFixed(0), max: 1, ticks: 4 });
+
+// 09 — classical metrics adaptation table
+(function() {
+  const rows = [
+    ['Cyclomatic complexity (McCabe 1976)', 'Branching tactic tokens per proof (M11)', 'adapted', 'Weak standalone predictor in SE; same here — case-bash correlates with genre as much as quality.'],
+    ['Halstead volume / Maintainability Index', 'Rejected', 'rejected', 'Composite volume indices average away power-law tails (van Deursen; SIG critique). We report distributions instead.'],
+    ['Code duplication', 'Normalized duplicate declaration bodies (M7)', 'adapted', 'Direct port; one of the strongest hygiene checks.'],
+    ['Unit size distribution', 'Proof-length distribution, median + p90 (M8)', 'adapted', 'SIG-style risk profile, not an average.'],
+    ['Coupling / fan-in (Henry–Kafura)', 'File fan-in, import granularity (M9); decl in-degree (M1)', 'adapted', 'Import granularity is the discriminating half.'],
+    ['Comment ratio / API doc coverage', 'Docstring coverage on public defs; comment density (M10)', 'adapted', 'Process-enforced in Mathlib; discriminates.'],
+    ['Test coverage', 'No direct analog — the kernel checks everything; sorries are the "uncovered" units (M8)', 'reinterpreted', 'Sorry rate ≈ inverse coverage.'],
+    ['Build health / performance', 'Elaboration seconds per kLOC, import-baseline subtracted (M13)', 'new', 'The heartbeats-per-LOC hypothesis.'],
+    ['Code churn & review activity (Nagappan–Ball)', 'Not yet — needs git/PR history', 'future', 'The SE literature ranks these highest; natural next step.'],
+    ['Dead code', 'Declarations never reused, adjusted for API-surface genre (M1)', 'adapted', 'Confounded: API completeness looks like dead code.'],
+  ];
+  document.getElementById('classicTable').innerHTML =
+    '<tr><th>classical metric</th><th>Lean adaptation</th><th>status</th><th>note</th></tr>' +
+    rows.map(r => `<tr><td>${r[0]}</td><td style="text-align:left">${r[1]}</td><td>${r[2]}</td><td style="text-align:left; white-space:normal; max-width:300px">${r[3]}</td></tr>`).join('');
+})();
+
+// prose fills
+for (const [id, html] of Object.entries(DATA.prose)) {
+  const el = document.getElementById(id);
+  if (el) el.innerHTML = html;
+}
+
+// validation table
+(function() {
+  const rows = Object.entries(DATA.validation).filter(([k,v]) => v.n_joined);
+  const tbl = document.getElementById('valTable');
+  tbl.innerHTML = '<tr><th>repo</th><th>joined decls</th><th>spearman ρ (in-degree)</th><th>never-reused · textual</th><th>never-reused · exact</th><th>mean deg · textual</th><th>mean deg · exact</th></tr>' +
+    rows.map(([k,v]) => `<tr><td>${byKey[k] ? byKey[k].label : k}</td><td>${fmtNum(v.n_joined)}</td>` +
+      `<td>${v.spearman_indeg.toFixed(2)}</td><td>${fmtPct(v.never_textual)}</td><td>${fmtPct(v.never_env)}</td>` +
+      `<td>${v.mean_deg_textual.toFixed(1)}</td><td>${v.mean_deg_env.toFixed(1)}</td></tr>`).join('');
+})();
+
+// 08 — amortization
+dotRank('amortChart', charted.filter(r => r.m14 && r.m14.mean_log10_cost != null).map(r => ({
+  label: r.label, value: r.m14.mean_log10_cost, tick: r.m14.p90_log10_cost, group: r.group,
+  tip: `<b>${esc(r.label)}</b><br>mean log₁₀ inlined cost: ${r.m14.mean_log10_cost}<br>median: ${r.m14.median_log10_cost} · p90: ${r.m14.p90_log10_cost} · max: ${r.m14.max_log10_cost}<br>total amortization exponent: ${r.m14.total_amortization_exp}`
+})).sort((a,b) => b.value - a.value), { ticks: 5 });
+
+// taxonomy mapping table
+(function() {
+  const rows = [
+    ['Definition quality (poorly designed definitions)', 'Not captured', 'bad',
+     'Requires mathematical judgment. Weak proxies only: definitions never reused (M1), axioms (M12).'],
+    ['Theorem generality (overly specific statements)', 'Not captured', 'bad',
+     'Statement length and hypothesis count are measurable but genre-confounded; no metric here detects needless specificity.'],
+    ['File organization', 'Captured', 'good',
+     'M3 cross-file/cross-directory locality and M9 import structure — the two strongest discriminators in this study.'],
+    ['API design & library reusability', 'Partially captured', 'mid',
+     'Internal reuse of own definitions (M1/M2) and the amortization exponent (M14) measure realized reuse — but only after someone reuses it; unusable-but-unused API looks identical to unused-good API.'],
+  ];
+  const cls = {good: 'verdict-good', bad: 'verdict-bad', mid: ''};
+  document.getElementById('taxonomyTable').innerHTML =
+    '<tr><th>expert-review issue (Ilin–Nugent)</th><th>status</th><th>via</th></tr>' +
+    rows.map(r => `<tr><td style="text-align:left">${r[0]}</td><td class="${cls[r[2]]}">${r[1]}</td><td style="text-align:left; white-space:normal; max-width:420px">${r[3]}</td></tr>`).join('');
+})();
+
+// per-chart computation details
+(function() {
+  const HOW = {
+    ccdfChart: 'For each reusable declaration (theorem/def/structure/…; instances and anonymous decls excluded) count distinct other declarations in the same repo that reference it — exact tier: appears in their elaborated type or value via getUsedConstants; textual tier: name resolves in their source text. Plot the fraction of declarations with in-degree ≥ x, both axes log.',
+    ge2Chart: 'Share of reusable declarations whose distinct-user in-degree (as above) is at least 2.',
+    ctxChart: 'Every resolved reference is classified by where it occurs: the declaration\u2019s type (statement), a definition\u2019s body (value), or a proof term. Shares are occurrence-weighted over all references, internal + upstream.',
+    crossChart: 'A declaration counts as "used outside its file" if at least one referencing declaration lives in a different source file. Cross-directory edges compare the first two path components of the two files.',
+    mlScatter: 'x: total references landing on Mathlib declarations divided by the repo\u2019s named declaration count (log scale). y: share of reusable declarations with internal in-degree 0.',
+    depthChart: 'Longest path in the internal declaration DAG (generated auxiliaries contracted into parents, residual cycles excluded), computed by topological peeling; depth(v) = 1 + max depth over v\u2019s internal dependencies.',
+    giniChart: 'Sort reusable declarations by in-degree; the value shown is the share of all internal reference-pairs absorbed by the top 1% of declarations.',
+    dupChart: 'Whitespace-normalized declaration bodies (value + proof, ≥ 60 chars) hashed; the rate is 1 − unique/total among named declarations.',
+    sorryChart: 'Exact tier: the proof term transitively contains sorryAx. Textual tier: a sorry/admit/sorry_proof token in the proof text.',
+    docChart: 'A declaration "has a docstring" if a /-- … -/ block ends within 4 lines above its keyword (attributes may sit between). Coverage is over public (non-private, named) defs/structures/classes/inductives.',
+    elabChart: '12 random built files per repo (≥30 LOC) re-elaborated with lake env lean, wall-clock timed; a stub containing only the file\u2019s import header is timed once per distinct import set and subtracted. Value = median over files of elaboration-seconds per 1,000 source lines.',
+    amortChart: 'cost(v) = 1 + Σ cost(u) over v\u2019s internal dependencies, with repetition — the size of the fully-inlined dependency tree. Computed in log-space (log-sum-exp) over the acyclic graph in topological order; shown as log₁₀. Mean over declarations; tick = p90.',
+    pcaChart: 'One column per metric, restricted to metrics computed for every corpus repo (no imputation — the excluded columns are those undefined for some repo, e.g. Mathlib-leverage for Mathlib itself or elaboration cost for unbuildable dumps). Each column standardized to zero mean and unit variance, then projected onto the top two right-singular vectors (SVD). Axes oriented so Mathlib sits at positive PC1 and Seed-Prover at negative PC2. The exact metric list is printed under the chart.',
+    trivChart: 'A theorem statement is "trivial" if its normalized signature is `True` or contains only numerals and arithmetic operators; a proof is a trivial one-liner if it normalizes to trivial/rfl/decide/norm_num/simp. Zero-reference statements come from the dependency graph: theorems whose statement cites no declaration at all.',
+    stmtLenChart: 'Line count of each theorem\u2019s signature text (binders + statement, before := ). Median and p90 over theorems.',
+    proofLenChart: 'Line count of each theorem\u2019s proof text; empty proofs excluded. Median and p90.',
+    fileLenChart: 'Non-blank, non-comment lines per source file. Median and p90 over files.',
+    compChart: 'For each of the 8 checks (cross-dir reuse, outside-file reuse, granular imports, no sorries, no duplication, doc coverage, elaboration economy, amortization) every repo gets its percentile rank among repos where the check is measurable; the score is the mean of available ranks. Anchors are never weighted differently — the score is descriptive, not fitted.',
+  };
+  for (const [id, txt] of Object.entries(HOW)) {
+    const el = document.getElementById(id);
+    if (!el) continue;
+    const card = el.closest('.card');
+    if (!card) continue;
+    const d = document.createElement('details');
+    d.className = 'how';
+    d.innerHTML = `<summary>how this is computed</summary><p>${txt}</p>`;
+    card.insertBefore(d, el);
+  }
+
+})();
+
+document.getElementById('footerText').innerHTML = DATA.footer;
+</script>

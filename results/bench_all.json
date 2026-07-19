@@ -1,0 +1,1381 @@
+{
+ "mathlib4": {
+  "files": 12,
+  "timeouts": 0,
+  "loc": 1852,
+  "secs": 34.4,
+  "baseline_secs": 2.21,
+  "secs_per_kloc": 18.6,
+  "secs_per_kloc_median": 26.2,
+  "per_file": [
+   {
+    "file": ".lake/packages/mathlib/Mathlib/CategoryTheory/Monoidal/Internal/Types/CommGrp_.lean",
+    "loc": 50,
+    "secs": 9.86,
+    "elab": 7.64
+   },
+   {
+    "file": ".lake/packages/mathlib/Mathlib/Algebra/Homology/GrothendieckAbelian.lean",
+    "loc": 46,
+    "secs": 3.68,
+    "elab": 1.46
+   },
+   {
+    "file": ".lake/packages/mathlib/Mathlib/Combinatorics/Quiver/Path/Weight.lean",
+    "loc": 78,
+    "secs": 4.33,
+    "elab": 2.11
+   },
+   {
+    "file": ".lake/packages/mathlib/Mathlib/CategoryTheory/Abelian/GrothendieckAxioms/Sheaf.lean",
+    "loc": 50,
+    "secs": 5.45,
+    "elab": 3.24
+   },
+   {
+    "file": ".lake/packages/mathlib/Mathlib/CategoryTheory/Subobject/Types.lean",
+    "loc": 31,
+    "secs": 4.62,
+    "elab": 2.4
+   },
+   {
+    "file": ".lake/packages/mathlib/Mathlib/Tactic/Convert.lean",
+    "loc": 98,
+    "secs": 4.06,
+    "elab": 1.85
+   },
+   {
+    "file": ".lake/packages/mathlib/Mathlib/MeasureTheory/Integral/IntegralEqImproper.lean",
+    "loc": 1022,
+    "secs": 11.43,
+    "elab": 9.22
+   },
+   {
+    "file": ".lake/packages/mathlib/Mathlib/Algebra/Homology/HomotopyCategory/ShortExact.lean",
+    "loc": 142,
+    "secs": 3.92,
+    "elab": 1.71
+   },
+   {
+    "file": ".lake/packages/mathlib/Mathlib/RingTheory/TwoSidedIdeal/Kernel.lean",
+    "loc": 34,
+    "secs": 2.39,
+    "elab": 0.17
+   },
+   {
+    "file": ".lake/packages/mathlib/Mathlib/CategoryTheory/Sites/Coherent/Basic.lean",
+    "loc": 64,
+    "secs": 2.54,
+    "elab": 0.32
+   },
+   {
+    "file": ".lake/packages/mathlib/Mathlib/Algebra/GroupWithZero/Action/Pi.lean",
+    "loc": 78,
+    "secs": 2.33,
+    "elab": 0.11
+   },
+   {
+    "file": ".lake/packages/mathlib/Mathlib/Analysis/BoundedVariation.lean",
+    "loc": 159,
+    "secs": 6.39,
+    "elab": 4.17
+   }
+  ]
+ },
+ "physlib": {
+  "files": 12,
+  "timeouts": 0,
+  "loc": 2117,
+  "secs": 60.5,
+  "baseline_secs": 2.17,
+  "secs_per_kloc": 28.6,
+  "secs_per_kloc_median": 30.0,
+  "per_file": [
+   {
+    "file": "Physlib/Relativity/LorentzGroup/Boosts/Apply.lean",
+    "loc": 44,
+    "secs": 15.92,
+    "elab": 13.76
+   },
+   {
+    "file": "Physlib/Mathematics/Geometry/Metric/PseudoRiemannian/Defs.lean",
+    "loc": 359,
+    "secs": 6.43,
+    "elab": 4.26
+   },
+   {
+    "file": "Physlib/Relativity/Tensors/Constructors.lean",
+    "loc": 407,
+    "secs": 15.24,
+    "elab": 13.07
+   },
+   {
+    "file": "Physlib/Cosmology/FLRW/Basic.lean",
+    "loc": 111,
+    "secs": 6.28,
+    "elab": 4.12
+   },
+   {
+    "file": "Physlib/SpaceAndTime/GalileanGroup/Basic.lean",
+    "loc": 224,
+    "secs": 6.67,
+    "elab": 4.51
+   },
+   {
+    "file": "Physlib/StringTheory/FTheory/SU5/Charges/OfRationalSection.lean",
+    "loc": 35,
+    "secs": 3.22,
+    "elab": 1.05
+   },
+   {
+    "file": "QuantumInfo/ForMathlib/HermitianMat/Unitary.lean",
+    "loc": 74,
+    "secs": 5.58,
+    "elab": 3.41
+   },
+   {
+    "file": "Physlib/QFT/QED/AnomalyCancellation/Odd/LineInCubic.lean",
+    "loc": 96,
+    "secs": 4.04,
+    "elab": 1.88
+   },
+   {
+    "file": "Physlib/Mathematics/Distribution/Basic.lean",
+    "loc": 369,
+    "secs": 8.86,
+    "elab": 6.69
+   },
+   {
+    "file": "Physlib/SpaceAndTime/Space/EuclideanGroup/Action.lean",
+    "loc": 66,
+    "secs": 4.68,
+    "elab": 2.51
+   },
+   {
+    "file": "Physlib/QFT/PerturbationTheory/WickContraction/Sign/InsertNone.lean",
+    "loc": 214,
+    "secs": 4.85,
+    "elab": 2.68
+   },
+   {
+    "file": "Physlib/Mathematics/Distribution/PowMul.lean",
+    "loc": 118,
+    "secs": 4.69,
+    "elab": 2.52
+   }
+  ]
+ },
+ "lean-pool": {
+  "files": 12,
+  "timeouts": 0,
+  "loc": 2109,
+  "secs": 26.3,
+  "baseline_secs": 3.18,
+  "secs_per_kloc": 12.5,
+  "secs_per_kloc_median": 13.9,
+  "per_file": [
+   {
+    "file": "LeanPool/VirasoroProject/LieAlgebraRepresentationOfBasis.lean",
+    "loc": 78,
+    "secs": 6.92,
+    "elab": 3.42
+   },
+   {
+    "file": "LeanPool/OSforGFF/Schwinger/TwoPoint.lean",
+    "loc": 91,
+    "secs": 10.51,
+    "elab": 6.31
+   },
+   {
+    "file": "LeanPool/WhiteheadTheorem/HEP/Cube.lean",
+    "loc": 44,
+    "secs": 4.71,
+    "elab": 1.09
+   },
+   {
+    "file": "LeanPool/SardMoreira/LocalEstimates.lean",
+    "loc": 239,
+    "secs": 6.46,
+    "elab": 2.63
+   },
+   {
+    "file": "LeanPool/LeanModularForms/Modularforms/Generators/Injectivity.lean",
+    "loc": 559,
+    "secs": 5.89,
+    "elab": 4.35
+   },
+   {
+    "file": "LeanPool/PumpingCfg/ChomskyNormalForm/Basic.lean",
+    "loc": 333,
+    "secs": 3.87,
+    "elab": 1.12
+   },
+   {
+    "file": "LeanPool/Incompleteness/Foundation/Modal/Kripke/KHIncompleteness.lean",
+    "loc": 324,
+    "secs": 4.15,
+    "elab": 1.64
+   },
+   {
+    "file": "LeanPool/LeanModularForms/Modularforms/BigO.lean",
+    "loc": 137,
+    "secs": 3.44,
+    "elab": 1.9
+   },
+   {
+    "file": "LeanPool/ThreeGap/TorusReduction.lean",
+    "loc": 97,
+    "secs": 3.95,
+    "elab": 0.78
+   },
+   {
+    "file": "LeanPool/ZhangYeungInequality/PFR/Mathlib/MeasureTheory/Measure/Prod.lean",
+    "loc": 47,
+    "secs": 2.98,
+    "elab": 1.44
+   },
+   {
+    "file": "LeanPool/OSforGFF/GaussianField/SchwartzNuclear/HermiteNuclear.lean",
+    "loc": 52,
+    "secs": 5.58,
+    "elab": 0.74
+   },
+   {
+    "file": "LeanPool/Erdos1196/FormalConjecturesErdos1196.lean",
+    "loc": 108,
+    "secs": 5.96,
+    "elab": 0.84
+   }
+  ]
+ },
+ "cslib": {
+  "files": 12,
+  "timeouts": 0,
+  "loc": 1288,
+  "secs": 59.3,
+  "baseline_secs": 4.44,
+  "secs_per_kloc": 46.1,
+  "secs_per_kloc_median": 53.8,
+  "per_file": [
+   {
+    "file": "Cslib/Computability/Machines/Turing/SingleTape/Deterministic.lean",
+    "loc": 232,
+    "secs": 15.76,
+    "elab": 11.33
+   },
+   {
+    "file": "Cslib/Computability/Distributed/FLP/ZeroConsensus.lean",
+    "loc": 109,
+    "secs": 7.47,
+    "elab": 3.03
+   },
+   {
+    "file": "Cslib/Computability/Distributed/FLP/Algorithm.lean",
+    "loc": 125,
+    "secs": 7.37,
+    "elab": 2.93
+   },
+   {
+    "file": "Cslib/Computability/Automata/EpsilonNA/ToSingleAccept.lean",
+    "loc": 230,
+    "secs": 13.9,
+    "elab": 9.47
+   },
+   {
+    "file": "Cslib/Computability/Machines/Turing/SingleTape/Defs.lean",
+    "loc": 37,
+    "secs": 9.05,
+    "elab": 4.61
+   },
+   {
+    "file": "Cslib/Logics/Modal/Cube.lean",
+    "loc": 61,
+    "secs": 7.72,
+    "elab": 3.28
+   },
+   {
+    "file": "Cslib/Foundations/Semantics/LTS/LTSCat/Basic.lean",
+    "loc": 46,
+    "secs": 8.22,
+    "elab": 3.78
+   },
+   {
+    "file": "Cslib/Foundations/Relation/Domain.lean",
+    "loc": 51,
+    "secs": 7.2,
+    "elab": 2.76
+   },
+   {
+    "file": "Cslib/Computability/Languages/RegularLanguage.lean",
+    "loc": 169,
+    "secs": 11.83,
+    "elab": 7.39
+   },
+   {
+    "file": "Cslib/Foundations/Data/FinFun/Update.lean",
+    "loc": 35,
+    "secs": 7.73,
+    "elab": 3.29
+   },
+   {
+    "file": "Cslib/Foundations/Combinatorics/InfiniteGraphRamsey.lean",
+    "loc": 97,
+    "secs": 9.8,
+    "elab": 5.36
+   },
+   {
+    "file": "Cslib/Computability/URM/Basic.lean",
+    "loc": 96,
+    "secs": 6.56,
+    "elab": 2.12
+   }
+  ]
+ },
+ "tauceti": {
+  "files": 12,
+  "timeouts": 0,
+  "loc": 973,
+  "secs": 71.4,
+  "baseline_secs": 4.42,
+  "secs_per_kloc": 73.4,
+  "secs_per_kloc_median": 84.9,
+  "per_file": [
+   {
+    "file": "TauCeti/Analysis/SpecialFunctions/Hermite/Function/Orthonormal.lean",
+    "loc": 63,
+    "secs": 13.27,
+    "elab": 9.67
+   },
+   {
+    "file": "TauCeti/KnotTheory/Grid/Differential/Square/Backtracking.lean",
+    "loc": 62,
+    "secs": 7.64,
+    "elab": 4.04
+   },
+   {
+    "file": "TauCeti/Analysis/PositiveDefinite/SemigroupGroup/Normalize.lean",
+    "loc": 65,
+    "secs": 12.31,
+    "elab": 8.71
+   },
+   {
+    "file": "TauCeti/Analysis/Complex/Conformal/UnitDisc/Homeomorph.lean",
+    "loc": 69,
+    "secs": 15.01,
+    "elab": 11.42
+   },
+   {
+    "file": "TauCeti/NumberTheory/ClassGroup/ElementaryTwoQuotient.lean",
+    "loc": 104,
+    "secs": 14.53,
+    "elab": 10.93
+   },
+   {
+    "file": "TauCeti/Analysis/Contour/InvSubCPVExistence.lean",
+    "loc": 122,
+    "secs": 13.69,
+    "elab": 0.27
+   },
+   {
+    "file": "TauCeti/NumberTheory/EffectiveBounds/Discriminant/Equality.lean",
+    "loc": 52,
+    "secs": 7.44,
+    "elab": 3.84
+   },
+   {
+    "file": "TauCeti/Analysis/PDE/SymmetricEnergy.lean",
+    "loc": 73,
+    "secs": 9.8,
+    "elab": 6.2
+   },
+   {
+    "file": "TauCeti/NumberTheory/Multiquadratic/Subfield/Degree.lean",
+    "loc": 97,
+    "secs": 8.03,
+    "elab": 4.43
+   },
+   {
+    "file": "TauCeti/Analysis/PDE/EnergyForm/Measurability.lean",
+    "loc": 64,
+    "secs": 9.36,
+    "elab": 5.76
+   },
+   {
+    "file": "TauCeti/Analysis/Semigroups/Generator/Invariance.lean",
+    "loc": 65,
+    "secs": 6.97,
+    "elab": 3.37
+   },
+   {
+    "file": "TauCeti/Geometry/Symplectic/JHolomorphic/Transport.lean",
+    "loc": 137,
+    "secs": 6.36,
+    "elab": 2.76
+   }
+  ]
+ },
+ "pfr": {
+  "files": 12,
+  "timeouts": 0,
+  "loc": 3518,
+  "secs": 76.6,
+  "baseline_secs": 4.5,
+  "secs_per_kloc": 21.8,
+  "secs_per_kloc_median": 20.8,
+  "per_file": [
+   {
+    "file": "PFR/Examples.lean",
+    "loc": 127,
+    "secs": 28.78,
+    "elab": 19.3
+   },
+   {
+    "file": "PFR/Mathlib/Probability/UniformOn.lean",
+    "loc": 52,
+    "secs": 7.43,
+    "elab": 3.38
+   },
+   {
+    "file": "PFR/ForMathlib/ConditionalIndependence.lean",
+    "loc": 259,
+    "secs": 8.31,
+    "elab": 4.27
+   },
+   {
+    "file": "PFR/ForMathlib/Entropy/Measure.lean",
+    "loc": 703,
+    "secs": 7.45,
+    "elab": 3.4
+   },
+   {
+    "file": "PFR/ForMathlib/Entropy/Group.lean",
+    "loc": 202,
+    "secs": 7.77,
+    "elab": 3.72
+   },
+   {
+    "file": "PFR/ForMathlib/FiniteRange/IdentDistrib.lean",
+    "loc": 150,
+    "secs": 5.71,
+    "elab": 1.67
+   },
+   {
+    "file": "PFR/Mathlib/Probability/Independence/Kernel/IndepFun.lean",
+    "loc": 127,
+    "secs": 7.95,
+    "elab": 3.91
+   },
+   {
+    "file": "PFR/Fibring.lean",
+    "loc": 157,
+    "secs": 7.3,
+    "elab": 3.26
+   },
+   {
+    "file": "PFR/TorsionEndgame.lean",
+    "loc": 950,
+    "secs": 17.17,
+    "elab": 13.12
+   },
+   {
+    "file": "PFR/FirstEstimate.lean",
+    "loc": 149,
+    "secs": 12.45,
+    "elab": 8.4
+   },
+   {
+    "file": "PFR/ForMathlib/Entropy/Kernel/RuzsaDist.lean",
+    "loc": 343,
+    "secs": 9.7,
+    "elab": 5.65
+   },
+   {
+    "file": "PFR/MultiTauFunctional.lean",
+    "loc": 299,
+    "secs": 10.55,
+    "elab": 6.5
+   }
+  ]
+ },
+ "analysis": {
+  "files": 10,
+  "timeouts": 2,
+  "loc": 5711,
+  "secs": 75.6,
+  "baseline_secs": 16.18,
+  "secs_per_kloc": 13.2,
+  "secs_per_kloc_median": 17.8,
+  "per_file": [
+   {
+    "file": "Analysis/Section_6_6.lean",
+    "loc": 35,
+    "secs": 27.81,
+    "elab": 15.12
+   },
+   {
+    "file": "Analysis/Section_9_7.lean",
+    "loc": 95,
+    "secs": 15.14,
+    "elab": 2.6
+   },
+   {
+    "file": "Analysis/MeasureTheory/Section_1_2_1.lean",
+    "loc": 4348,
+    "secs": 22.17,
+    "elab": 14.03
+   },
+   {
+    "file": "Analysis/Section_7_5.lean",
+    "loc": 170,
+    "secs": 10.16,
+    "elab": 0.11
+   },
+   {
+    "file": "Analysis/Section_6_epilogue.lean",
+    "loc": 99,
+    "secs": 15.73,
+    "elab": 0.05
+   },
+   {
+    "file": "Analysis/Section_2_1.lean",
+    "loc": 75,
+    "secs": 42.63,
+    "elab": 13.21
+   },
+   {
+    "file": "Analysis/Misc/NatBitwise.lean",
+    "loc": 66,
+    "secs": 14.26,
+    "elab": 0.05
+   },
+   {
+    "file": "Analysis/Section_5_3.lean",
+    "loc": 298,
+    "secs": 35.48,
+    "elab": 24.96
+   },
+   {
+    "file": "Analysis/Section_8_1.lean",
+    "loc": 222,
+    "secs": 19.77,
+    "elab": 0.05
+   },
+   {
+    "file": "Analysis/MeasureTheory/Section_1_4_3.lean",
+    "loc": 241,
+    "secs": null
+   },
+   {
+    "file": "Analysis/Section_3_3.lean",
+    "loc": 303,
+    "secs": 12.57,
+    "elab": 5.39
+   },
+   {
+    "file": "Analysis/MeasureTheory/Section_1_4_2.lean",
+    "loc": 154,
+    "secs": null
+   }
+  ]
+ },
+ "flt": {
+  "files": 12,
+  "timeouts": 0,
+  "loc": 3033,
+  "secs": 71.7,
+  "baseline_secs": 3.56,
+  "secs_per_kloc": 23.6,
+  "secs_per_kloc_median": 22.3,
+  "per_file": [
+   {
+    "file": "FLT/Mathlib/NumberTheory/Padics/HeightOneSpectrum.lean",
+    "loc": 95,
+    "secs": 15.18,
+    "elab": 7.03
+   },
+   {
+    "file": "FLT/Mathlib/Algebra/Polynomial/QuadraticDiscriminant.lean",
+    "loc": 71,
+    "secs": 3.58,
+    "elab": 1.76
+   },
+   {
+    "file": "FLT/AutomorphicForm/QuaternionAlgebra/HeckeOperators/Concrete.lean",
+    "loc": 873,
+    "secs": 19.25,
+    "elab": 17.43
+   },
+   {
+    "file": "FLT/Mathlib/Algebra/Group/Action/Hom.lean",
+    "loc": 62,
+    "secs": 3.2,
+    "elab": 1.38
+   },
+   {
+    "file": "FLT/AutomorphicForm/QuaternionAlgebra/InnerProduct.lean",
+    "loc": 771,
+    "secs": 33.02,
+    "elab": 31.2
+   },
+   {
+    "file": "FLT/Mathlib/MeasureTheory/Group/ModularCharacter.lean",
+    "loc": 461,
+    "secs": 6.92,
+    "elab": 5.1
+   },
+   {
+    "file": "FLT/Mathlib/FieldTheory/Galois/Infinite.lean",
+    "loc": 246,
+    "secs": 5.2,
+    "elab": 1.06
+   },
+   {
+    "file": "FLT/Mathlib/Topology/Algebra/UniformRing.lean",
+    "loc": 32,
+    "secs": 2.96,
+    "elab": 1.14
+   },
+   {
+    "file": "FLT/AutomorphicForm/QuaternionAlgebra/FiniteDimensional.lean",
+    "loc": 37,
+    "secs": 4.55,
+    "elab": 0.25
+   },
+   {
+    "file": "FLT/Patching/Utils/StructureFiniteness.lean",
+    "loc": 204,
+    "secs": 4.24,
+    "elab": 2.04
+   },
+   {
+    "file": "FLT/HaarMeasure/MeasurableSpacePadics.lean",
+    "loc": 59,
+    "secs": 5.04,
+    "elab": 0.05
+   },
+   {
+    "file": "FLT/Mathlib/Algebra/Algebra/Pi.lean",
+    "loc": 122,
+    "secs": 5.09,
+    "elab": 3.27
+   }
+  ]
+ },
+ "equational_theories": {
+  "files": 12,
+  "timeouts": 0,
+  "loc": 14797,
+  "secs": 122.8,
+  "baseline_secs": 4.63,
+  "secs_per_kloc": 8.3,
+  "secs_per_kloc_median": 6.1,
+  "per_file": [
+   {
+    "file": "equational_theories/Generated/MagmaEgg/small/_009.lean",
+    "loc": 693,
+    "secs": 14.53,
+    "elab": 10.11
+   },
+   {
+    "file": "equational_theories/Duals/Command.lean",
+    "loc": 72,
+    "secs": 4.85,
+    "elab": 0.44
+   },
+   {
+    "file": "equational_theories/Generated/VampireProven/Proofs7.lean",
+    "loc": 1757,
+    "secs": 13.41,
+    "elab": 9.14
+   },
+   {
+    "file": "equational_theories/Generated/EquationSearch/theorems/Combined.lean",
+    "loc": 4689,
+    "secs": 23.62,
+    "elab": 15.44
+   },
+   {
+    "file": "equational_theories/ThreeC2.lean",
+    "loc": 316,
+    "secs": 6.6,
+    "elab": 1.31
+   },
+   {
+    "file": "equational_theories/CentralGroupoids.lean",
+    "loc": 95,
+    "secs": 15.91,
+    "elab": 11.34
+   },
+   {
+    "file": "equational_theories/ManuallyProved/Equation3308.lean",
+    "loc": 664,
+    "secs": 7.97,
+    "elab": 3.8
+   },
+   {
+    "file": "equational_theories/ManuallyProved/Equation1729/MagmaConstruction.lean",
+    "loc": 2206,
+    "secs": 18.91,
+    "elab": 12.39
+   },
+   {
+    "file": "equational_theories/ManuallyProved/Equation677.lean",
+    "loc": 60,
+    "secs": 3.87,
+    "elab": 0.18
+   },
+   {
+    "file": "equational_theories/Generated/Greedy/Eq707.lean",
+    "loc": 626,
+    "secs": 11.48,
+    "elab": 8.16
+   },
+   {
+    "file": "equational_theories/Generated/Greedy/Eq511.lean",
+    "loc": 3078,
+    "secs": 45.02,
+    "elab": 41.7
+   },
+   {
+    "file": "equational_theories/ManuallyProved/Equation1661.lean",
+    "loc": 541,
+    "secs": 12.21,
+    "elab": 8.76
+   }
+  ]
+ },
+ "atlas": {
+  "files": 12,
+  "timeouts": 0,
+  "loc": 3854,
+  "secs": 46.9,
+  "baseline_secs": 4.97,
+  "secs_per_kloc": 12.2,
+  "secs_per_kloc_median": 5.3,
+  "per_file": [
+   {
+    "file": "Atlas/GeometryOfManifolds/code/CohomologyIsomorphismConcrete.lean",
+    "loc": 158,
+    "secs": 18.02,
+    "elab": 13.76
+   },
+   {
+    "file": "Atlas/NumberTheoryI/code/PairingsTheorems.lean",
+    "loc": 784,
+    "secs": 10.5,
+    "elab": 6.55
+   },
+   {
+    "file": "Atlas/Buildings/code/CoxeterGroup/PosOfAscentProof.lean",
+    "loc": 362,
+    "secs": 5.28,
+    "elab": 1.44
+   },
+   {
+    "file": "Atlas/AlgebraicCombinatorics/code/CirculantHadamard.lean",
+    "loc": 1013,
+    "secs": 10.66,
+    "elab": 5.33
+   },
+   {
+    "file": "Atlas/Buildings/code/Building/LabelPreservingIso.lean",
+    "loc": 79,
+    "secs": 3.28,
+    "elab": 0.06
+   },
+   {
+    "file": "Atlas/Buildings/code/CoxeterGroup/ReflectionLengthDecrease.lean",
+    "loc": 237,
+    "secs": 4.51,
+    "elab": 0.75
+   },
+   {
+    "file": "Atlas/AnAlgorithmistsToolkit/code/Lattices.lean",
+    "loc": 244,
+    "secs": 6.35,
+    "elab": 1.96
+   },
+   {
+    "file": "Atlas/AlgebraicGeometryI/code/CanonicalSheafCurves.lean",
+    "loc": 135,
+    "secs": 6.31,
+    "elab": 1.37
+   },
+   {
+    "file": "Atlas/IntroductionToPartialDifferentialEquations/code/CM18/LagrangianMechanics.lean",
+    "loc": 449,
+    "secs": 27.65,
+    "elab": 14.43
+   },
+   {
+    "file": "Atlas/AlgebraicTopologyI/code/Section14.lean",
+    "loc": 50,
+    "secs": 4.17,
+    "elab": 0.05
+   },
+   {
+    "file": "Atlas/NumberTheoryI/code/PrimeSplitting.lean",
+    "loc": 195,
+    "secs": 4.7,
+    "elab": 0.84
+   },
+   {
+    "file": "Atlas/IntroductionToFunctionalAnalysis/code/HilbertSpace.lean",
+    "loc": 148,
+    "secs": 4.86,
+    "elab": 0.35
+   }
+  ]
+ },
+ "addcombi": {
+  "files": 6,
+  "timeouts": 0,
+  "loc": 906,
+  "secs": 10.2,
+  "baseline_secs": 4.48,
+  "secs_per_kloc": 11.2,
+  "secs_per_kloc_median": 13.2,
+  "per_file": [
+   {
+    "file": "AddCombi/Convolution/Finite/Order.lean",
+    "loc": 38,
+    "secs": 12.51,
+    "elab": 5.16
+   },
+   {
+    "file": "AddCombi/BSG.lean",
+    "loc": 346,
+    "secs": 6.99,
+    "elab": 1.23
+   },
+   {
+    "file": "AddCombi/Mathlib/Algebra/GroupWithZero/Indicator.lean",
+    "loc": 30,
+    "secs": 3.15,
+    "elab": 0.66
+   },
+   {
+    "file": "AddCombi/Convolution/Finite/Defs.lean",
+    "loc": 288,
+    "secs": 5.73,
+    "elab": 0.84
+   },
+   {
+    "file": "AddCombi/Mathlib/Combinatorics/Additive/Sidon.lean",
+    "loc": 56,
+    "secs": 3.23,
+    "elab": 0.74
+   },
+   {
+    "file": "AddCombi/Mathlib/Combinatorics/Additive/Energy.lean",
+    "loc": 148,
+    "secs": 5.44,
+    "elab": 1.55
+   }
+  ]
+ },
+ "strongpnt": {
+  "files": 7,
+  "timeouts": 0,
+  "loc": 21580,
+  "secs": 110.1,
+  "baseline_secs": 3.69,
+  "secs_per_kloc": 5.1,
+  "secs_per_kloc_median": 4.4,
+  "per_file": [
+   {
+    "file": "StrongPNT/Z0.lean",
+    "loc": 38,
+    "secs": 20.25,
+    "elab": 16.1
+   },
+   {
+    "file": "StrongPNT/PNT3_RiemannZeta.lean",
+    "loc": 3727,
+    "secs": 17.25,
+    "elab": 13.38
+   },
+   {
+    "file": "StrongPNT/PNT1_ComplexAnalysis.lean",
+    "loc": 4265,
+    "secs": 16.94,
+    "elab": 13.29
+   },
+   {
+    "file": "StrongPNT/PNT2_LogDerivative.lean",
+    "loc": 3342,
+    "secs": 18.25,
+    "elab": 14.75
+   },
+   {
+    "file": "StrongPNT/PNT4_ZeroFreeRegion.lean",
+    "loc": 4868,
+    "secs": 21.51,
+    "elab": 17.89
+   },
+   {
+    "file": "StrongPNT/PNT5_Strong.lean",
+    "loc": 5139,
+    "secs": 36.0,
+    "elab": 32.47
+   },
+   {
+    "file": "StrongPNT/ZetaZeroFree.lean",
+    "loc": 201,
+    "secs": 5.72,
+    "elab": 2.22
+   }
+  ]
+ },
+ "pnt": {
+  "files": 11,
+  "timeouts": 1,
+  "loc": 4771,
+  "secs": 57.6,
+  "baseline_secs": 4.02,
+  "secs_per_kloc": 12.1,
+  "secs_per_kloc_median": 14.3,
+  "per_file": [
+   {
+    "file": "PrimeNumberTheoremAnd/Mathlib/NumberTheory/Chebyshev.lean",
+    "loc": 130,
+    "secs": 7.02,
+    "elab": 2.54
+   },
+   {
+    "file": "PrimeNumberTheoremAnd/Tactic/AdditiveCombination.lean",
+    "loc": 76,
+    "secs": 3.28,
+    "elab": 0.34
+   },
+   {
+    "file": "PrimeNumberTheoremAnd/Mathlib/Analysis/Complex/BorelCaratheodory.lean",
+    "loc": 40,
+    "secs": 4.44,
+    "elab": 2.39
+   },
+   {
+    "file": "PrimeNumberTheoremAnd/IEANTN/BKLNW/BKLNW_table10_rows_regime3_4900_6500.lean",
+    "loc": 1354,
+    "secs": 24.8,
+    "elab": 18.5
+   },
+   {
+    "file": "PrimeNumberTheoremAnd/Mathlib/NumberTheory/LSeries/RiemannZetaValues.lean",
+    "loc": 104,
+    "secs": 4.32,
+    "elab": 2.26
+   },
+   {
+    "file": "PrimeNumberTheoremAnd/IEANTN/ZetaDefinitions.lean",
+    "loc": 134,
+    "secs": 5.94,
+    "elab": 0.15
+   },
+   {
+    "file": "PrimeNumberTheoremAnd/IEANTN/BKLNW/BKLNW_table10_rows_regime3_6600_8500.lean",
+    "loc": 1354,
+    "secs": 25.63,
+    "elab": 19.33
+   },
+   {
+    "file": "PrimeNumberTheoremAnd/Mathlib/NumberTheory/Sieve/SelbergBounds.lean",
+    "loc": 468,
+    "secs": 4.74,
+    "elab": 0.4
+   },
+   {
+    "file": "PrimeNumberTheoremAnd/Mathlib/Analysis/Complex/CartanProductBound.lean",
+    "loc": 70,
+    "secs": 3.36,
+    "elab": 1.31
+   },
+   {
+    "file": "PrimeNumberTheoremAnd/Unused/Hardy_Tauberian_theorem.lean",
+    "loc": 171,
+    "secs": null
+   },
+   {
+    "file": "PrimeNumberTheoremAnd/IEANTN/Ramanujan/RamanujanCalculations.lean",
+    "loc": 916,
+    "secs": 13.74,
+    "elab": 7.88
+   },
+   {
+    "file": "PrimeNumberTheoremAnd/Mathlib/Analysis/Complex/CartanInverseFactorBound.lean",
+    "loc": 125,
+    "secs": 4.58,
+    "elab": 2.53
+   }
+  ]
+ },
+ "carleson": {
+  "files": 12,
+  "timeouts": 0,
+  "loc": 2987,
+  "secs": 39.8,
+  "baseline_secs": 1.87,
+  "secs_per_kloc": 13.3,
+  "secs_per_kloc_median": 17.0,
+  "per_file": [
+   {
+    "file": "Carleson/ToMathlib/MeasureTheory/Measure/IsDoubling.lean",
+    "loc": 373,
+    "secs": 9.62,
+    "elab": 7.75
+   },
+   {
+    "file": "Carleson/ForestOperator/AlmostOrthogonality.lean",
+    "loc": 256,
+    "secs": 6.24,
+    "elab": 4.36
+   },
+   {
+    "file": "Carleson/Forest.lean",
+    "loc": 74,
+    "secs": 4.49,
+    "elab": 2.62
+   },
+   {
+    "file": "Carleson/Classical/VanDerCorput.lean",
+    "loc": 255,
+    "secs": 6.16,
+    "elab": 4.28
+   },
+   {
+    "file": "Carleson/Classical/Helper.lean",
+    "loc": 79,
+    "secs": 3.69,
+    "elab": 1.82
+   },
+   {
+    "file": "Carleson/Classical/Approximation.lean",
+    "loc": 253,
+    "secs": 4.15,
+    "elab": 2.28
+   },
+   {
+    "file": "Carleson/FinitaryCarleson.lean",
+    "loc": 103,
+    "secs": 3.87,
+    "elab": 1.99
+   },
+   {
+    "file": "Carleson/ToMathlib/MeasureTheory/Function/LpSeminorm/Basic.lean",
+    "loc": 132,
+    "secs": 3.69,
+    "elab": 1.81
+   },
+   {
+    "file": "Carleson/ToMathlib/IntegralBallContinuity.lean",
+    "loc": 190,
+    "secs": 4.82,
+    "elab": 2.95
+   },
+   {
+    "file": "Carleson/DoublingMeasure.lean",
+    "loc": 413,
+    "secs": 4.88,
+    "elab": 3.0
+   },
+   {
+    "file": "Carleson/Psi.lean",
+    "loc": 740,
+    "secs": 6.77,
+    "elab": 4.89
+   },
+   {
+    "file": "Carleson/MetricCarleson/Linearized.lean",
+    "loc": 119,
+    "secs": 3.92,
+    "elab": 2.05
+   }
+  ]
+ },
+ "spherepacking": {
+  "files": 12,
+  "timeouts": 0,
+  "loc": 3299,
+  "secs": 44.5,
+  "baseline_secs": 1.72,
+  "secs_per_kloc": 13.5,
+  "secs_per_kloc_median": 19.8,
+  "per_file": [
+   {
+    "file": "SpherePacking/MagicFunction/a/IntegralEstimates/I4.lean",
+    "loc": 154,
+    "secs": 4.46,
+    "elab": 2.74
+   },
+   {
+    "file": "SpherePacking/CohnElkies/LPBound.lean",
+    "loc": 514,
+    "secs": 7.64,
+    "elab": 5.92
+   },
+   {
+    "file": "SpherePacking/MagicFunction/b/Basic.lean",
+    "loc": 132,
+    "secs": 4.34,
+    "elab": 2.62
+   },
+   {
+    "file": "SpherePacking/MagicFunction/a/Integrability/RealIntegrands.lean",
+    "loc": 80,
+    "secs": 4.4,
+    "elab": 2.68
+   },
+   {
+    "file": "SpherePacking/MagicFunction/a/Schwartz.lean",
+    "loc": 132,
+    "secs": 4.55,
+    "elab": 2.83
+   },
+   {
+    "file": "SpherePacking/ModularForms/SlashActionAuxil.lean",
+    "loc": 251,
+    "secs": 4.68,
+    "elab": 2.96
+   },
+   {
+    "file": "SpherePacking/ModularForms/FG.lean",
+    "loc": 896,
+    "secs": 6.16,
+    "elab": 4.44
+   },
+   {
+    "file": "SpherePacking/CohnElkies/Prereqs.lean",
+    "loc": 167,
+    "secs": 5.13,
+    "elab": 3.41
+   },
+   {
+    "file": "SpherePacking/ModularForms/ResToImagAxis.lean",
+    "loc": 407,
+    "secs": 4.9,
+    "elab": 3.17
+   },
+   {
+    "file": "SpherePacking/MagicFunction/a/IntegralEstimates/I6.lean",
+    "loc": 132,
+    "secs": 4.35,
+    "elab": 2.63
+   },
+   {
+    "file": "SpherePacking/Tactic/TendstoCont.lean",
+    "loc": 310,
+    "secs": 3.15,
+    "elab": 1.42
+   },
+   {
+    "file": "SpherePacking/MagicFunction/IntegralParametrisations.lean",
+    "loc": 124,
+    "secs": 11.43,
+    "elab": 9.71
+   }
+  ]
+ },
+ "sphere-gauss": {
+  "files": 12,
+  "timeouts": 0,
+  "loc": 2447,
+  "secs": 23.7,
+  "baseline_secs": 2.99,
+  "secs_per_kloc": 9.7,
+  "secs_per_kloc_median": 11.1,
+  "per_file": [
+   {
+    "file": "SpherePacking/MagicFunction/a/IntegralEstimates/I4.lean",
+    "loc": 159,
+    "secs": 5.73,
+    "elab": 1.77
+   },
+   {
+    "file": "SpherePacking/CohnElkies/PoissonSummationLattices/PoissonSummation.lean",
+    "loc": 241,
+    "secs": 5.28,
+    "elab": 3.88
+   },
+   {
+    "file": "SpherePacking/MagicFunction/b/Eigenfunction/GaussianFourier.lean",
+    "loc": 36,
+    "secs": 4.36,
+    "elab": 2.96
+   },
+   {
+    "file": "SpherePacking/MagicFunction/a/Eigenfunction/PermI12ContourAux.lean",
+    "loc": 55,
+    "secs": 4.46,
+    "elab": 0.05
+   },
+   {
+    "file": "SpherePacking/MagicFunction/a/SpecialValues.lean",
+    "loc": 914,
+    "secs": 6.83,
+    "elab": 2.29
+   },
+   {
+    "file": "SpherePacking/ModularForms/ThetaDerivIdentities.lean",
+    "loc": 413,
+    "secs": 5.63,
+    "elab": 1.89
+   },
+   {
+    "file": "SpherePacking/MagicFunction/g/CohnElkies/IntegralReductions.lean",
+    "loc": 43,
+    "secs": 4.35,
+    "elab": 2.94
+   },
+   {
+    "file": "SpherePacking/CohnElkies/PoissonSummationLattices/UnitAddTorus.lean",
+    "loc": 100,
+    "secs": 3.64,
+    "elab": 2.24
+   },
+   {
+    "file": "SpherePacking/ModularForms/SummableLemmas/Basic.lean",
+    "loc": 71,
+    "secs": 4.57,
+    "elab": 3.17
+   },
+   {
+    "file": "SpherePacking/MagicFunction/a/Schwartz/SmoothI1.lean",
+    "loc": 117,
+    "secs": 5.15,
+    "elab": 0.62
+   },
+   {
+    "file": "SpherePacking/CohnElkies/LPBoundSwapSums.lean",
+    "loc": 145,
+    "secs": 5.59,
+    "elab": 1.54
+   },
+   {
+    "file": "SpherePacking/ForMathlib/IteratedDeriv.lean",
+    "loc": 153,
+    "secs": 3.76,
+    "elab": 0.32
+   }
+  ]
+ },
+ "pedigree": {
+  "files": 3,
+  "timeouts": 9,
+  "loc": 674,
+  "secs": 2.6,
+  "baseline_secs": 3.07,
+  "secs_per_kloc": 3.8,
+  "secs_per_kloc_median": 3.4,
+  "per_file": [
+   {
+    "file": "MembershipProject/Core/N_LayeredNetworkTypes.lean",
+    "loc": 123,
+    "secs": null
+   },
+   {
+    "file": "Backup/M3PFrameworkTillMCFVer1.lean",
+    "loc": 367,
+    "secs": null
+   },
+   {
+    "file": "MembershipProject/Core/N_UptoF5.lean",
+    "loc": 158,
+    "secs": 4.08,
+    "elab": 1.62
+   },
+   {
+    "file": "Backup/Edge_In_k_Tour.lean",
+    "loc": 78,
+    "secs": null
+   },
+   {
+    "file": "MembershipProject/Core/Case1Proof.lean",
+    "loc": 103,
+    "secs": null
+   },
+   {
+    "file": "Backup/Lemma7.lean",
+    "loc": 89,
+    "secs": null
+   },
+   {
+    "file": "Backup/TreeDefRandomTest.lean",
+    "loc": 143,
+    "secs": 4.69,
+    "elab": 0.48
+   },
+   {
+    "file": "Backup/Lemma_For_Singleton.lean",
+    "loc": 86,
+    "secs": null
+   },
+   {
+    "file": "Backup/Tiru_Defines_Triples.lean",
+    "loc": 373,
+    "secs": 3.03,
+    "elab": 0.47
+   },
+   {
+    "file": "MembershipProject/Core/N_Discords.lean",
+    "loc": 243,
+    "secs": null
+   },
+   {
+    "file": "Backup/N_RestrictionAll.lean",
+    "loc": 74,
+    "secs": null
+   },
+   {
+    "file": "Backup/N_PedigreeStepD.lean",
+    "loc": 176,
+    "secs": null
+   }
+  ]
+ },
+ "gblean": {
+  "files": 5,
+  "timeouts": 1,
+  "loc": 1724,
+  "secs": 12.9,
+  "baseline_secs": 1.01,
+  "secs_per_kloc": 7.5,
+  "secs_per_kloc_median": 5.4,
+  "per_file": [
+   {
+    "file": "GB/Groebner.lean",
+    "loc": 295,
+    "secs": 5.63,
+    "elab": 4.6
+   },
+   {
+    "file": "GB/S_Poly.lean",
+    "loc": 488,
+    "secs": 4.81,
+    "elab": 3.79
+   },
+   {
+    "file": "GB/Buchberger.lean",
+    "loc": 511,
+    "secs": null
+   },
+   {
+    "file": "GB/Polynomial.lean",
+    "loc": 109,
+    "secs": 1.47,
+    "elab": 0.46
+   },
+   {
+    "file": "GB/Reduction.lean",
+    "loc": 320,
+    "secs": 2.28,
+    "elab": 1.27
+   },
+   {
+    "file": "GB/Monomial.lean",
+    "loc": 512,
+    "secs": 3.79,
+    "elab": 2.79
+   }
+  ]
+ }
+}
