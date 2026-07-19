@@ -54,6 +54,7 @@ class Prep:
         self.branch = _np(d["branch"], np.int32) if "branch" in d else np.zeros(self.n, np.int32)
         self.sorry = _np(d["sorry"], np.int32)
         self.proof_lines = _np(d["proof_lines"], np.int32)
+        self.sig_lines = _np(d["sig_lines"], np.int32) if "sig_lines" in d else np.zeros(self.n, np.int32)
         self.value_lines = _np(d["value_lines"], np.int32)
         self.sig_chars = _np(d["sig_chars"], np.int32)
         self.proof_chars = _np(d["proof_chars"], np.int32)

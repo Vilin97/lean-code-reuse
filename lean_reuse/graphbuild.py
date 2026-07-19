@@ -124,6 +124,7 @@ def build_repo(key: str, repos_dir: str, dep_tables: dict[str, dict], nproc: int
     has_doc = array("b")
     proof_lines = array("i")
     value_lines = array("i")
+    sig_lines = array("i")
     sig_chars = array("i")
     proof_chars = array("i")
     sig_hash = array("q")
@@ -143,6 +144,7 @@ def build_repo(key: str, repos_dir: str, dep_tables: dict[str, dict], nproc: int
             has_doc.append(1 if d.has_doc else 0)
             proof_lines.append(d.proof.count("\n") + (1 if d.proof.strip() else 0))
             value_lines.append(d.value.count("\n") + (1 if d.value.strip() else 0))
+            sig_lines.append(d.sig.count("\n") + (1 if d.sig.strip() else 0))
             sig_chars.append(min(len(d.sig), 2**31 - 1))
             proof_chars.append(min(len(d.proof), 2**31 - 1))
             nsig = " ".join(d.sig.split())
@@ -240,6 +242,7 @@ def build_repo(key: str, repos_dir: str, dep_tables: dict[str, dict], nproc: int
             "sorry": sorry_cnt,
             "proof_lines": proof_lines,
             "value_lines": value_lines,
+            "sig_lines": sig_lines,
             "sig_chars": sig_chars,
             "proof_chars": proof_chars,
             "sig_hash": sig_hash,

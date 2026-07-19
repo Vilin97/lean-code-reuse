@@ -37,7 +37,13 @@ def compute(data, prep, ctx) -> dict:
         if whole:
             whole_lib_files += 1
     locs = np.array([l for l in data.get("file_loc", [])]) if n else np.zeros(0)
+    locs = locs[locs > 0] if len(locs) else locs
+    fstats = None
+    if len(locs):
+        fstats = {"mean": round(float(locs.mean()), 1), "median": float(np.median(locs)),
+                  "p90": float(np.percentile(locs, 90)), "max": int(locs.max())}
     return {
+        "file_loc_stats": fstats,
         "median_file_loc": float(np.median(locs)) if len(locs) else None,
         "n_files": n,
         "mean_internal_imports_per_file": round(float(internal_out.mean()), 3) if n else 0.0,

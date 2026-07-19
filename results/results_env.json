@@ -195,6 +195,13 @@
     "stmt_max_cluster": 10
    },
    "proof_economy": {
+    "stmt_lines": {
+     "mean": 2.221,
+     "median": 2.0,
+     "p90": 4.0,
+     "p99": 10.0,
+     "max": 37
+    },
     "stmt_chars_median": 58.0,
     "n_theorems": 47034,
     "proof_lines": {
@@ -211,7 +218,8 @@
     "n_examples": 0
    },
    "import_graph": {
-    "median_file_loc": 0.0,
+    "file_loc_stats": null,
+    "median_file_loc": null,
     "n_files": 2037,
     "mean_internal_imports_per_file": 0.0,
     "median_fan_in": 0.0,
@@ -456,6 +464,13 @@
     "stmt_max_cluster": 4
    },
    "proof_economy": {
+    "stmt_lines": {
+     "mean": 2.138,
+     "median": 2.0,
+     "p90": 3.0,
+     "p99": 9.779999999999973,
+     "max": 17
+    },
     "stmt_chars_median": 68.0,
     "n_theorems": 1634,
     "proof_lines": {
@@ -472,7 +487,13 @@
     "n_examples": 0
    },
    "import_graph": {
-    "median_file_loc": 48.5,
+    "file_loc_stats": {
+     "mean": 100.1,
+     "median": 49.0,
+     "p90": 247.60000000000025,
+     "max": 988
+    },
+    "median_file_loc": 49.0,
     "n_files": 138,
     "mean_internal_imports_per_file": 0.717,
     "median_fan_in": 0.0,
@@ -704,6 +725,13 @@
     "stmt_max_cluster": 0
    },
    "proof_economy": {
+    "stmt_lines": {
+     "mean": 1.0,
+     "median": 1.0,
+     "p90": 1.0,
+     "p99": 1.0,
+     "max": 1
+    },
     "stmt_chars_median": 0.0,
     "n_theorems": 12,
     "proof_lines": {
@@ -720,6 +748,12 @@
     "n_examples": 0
    },
    "import_graph": {
+    "file_loc_stats": {
+     "mean": 94.3,
+     "median": 57.0,
+     "p90": 200.3,
+     "max": 660
+    },
     "median_file_loc": 57.0,
     "n_files": 130,
     "mean_internal_imports_per_file": 1.823,
@@ -952,6 +986,13 @@
     "stmt_max_cluster": 7
    },
    "proof_economy": {
+    "stmt_lines": {
+     "mean": 1.874,
+     "median": 2.0,
+     "p90": 3.0,
+     "p99": 6.0,
+     "max": 26
+    },
     "stmt_chars_median": 58.0,
     "n_theorems": 243107,
     "proof_lines": {
@@ -968,6 +1009,12 @@
     "n_examples": 0
    },
    "import_graph": {
+    "file_loc_stats": {
+     "mean": 184.7,
+     "median": 117.0,
+     "p90": 441.0,
+     "max": 1205
+    },
     "median_file_loc": 117.0,
     "n_files": 8027,
     "mean_internal_imports_per_file": 3.044,
@@ -1309,6 +1356,13 @@
     "stmt_max_cluster": 2
    },
    "proof_economy": {
+    "stmt_lines": {
+     "mean": 1.996,
+     "median": 2.0,
+     "p90": 3.0,
+     "p99": 7.0,
+     "max": 44
+    },
     "stmt_chars_median": 70.0,
     "n_theorems": 1806,
     "proof_lines": {
@@ -1325,6 +1379,12 @@
     "n_examples": 0
    },
    "import_graph": {
+    "file_loc_stats": {
+     "mean": 99.0,
+     "median": 73.0,
+     "p90": 217.8,
+     "max": 535
+    },
     "median_file_loc": 73.0,
     "n_files": 163,
     "mean_internal_imports_per_file": 1.454,
@@ -1666,6 +1726,13 @@
     "stmt_max_cluster": 2
    },
    "proof_economy": {
+    "stmt_lines": {
+     "mean": 2.693,
+     "median": 2.0,
+     "p90": 5.0,
+     "p99": 11.0,
+     "max": 56
+    },
     "stmt_chars_median": 95.0,
     "n_theorems": 8675,
     "proof_lines": {
@@ -1682,7 +1749,13 @@
     "n_examples": 0
    },
    "import_graph": {
-    "median_file_loc": 124.0,
+    "file_loc_stats": {
+     "mean": 212.7,
+     "median": 139.0,
+     "p90": 439.40000000000003,
+     "max": 2229
+    },
+    "median_file_loc": 139.0,
     "n_files": 533,
     "mean_internal_imports_per_file": 1.493,
     "median_fan_in": 1.0,
@@ -2023,6 +2096,13 @@
     "stmt_max_cluster": 2
    },
    "proof_economy": {
+    "stmt_lines": {
+     "mean": 3.116,
+     "median": 3.0,
+     "p90": 5.0,
+     "p99": 12.0,
+     "max": 57
+    },
     "stmt_chars_median": 94.0,
     "n_theorems": 2829,
     "proof_lines": {
@@ -2039,6 +2119,12 @@
     "n_examples": 0
    },
    "import_graph": {
+    "file_loc_stats": {
+     "mean": 160.7,
+     "median": 66.5,
+     "p90": 425.1,
+     "max": 1584
+    },
     "median_file_loc": 66.5,
     "n_files": 254,
     "mean_internal_imports_per_file": 1.551,
@@ -2384,6 +2470,13 @@
     "stmt_max_cluster": 2
    },
    "proof_economy": {
+    "stmt_lines": {
+     "mean": 3.428,
+     "median": 3.0,
+     "p90": 6.0,
+     "p99": 11.0,
+     "max": 18
+    },
     "stmt_chars_median": 144.0,
     "n_theorems": 1015,
     "proof_lines": {
@@ -2400,6 +2493,12 @@
     "n_examples": 0
    },
    "import_graph": {
+    "file_loc_stats": {
+     "mean": 262.6,
+     "median": 127.0,
+     "p90": 834.8000000000002,
+     "max": 2324
+    },
     "median_file_loc": 127.0,
     "n_files": 69,
     "mean_internal_imports_per_file": 1.362,
@@ -2741,6 +2840,13 @@
     "stmt_max_cluster": 4
    },
    "proof_economy": {
+    "stmt_lines": {
+     "mean": 1.765,
+     "median": 1.0,
+     "p90": 3.0,
+     "p99": 7.0,
+     "max": 14
+    },
     "stmt_chars_median": 75.0,
     "n_theorems": 2664,
     "proof_lines": {
@@ -2757,7 +2863,13 @@
     "n_examples": 0
    },
    "import_graph": {
-    "median_file_loc": 155.5,
+    "file_loc_stats": {
+     "mean": 309.9,
+     "median": 157.0,
+     "p90": 675.6000000000012,
+     "max": 4348
+    },
+    "median_file_loc": 157.0,
     "n_files": 98,
     "mean_internal_imports_per_file": 1.112,
     "median_fan_in": 1.0,
@@ -3098,6 +3210,13 @@
     "stmt_max_cluster": 12
    },
    "proof_economy": {
+    "stmt_lines": {
+     "mean": 1.166,
+     "median": 1.0,
+     "p90": 2.0,
+     "p99": 3.0,
+     "max": 18
+    },
     "stmt_chars_median": 0.0,
     "n_theorems": 34353,
     "proof_lines": {
@@ -3114,6 +3233,12 @@
     "n_examples": 0
    },
    "import_graph": {
+    "file_loc_stats": {
+     "mean": 109.2,
+     "median": 13.0,
+     "p90": 154.60000000000286,
+     "max": 10361
+    },
     "median_file_loc": 13.0,
     "n_files": 1275,
     "mean_internal_imports_per_file": 2.78,
@@ -3457,6 +3582,13 @@
     "stmt_max_cluster": 2
    },
    "proof_economy": {
+    "stmt_lines": {
+     "mean": 2.39,
+     "median": 2.0,
+     "p90": 4.0,
+     "p99": 8.0,
+     "max": 13
+    },
     "stmt_chars_median": 75.0,
     "n_theorems": 3567,
     "proof_lines": {
@@ -3473,7 +3605,13 @@
     "n_examples": 0
    },
    "import_graph": {
-    "median_file_loc": 0.0,
+    "file_loc_stats": {
+     "mean": 36.4,
+     "median": 21.0,
+     "p90": 76.10000000000002,
+     "max": 459
+    },
+    "median_file_loc": 21.0,
     "n_files": 970,
     "mean_internal_imports_per_file": 0.213,
     "median_fan_in": 0.0,
@@ -3810,6 +3948,13 @@
     "stmt_max_cluster": 5
    },
    "proof_economy": {
+    "stmt_lines": {
+     "mean": 3.106,
+     "median": 3.0,
+     "p90": 5.0,
+     "p99": 10.0,
+     "max": 25
+    },
     "stmt_chars_median": 120.0,
     "n_theorems": 6209,
     "proof_lines": {
@@ -3826,6 +3971,12 @@
     "n_examples": 0
    },
    "import_graph": {
+    "file_loc_stats": {
+     "mean": 113.8,
+     "median": 86.0,
+     "p90": 211.5,
+     "max": 1223
+    },
     "median_file_loc": 86.0,
     "n_files": 536,
     "mean_internal_imports_per_file": 1.396,
@@ -4167,6 +4318,13 @@
     "stmt_max_cluster": 8
    },
    "proof_economy": {
+    "stmt_lines": {
+     "mean": 3.132,
+     "median": 2.0,
+     "p90": 6.0,
+     "p99": 15.0,
+     "max": 64
+    },
     "stmt_chars_median": 91.0,
     "n_theorems": 31108,
     "proof_lines": {
@@ -4183,7 +4341,13 @@
     "n_examples": 0
    },
    "import_graph": {
-    "median_file_loc": 145.0,
+    "file_loc_stats": {
+     "mean": 280.9,
+     "median": 150.0,
+     "p90": 664.0,
+     "max": 8391
+    },
+    "median_file_loc": 150.0,
     "n_files": 1762,
     "mean_internal_imports_per_file": 1.711,
     "median_fan_in": 1.0,
@@ -4524,6 +4688,13 @@
     "stmt_max_cluster": 1
    },
    "proof_economy": {
+    "stmt_lines": {
+     "mean": 1.578,
+     "median": 1.0,
+     "p90": 3.0,
+     "p99": 5.210000000000008,
+     "max": 7
+    },
     "stmt_chars_median": 50.0,
     "n_theorems": 210,
     "proof_lines": {
@@ -4540,6 +4711,12 @@
     "n_examples": 0
    },
    "import_graph": {
+    "file_loc_stats": {
+     "mean": 77.2,
+     "median": 24.0,
+     "p90": 260.0000000000001,
+     "max": 346
+    },
     "median_file_loc": 24.0,
     "n_files": 13,
     "mean_internal_imports_per_file": 1.154,
@@ -4881,6 +5058,13 @@
     "stmt_max_cluster": 12
    },
    "proof_economy": {
+    "stmt_lines": {
+     "mean": 2.432,
+     "median": 2.0,
+     "p90": 4.0,
+     "p99": 12.0,
+     "max": 38
+    },
     "stmt_chars_median": 78.0,
     "n_theorems": 7527,
     "proof_lines": {
@@ -4897,6 +5081,12 @@
     "n_examples": 0
    },
    "import_graph": {
+    "file_loc_stats": {
+     "mean": 695.7,
+     "median": 317.0,
+     "p90": 1524.0,
+     "max": 5924
+    },
     "median_file_loc": 317.0,
     "n_files": 186,
     "mean_internal_imports_per_file": 1.683,
@@ -5238,6 +5428,13 @@
     "stmt_max_cluster": 2
    },
    "proof_economy": {
+    "stmt_lines": {
+     "mean": 2.513,
+     "median": 2.0,
+     "p90": 4.0,
+     "p99": 10.0,
+     "max": 21
+    },
     "stmt_chars_median": 91.0,
     "n_theorems": 2664,
     "proof_lines": {
@@ -5254,6 +5451,12 @@
     "n_examples": 0
    },
    "import_graph": {
+    "file_loc_stats": {
+     "mean": 349.0,
+     "median": 207.0,
+     "p90": 919.0,
+     "max": 1921
+    },
     "median_file_loc": 207.0,
     "n_files": 117,
     "mean_internal_imports_per_file": 1.88,
@@ -5595,6 +5798,13 @@
     "stmt_max_cluster": 5
    },
    "proof_economy": {
+    "stmt_lines": {
+     "mean": 3.815,
+     "median": 2.0,
+     "p90": 10.0,
+     "p99": 17.0,
+     "max": 21
+    },
     "stmt_chars_median": 113.5,
     "n_theorems": 1080,
     "proof_lines": {
@@ -5611,6 +5821,12 @@
     "n_examples": 0
    },
    "import_graph": {
+    "file_loc_stats": {
+     "mean": 3082.9,
+     "median": 3727.0,
+     "p90": 4976.4,
+     "max": 5139
+    },
     "median_file_loc": 3727.0,
     "n_files": 7,
     "mean_internal_imports_per_file": 1.0,
@@ -5952,6 +6168,13 @@
     "stmt_max_cluster": 3
    },
    "proof_economy": {
+    "stmt_lines": {
+     "mean": 2.023,
+     "median": 2.0,
+     "p90": 4.0,
+     "p99": 7.0,
+     "max": 9
+    },
     "stmt_chars_median": 71.0,
     "n_theorems": 1167,
     "proof_lines": {
@@ -5968,7 +6191,13 @@
     "n_examples": 0
    },
    "import_graph": {
-    "median_file_loc": 81.0,
+    "file_loc_stats": {
+     "mean": 163.5,
+     "median": 82.0,
+     "p90": 422.2,
+     "max": 1000
+    },
+    "median_file_loc": 82.0,
     "n_files": 80,
     "mean_internal_imports_per_file": 1.538,
     "median_fan_in": 1.0,
@@ -6312,6 +6541,13 @@
     "stmt_max_cluster": 5
    },
    "proof_economy": {
+    "stmt_lines": {
+     "mean": 2.638,
+     "median": 2.0,
+     "p90": 5.0,
+     "p99": 12.0,
+     "max": 32
+    },
     "stmt_chars_median": 83.0,
     "n_theorems": 2429,
     "proof_lines": {
@@ -6328,6 +6564,12 @@
     "n_examples": 0
    },
    "import_graph": {
+    "file_loc_stats": {
+     "mean": 177.2,
+     "median": 96.5,
+     "p90": 459.30000000000007,
+     "max": 1126
+    },
     "median_file_loc": 96.5,
     "n_files": 262,
     "mean_internal_imports_per_file": 2.981,

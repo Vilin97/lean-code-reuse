@@ -100,12 +100,15 @@ def pack_repo(key, res, tier):
             "pl_med": m["proof_economy"]["proof_lines"]["median"],
             "pl_p90": m["proof_economy"]["proof_lines"]["p90"],
             "stmt_med": m["proof_economy"].get("stmt_chars_median"),
+            "stmt_lines": m["proof_economy"].get("stmt_lines"),
+            "pl_stats": m["proof_economy"]["proof_lines"],
             "rpp": m["proof_economy"]["refs_per_proof"],
         },
         "m9": {
             "whole_ml": m["import_graph"]["pct_files_importing_all_mathlib"],
             "fanin2": m["import_graph"]["pct_files_fan_in_ge2"],
             "file_med": m["import_graph"].get("median_file_loc"),
+            "file_stats": m["import_graph"].get("file_loc_stats"),
         },
         "m10": m.get("doc_coverage", {}),
         "m11": m.get("complexity", {}),
@@ -212,6 +215,7 @@ def main():
         ("M1 · share never reused", lambda r: r["m1"]["never"], False, True),
         ("M2 · statement share of refs", lambda r: r["m2"]["sig"], True, True),
         ("M4 · Mathlib refs per decl", lambda r: r["m4"]["ml_per_decl"] or None, True, False),
+        ("M4 · Mathlib vocabulary per 1k refs", lambda r: r["m4"]["vocab1k"], True, False),
         ("M5 · top-1% reuse share", lambda r: r["m5"]["top1"] or 0, False, True),
         ("M6 · max dependency depth", lambda r: r["m6"]["maxd"], True, False),
         ("M12 · axioms per 1k decls", lambda r: r["m12"].get("axioms_per_1k_decls"), False, False),
@@ -256,8 +260,47 @@ def main():
                      "n_metrics": len(parts)})
     comp.sort(key=lambda c: -c["score"])
 
+    # ---- PCA over the standardized metric battery --------------------------
+    import numpy as _np
+    pca_metrics = [(lbl, f) for lbl, f, _, _ in metrics]
+    M = []
+    for r in repos:
+        M.append([f(r) for _, f in pca_metrics])
+    M = _np.array(M, dtype=float)
+    for j in range(M.shape[1]):
+        col = M[:, j]
+        med_j = _np.nanmedian(col) if not _np.all(_np.isnan(col)) else 0.0
+        col[_np.isnan(col)] = med_j
+        sd = col.std()
+        M[:, j] = (col - col.mean()) / (sd if sd > 1e-9 else 1.0)
+    U, S, Vt = _np.linalg.svd(M, full_matrices=False)
+    pcs = U[:, :2] * S[:2]
+    expl = (S**2 / (S**2).sum())[:2]
+    # orient PC1 so Mathlib is positive; PC2 so high anchors avg positive
+    mi = next(i for i, r in enumerate(repos) if r["key"] == "mathlib4")
+    if pcs[mi, 0] < 0:
+        pcs[:, 0] *= -1
+        Vt[0] *= -1
+    hi_idx = [i for i, r in enumerate(repos) if r["key"] in HIGH_ANCHOR]
+    if pcs[hi_idx, 1].mean() < 0:
+        pcs[:, 1] *= -1
+        Vt[1] *= -1
+    load1 = sorted(zip([l for l, _ in pca_metrics], Vt[0]), key=lambda t: -abs(t[1]))[:5]
+    load2 = sorted(zip([l for l, _ in pca_metrics], Vt[1]), key=lambda t: -abs(t[1]))[:5]
+    pca = {
+        "points": [
+            {"label": r["label"], "group": r["group"], "anchor": r["anchor"],
+             "tier": r["tier"], "x": round(float(pcs[i, 0]), 3), "y": round(float(pcs[i, 1]), 3)}
+            for i, r in enumerate(repos)
+        ],
+        "expl": [round(float(e), 3) for e in expl],
+        "load1": [{"m": l, "w": round(float(w), 2)} for l, w in load1],
+        "load2": [{"m": l, "w": round(float(w), 2)} for l, w in load2],
+    }
+
     data = {
         "groups": GROUPS,
+        "pca": pca,
         "totals": totals,
         "repos": repos,
         "ccdf": ccdf,

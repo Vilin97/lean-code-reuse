@@ -306,6 +306,7 @@ def build_env_cache(
     sorry_a = array("i")
     proof_lines = array("i")
     value_lines = array("i")
+    sig_lines = array("i")
     sig_chars = array("i")
     proof_chars = array("i")
     sig_hash = array("q")
@@ -338,6 +339,7 @@ def build_env_cache(
             line_a.append(td["line"][ti])
             proof_lines.append(td["proof_lines"][ti])
             value_lines.append(td["value_lines"][ti])
+            sig_lines.append(td["sig_lines"][ti] if "sig_lines" in td else 0)
             sig_chars.append(td["sig_chars"][ti])
             proof_chars.append(td["proof_chars"][ti])
             sig_hash.append(td["sig_hash"][ti])
@@ -347,6 +349,7 @@ def build_env_cache(
             doc_a.append(0)
             branch_a.append(0)
             line_a.append(0)
+            sig_lines.append(0)
             proof_lines.append(0)
             value_lines.append(0)
             sig_chars.append(0)
@@ -421,6 +424,7 @@ def build_env_cache(
             "sorry": sorry_a,
             "proof_lines": proof_lines,
             "value_lines": value_lines,
+            "sig_lines": sig_lines,
             "sig_chars": sig_chars,
             "proof_chars": proof_chars,
             "sig_hash": sig_hash,

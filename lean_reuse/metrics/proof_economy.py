@@ -31,7 +31,10 @@ def compute(data, prep, ctx) -> dict:
     n_examples = int((prep.kind == KIND_IDX["example"]).sum())
 
     sig_th = prep.sig_chars[thm]
+    sl = prep.sig_lines[thm]
+    sl = sl[sl > 0]
     return {
+        "stmt_lines": stats_summary(sl) if len(sl) else None,
         "stmt_chars_median": float(np.median(sig_th)) if len(sig_th) else None,
         "n_theorems": int(thm.sum()),
         "proof_lines": stats_summary(pl[has_proof]) if has_proof.any() else stats_summary(pl),
