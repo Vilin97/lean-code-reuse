@@ -247,7 +247,7 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
   </div>
   <div class="card">
     <h4>Amortization exponent (log₁₀ of fully-inlined dependency-tree size)</h4>
-    <div class="sub">Dot = mean over declarations; tick = p90. A value of 7 means the average declaration sits on a tree 10⁷ nodes large if nothing were shared.</div>
+    <div class="sub">Dot = mean over declarations; tick = p90. A value of 7 means the average declaration sits on a tree 10⁷ nodes large if nothing were shared. Exact-tier repos only — the tier-agreement analysis (§13) shows textual approximations of this metric are unreliable, so textual-tier repos are excluded here and in the composite.</div>
     <div class="chartwrap" id="amortChart"></div>
   </div>
   <div class="card">
@@ -515,6 +515,18 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
   <div class="secno">13</div>
   <h2>Validity, and what this can't see</h2>
   <div class="prose" id="validityProse"></div>
+  <h3>Does the textual tier agree with the exact tier?</h3>
+  <div class="prose">
+    <p>
+      For every repo measured on <em>both</em> tiers, we compare the tiers metric by
+      metric: the cross-tier Spearman correlation of repo values (does the textual tier
+      rank repos the same way the exact tier does?) and the median absolute difference of
+      the values themselves. Rankings agree strongly on every reported metric; absolute
+      levels differ most where the exact tier sees what text cannot (instance and
+      dot-notation references inflate exact in-degrees).
+    </p>
+  </div>
+  <div class="tablewrap"><table class="data" id="tiervalTable"></table></div>
   <div class="tablewrap"><table class="data" id="valTable"></table></div>
 </section>
 
@@ -961,6 +973,15 @@ for (const [id, html] of Object.entries(DATA.prose)) {
   if (el) el.innerHTML = html;
 }
 
+// metric-level tier agreement table
+(function() {
+  const tbl = document.getElementById('tiervalTable');
+  if (!tbl || !DATA.tierval) return;
+  tbl.innerHTML = '<tr><th>metric</th><th>repos with both tiers</th><th>cross-tier Spearman</th><th>median |textual − exact|</th></tr>' +
+    DATA.tierval.map(t => `<tr><td style="text-align:left">${esc(t.label)}</td><td>${t.n}</td>` +
+      `<td class="${t.spearman >= 0.8 ? 'verdict-good' : ''}">${t.spearman.toFixed(2)}</td><td>${t.med_abs_diff}</td></tr>`).join('');
+})();
+
 // validation table
 (function() {
   const rows = Object.entries(DATA.validation).filter(([k,v]) => v.n_joined);
@@ -972,7 +993,7 @@ for (const [id, html] of Object.entries(DATA.prose)) {
 })();
 
 // 08 — amortization
-dotRank('amortChart', charted.filter(r => r.m14 && r.m14.mean_log10_cost != null).map(r => ({
+dotRank('amortChart', charted.filter(r => r.tier === 'exact' && r.m14 && r.m14.mean_log10_cost != null).map(r => ({
   label: r.label, value: r.m14.mean_log10_cost, tick: r.m14.p90_log10_cost, group: r.group,
   tip: `<b>${esc(r.label)}</b><br>mean log₁₀ inlined cost: ${r.m14.mean_log10_cost}<br>median: ${r.m14.median_log10_cost} · p90: ${r.m14.p90_log10_cost} · max: ${r.m14.max_log10_cost}<br>total amortization exponent: ${r.m14.total_amortization_exp}`
 })).sort((a,b) => b.value - a.value), { ticks: 5 });

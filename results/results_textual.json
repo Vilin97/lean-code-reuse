@@ -11772,5 +11772,377 @@
     "pct_statements_no_refs": 0.005
    }
   }
+ },
+ "brownian": {
+  "meta": {
+   "tier": "textual",
+   "join_rate": null,
+   "label": "Brownian Motion",
+   "category": "research formalization",
+   "provenance": "human",
+   "stars": 57,
+   "url": "https://github.com/RemyDegenne/brownian-motion",
+   "files": 69,
+   "loc": 15050,
+   "decls": 1277,
+   "edges": 13570,
+   "dotted_coverage": 0.6687,
+   "parse_errors": 0
+  },
+  "metrics": {
+   "reuse_degree": {
+    "n_reusable_decls": 1211,
+    "degree": {
+     "mean": 2.202,
+     "median": 1.0,
+     "p90": 3.0,
+     "p99": 27.0,
+     "max": 423
+    },
+    "pct_never_reused": 0.422,
+    "pct_reused_ge2": 0.2469,
+    "ccdf": {
+     "1": 0.57803,
+     "2": 0.2469,
+     "3": 0.1379,
+     "5": 0.0834,
+     "10": 0.03468,
+     "20": 0.01652,
+     "50": 0.0033,
+     "100": 0.00083,
+     "200": 0.00083,
+     "500": 0.0,
+     "1000": 0.0
+    },
+    "top": [
+     {
+      "name": "\u03a9",
+      "deg": 423
+     },
+     {
+      "name": "B",
+      "deg": 68
+     },
+     {
+      "name": "MeasureTheory.IsPavingAnalytic",
+      "deg": 57
+     },
+     {
+      "name": "IsCadlag",
+      "deg": 51
+     },
+     {
+      "name": "ProbabilityTheory.SimpleProcess",
+      "deg": 48
+     },
+     {
+      "name": "MeasureTheory.debut",
+      "deg": 47
+     },
+     {
+      "name": "Function.IsRightContinuous",
+      "deg": 46
+     },
+     {
+      "name": "HasBoundedCoveringNumber",
+      "deg": 40
+     },
+     {
+      "name": "ProbabilityTheory.ClassD",
+      "deg": 37
+     },
+     {
+      "name": "countableSupClosure",
+      "deg": 36
+     },
+     {
+      "name": "mesh",
+      "deg": 35
+     },
+     {
+      "name": "ProbabilityTheory.gaussianLimit",
+      "deg": 30
+     },
+     {
+      "name": "countableInfClosure",
+      "deg": 27
+     },
+     {
+      "name": "MeasureTheory.IsPavingAnalyticFor",
+      "deg": 27
+     },
+     {
+      "name": "MeasureTheory.succ",
+      "deg": 26
+     },
+     {
+      "name": "chainingSequence",
+      "deg": 26
+     },
+     {
+      "name": "MeasureTheory.DiscreteApproxSequence",
+      "deg": 24
+     },
+     {
+      "name": "meshFiltration",
+      "deg": 23
+     },
+     {
+      "name": "ProbabilityTheory.gaussianProjectiveFamily",
+      "deg": 20
+     },
+     {
+      "name": "CountableSupClosed",
+      "deg": 20
+     }
+    ]
+   },
+   "statement_vs_proof": {
+    "share_signature": 0.3877,
+    "share_value": 0.0351,
+    "share_proof": 0.5772,
+    "load_bearing_share": 0.4228,
+    "mean_stmt_indeg": 1.326,
+    "mean_proof_indeg": 1.057,
+    "internal_refs_to_theorems": 1037,
+    "internal_refs_to_defs": 3140,
+    "thm_def_ref_ratio": 0.33,
+    "pct_theorems_used_in_statements": 0.0028
+   },
+   "cross_file": {
+    "pct_edges_cross_file": 0.3917,
+    "pct_edges_cross_dir": 0.2136,
+    "pct_decls_used_outside_file": 0.1486,
+    "pct_decls_used_in_5plus_external_files": 0.0041,
+    "mean_user_files_per_used_decl": 1.256,
+    "n_dirs": 6
+   },
+   "external_reuse": {
+    "external_refs_total": 14532,
+    "external_refs_per_decl": 11.805,
+    "external_internal_ratio": 3.478,
+    "per_dep": {
+     "mathlib4": {
+      "refs": 11816,
+      "distinct_decls_used": 2167
+     },
+     "batteries": {
+      "refs": 2,
+      "distinct_decls_used": 1
+     },
+     "aesop": {
+      "refs": 0,
+      "distinct_decls_used": 0
+     },
+     "core": {
+      "refs": 2714,
+      "distinct_decls_used": 158
+     }
+    },
+    "mathlib_refs_per_decl": 9.599,
+    "mathlib_vocab": 2167,
+    "mathlib_vocab_per_1k_refs": 183.4,
+    "top_mathlib": [
+     {
+      "name": "Set",
+      "refs": 640
+     },
+     {
+      "name": "MeasurableSpace",
+      "refs": 286
+     },
+     {
+      "name": "TopologicalSpace",
+      "refs": 194
+     },
+     {
+      "name": "MeasureTheory.Measure",
+      "refs": 182
+     },
+     {
+      "name": "MeasureTheory.stoppedValue",
+      "refs": 169
+     },
+     {
+      "name": "MeasurableSet",
+      "refs": 165
+     },
+     {
+      "name": "Finset",
+      "refs": 147
+     },
+     {
+      "name": "Measurable",
+      "refs": 146
+     },
+     {
+      "name": "MeasureTheory.Filtration",
+      "refs": 142
+     },
+     {
+      "name": "Filter.Tendsto",
+      "refs": 139
+     },
+     {
+      "name": "LinearOrder",
+      "refs": 133
+     },
+     {
+      "name": "SecondCountableTopology",
+      "refs": 130
+     },
+     {
+      "name": "Filter.atTop",
+      "refs": 118
+     },
+     {
+      "name": "positivity",
+      "refs": 116
+     },
+     {
+      "name": "OrderBot",
+      "refs": 103
+     },
+     {
+      "name": "ENNReal.ofReal",
+      "refs": 91
+     },
+     {
+      "name": "Set.mem_setOf_eq",
+      "refs": 86
+     },
+     {
+      "name": "Set.univ",
+      "refs": 86
+     },
+     {
+      "name": "OrderTop",
+      "refs": 82
+     },
+     {
+      "name": "trans",
+      "refs": 81
+     },
+     {
+      "name": "MeasureTheory.IsStoppingTime",
+      "refs": 81
+     },
+     {
+      "name": "MeasureTheory.IsFiniteMeasure",
+      "refs": 80
+     },
+     {
+      "name": "le_rfl",
+      "refs": 78
+     },
+     {
+      "name": "MeasureTheory.Submartingale",
+      "refs": 71
+     },
+     {
+      "name": "MeasureTheory.eLpNorm",
+      "refs": 69
+     }
+    ]
+   },
+   "concentration": {
+    "gini": 0.795,
+    "top1pct_share": 0.3442,
+    "top10pct_share": 0.6989
+   },
+   "dependency_depth": {
+    "max_depth": 27,
+    "mean_depth": 5.194,
+    "p90_depth": 12.0,
+    "pct_in_cycles": 0.094
+   },
+   "duplication": {
+    "body_dup_rate": 0.0034,
+    "body_dup_n": 879,
+    "body_max_cluster": 2,
+    "stmt_dup_rate": 0.0,
+    "stmt_dup_n": 1018,
+    "stmt_max_cluster": 1
+   },
+   "proof_economy": {
+    "stmt_lines": {
+     "mean": 3.293,
+     "median": 3.0,
+     "p90": 6.0,
+     "p99": 9.0,
+     "max": 17
+    },
+    "stmt_chars_median": 142.0,
+    "n_theorems": 1059,
+    "proof_lines": {
+     "mean": 11.177,
+     "median": 6.0,
+     "p90": 24.0,
+     "p99": 84.42000000000007,
+     "max": 174
+    },
+    "refs_per_proof": 10.184,
+    "refs_per_proof_line": 0.911,
+    "sorry_rate": 0.0331,
+    "n_sorried_theorems": 35,
+    "n_examples": 19
+   },
+   "import_graph": {
+    "file_loc_stats": {
+     "mean": 218.1,
+     "median": 105.0,
+     "p90": 501.00000000000017,
+     "max": 1446
+    },
+    "median_file_loc": 105.0,
+    "n_files": 69,
+    "mean_internal_imports_per_file": 1.116,
+    "median_fan_in": 1.0,
+    "pct_files_fan_in_ge2": 0.2174,
+    "max_fan_in": 6,
+    "pct_files_importing_all_mathlib": 0.0,
+    "n_distinct_external_modules": 101
+   },
+   "doc_coverage": {
+    "pct_defs_with_doc": 0.8819,
+    "pct_theorems_with_doc": 0.178,
+    "pct_public_decls_with_doc": 0.2642,
+    "comment_density": 0.0833
+   },
+   "complexity": {
+    "branch_per_proof": 0.63,
+    "branch_per_100_lines": 5.64,
+    "pct_proofs_branchy": 0.0283,
+    "p90_branch": 2.0
+   },
+   "trust_base": {
+    "n_axioms_declared": 0,
+    "axioms_per_1k_decls": 0.0,
+    "axiom_names": [],
+    "n_native_decide_users": null
+   },
+   "elab_cost": {
+    "secs_per_kloc": 13.7,
+    "secs_per_kloc_median": 13.7,
+    "files_sampled": 12,
+    "loc_sampled": 3875,
+    "import_baseline_secs": 2.95
+   },
+   "amortization": {
+    "mean_log10_cost": 0.93,
+    "median_log10_cost": 0.6,
+    "p90_log10_cost": 2.19,
+    "max_log10_cost": 5.28,
+    "mean_log10_cost_theorems": 0.96,
+    "total_amortization_exp": 2.97,
+    "n_scored": 1157
+   },
+   "triviality": {
+    "pct_trivial_statements": 0.0,
+    "n_trivial_statements": 0,
+    "pct_trivial_proofs": 0.0387,
+    "pct_statements_no_refs": 0.0208
+   }
+  }
  }
 }

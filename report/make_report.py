@@ -21,11 +21,11 @@ GROUP_OF = {
     "tauceti": 2, "strongpnt": 2,
     "atlas": 3, "seed-prover": 3, "superhuman": 3, "erdos90": 3, "clawristotle": 3,
     "pedigree": 3, "rubik": 3, "gblean": 3,
-    "statlearn": 1, "econlib": 1, "econcs": 1, "asympstat": 1,
+    "statlearn": 1, "econlib": 1, "econcs": 1, "asympstat": 1, "brownian": 0,
 }
 GROUPS = ["Human", "Human + AI mix", "AI, curated", "AI, less curated", "—"]
 ORDER = [
-    "mathlib4", "flt", "pfr", "addcombi", "carleson", "pnt", "spherepacking",
+    "mathlib4", "flt", "pfr", "addcombi", "carleson", "pnt", "brownian", "spherepacking",
     "cslib", "physlib", "statlearn", "econlib", "econcs", "asympstat",
     "equational_theories",
     "lean-pool", "tauceti", "strongpnt", "atlas", "erdos90", "clawristotle",
@@ -39,6 +39,7 @@ DESC = {
     "addcombi": "Additive combinatorics library split out of PFR; young and small but maintainer-reviewed.",
     "carleson": "Van Doorn-led formalization of Carleson's theorem on pointwise convergence of Fourier series.",
     "pnt": "The PNT+ project: prime number theorem and consequences, blueprint-driven.",
+    "brownian": "Degenne-led construction of Brownian motion: Gaussian measures, Kolmogorov extension, continuity — Mathlib-bound probability theory.",
     "spherepacking": "Community formalization of Viazovska's sphere-packing solution in dimension 8, blueprint-led.",
     "cslib": "The official Lean computer-science library: lambda calculi, semantics, logic.",
     "physlib": "Community physics library (ex-PhysLean/HEPLean): QFT, relativity, quantum information.",
@@ -72,7 +73,7 @@ COMPOSITE = [
     ("no sorries", lambda r: -r["m8"]["sorry"]),
     ("no duplication", lambda r: -r["m7"]["dup"]),
     ("doc coverage", lambda r: r["m10"].get("pct_defs_with_doc")),
-    ("amortization", lambda r: r["m14"].get("mean_log10_cost")),
+    ("amortization", lambda r: r["m14"].get("mean_log10_cost") if r["tier"] == "exact" else None),
     ("elab economy", lambda r: -r["m13"]["secs_per_kloc"] if r["m13"].get("secs_per_kloc") is not None else None),
     ("no trivial statements", lambda r: -r["m15"]["pct_trivial_statements"] if r["m15"].get("pct_trivial_statements") is not None else None),
     ("Mathlib vocabulary breadth", lambda r: r["m4"].get("vocab1k")),
@@ -246,8 +247,8 @@ def main():
         ("M5 · top-1% reuse share", lambda r: r["m5"]["top1"] or 0, False, True),
         ("M6 · max dependency depth", lambda r: r["m6"]["maxd"], True, False),
         ("M12 · axioms per 1k decls", lambda r: r["m12"].get("axioms_per_1k_decls"), False, False),
-        ("M14 · amortization: mean log10 inlined cost", lambda r: r["m14"].get("mean_log10_cost"), True, False),
-        ("M14 · amortization: p90 log10 inlined cost", lambda r: r["m14"].get("p90_log10_cost"), True, False),
+        ("M14 · amortization: mean log10 inlined cost", lambda r: r["m14"].get("mean_log10_cost") if r["tier"] == "exact" else None, True, False),
+        ("M14 · amortization: p90 log10 inlined cost", lambda r: r["m14"].get("p90_log10_cost") if r["tier"] == "exact" else None, True, False),
         ("M8 · median proof length (lines)", lambda r: r["m8"]["pl_med"], False, False),
         ("M8 · p90 proof length (lines)", lambda r: r["m8"]["pl_p90"], False, False),
         ("M8 · median statement length (chars)", lambda r: r["m8"].get("stmt_med"), False, False),
@@ -316,8 +317,49 @@ def main():
         "included": [l for l, _ in pca_metrics],
     }
 
+    # ---- metric-level cross-tier validation --------------------------------
+    dual = [k for k in ORDER if k in env and k in tx]
+    tv_metrics = [
+        ("share reused >=2", lambda m: m["reuse_degree"]["pct_reused_ge2"]),
+        ("share never reused", lambda m: m["reuse_degree"]["pct_never_reused"]),
+        ("mean in-degree", lambda m: m["reuse_degree"]["degree"]["mean"]),
+        ("used outside file", lambda m: m["cross_file"]["pct_decls_used_outside_file"]),
+        ("edges crossing dirs", lambda m: m["cross_file"]["pct_edges_cross_dir"]),
+        ("duplicate bodies", lambda m: m["duplication"]["body_dup_rate"]),
+        ("sorried theorems", lambda m: m["proof_economy"]["sorry_rate"]),
+        ("defs with docstrings", lambda m: m["doc_coverage"].get("pct_defs_with_doc")),
+        ("amortization mean log10", lambda m: m["amortization"]["mean_log10_cost"]),
+        ("trivial one-liner proofs", lambda m: m["triviality"].get("pct_trivial_proofs")),
+    ]
+    def _spear(a, b):
+        a = _np.array(a, float); b = _np.array(b, float)
+        ra = _np.argsort(_np.argsort(a)); rb = _np.argsort(_np.argsort(b))
+        ca, cb = ra - ra.mean(), rb - rb.mean()
+        d = _np.sqrt((ca**2).sum() * (cb**2).sum())
+        return float((ca*cb).sum()/d) if d else 0.0
+    tierval = []
+    for label, f in tv_metrics:
+        pairs = []
+        for k in dual:
+            try:
+                tv_ = f(tx[k]["metrics"]); ev_ = f(env[k]["metrics"])
+            except (KeyError, TypeError):
+                continue
+            if tv_ is None or ev_ is None:
+                continue
+            pairs.append((k, tv_, ev_))
+        if len(pairs) < 5:
+            continue
+        t = [p[1] for p in pairs]; e = [p[2] for p in pairs]
+        tierval.append({
+            "label": label, "n": len(pairs),
+            "spearman": round(_spear(t, e), 2),
+            "med_abs_diff": round(float(_np.median(_np.abs(_np.array(t) - _np.array(e)))), 4),
+        })
+
     data = {
         "groups": GROUPS,
+        "tierval": tierval,
         "pca": pca,
         "totals": totals,
         "repos": repos,

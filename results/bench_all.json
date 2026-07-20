@@ -1709,5 +1709,88 @@
     "elab": 1.1
    }
   ]
+ },
+ "brownian": {
+  "files": 12,
+  "timeouts": 0,
+  "loc": 3875,
+  "secs": 53.1,
+  "baseline_secs": 2.95,
+  "secs_per_kloc": 13.7,
+  "secs_per_kloc_median": 13.7,
+  "per_file": [
+   {
+    "file": "BrownianMotion/Choquet/MeasurableSection.lean",
+    "loc": 439,
+    "secs": 11.18,
+    "elab": 8.44
+   },
+   {
+    "file": "BrownianMotion/Auxiliary/ENNReal.lean",
+    "loc": 30,
+    "secs": 4.24,
+    "elab": 1.49
+   },
+   {
+    "file": "BrownianMotion/Continuity/IsKolmogorovProcess.lean",
+    "loc": 968,
+    "secs": 11.87,
+    "elab": 9.13
+   },
+   {
+    "file": "BrownianMotion/Choquet/Capacity.lean",
+    "loc": 436,
+    "secs": 6.4,
+    "elab": 3.65
+   },
+   {
+    "file": "BrownianMotion/Continuity/HasBoundedInternalCoveringNumber.lean",
+    "loc": 129,
+    "secs": 6.25,
+    "elab": 3.5
+   },
+   {
+    "file": "BrownianMotion/StochasticIntegral/ClassD.lean",
+    "loc": 784,
+    "secs": 12.21,
+    "elab": 9.47
+   },
+   {
+    "file": "BrownianMotion/Auxiliary/FiniteInf.lean",
+    "loc": 49,
+    "secs": 3.82,
+    "elab": 0.05
+   },
+   {
+    "file": "BrownianMotion/Continuity/CoveringNumber.lean",
+    "loc": 305,
+    "secs": 6.88,
+    "elab": 4.13
+   },
+   {
+    "file": "BrownianMotion/StochasticIntegral/UniformIntegrable.lean",
+    "loc": 306,
+    "secs": 6.44,
+    "elab": 3.7
+   },
+   {
+    "file": "BrownianMotion/Auxiliary/MeasureTheory.lean",
+    "loc": 253,
+    "secs": 6.22,
+    "elab": 3.47
+   },
+   {
+    "file": "BrownianMotion/Gaussian/Moment.lean",
+    "loc": 129,
+    "secs": 6.49,
+    "elab": 3.74
+   },
+   {
+    "file": "BrownianMotion/Auxiliary/Martingale.lean",
+    "loc": 47,
+    "secs": 5.09,
+    "elab": 2.34
+   }
+  ]
  }
 }

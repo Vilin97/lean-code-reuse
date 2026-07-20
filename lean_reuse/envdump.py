@@ -58,6 +58,8 @@ ENV_SELF_PREFIXES = {
     "econlib": ("Econlib",),
     "econcs": ("EconCSLib",),
     "asympstat": ("AsymptoticStatistics",),
+    "brownian": ("BrownianMotion",),
+    "clawristotle": ("Aristotle",),
 }
 
 # Auto-generated last name components. Only applied to names NOT found in the
