@@ -20,7 +20,7 @@ GROUP_OF = {
     "physlib": 1, "equational_theories": 1, "lean-pool": 1,
     "tauceti": 2, "strongpnt": 2,
     "atlas": 3, "seed-prover": 3, "superhuman": 3, "erdos90": 3, "clawristotle": 3,
-    "pedigree": 3, "rubik": 3, "gblean": 3,
+    "pedigree": 3, "gblean": 3,
     "statlearn": 1, "econlib": 1, "econcs": 1, "asympstat": 1, "brownian": 0,
 }
 GROUPS = ["Human", "Human + AI mix", "AI, curated", "AI, less curated", "—"]
@@ -29,7 +29,7 @@ ORDER = [
     "cslib", "physlib", "statlearn", "econlib", "econcs", "asympstat",
     "equational_theories",
     "lean-pool", "tauceti", "strongpnt", "atlas", "erdos90", "clawristotle",
-    "seed-prover", "superhuman", "pedigree", "rubik", "gblean",
+    "seed-prover", "superhuman", "pedigree", "gblean",
 ]
 
 DESC = {
@@ -57,7 +57,6 @@ DESC = {
     "seed-prover": "ByteDance's IMO-style proof dump: per-problem files from the Seed-Prover system.",
     "superhuman": "DeepMind's 58-file corpus of competition proofs from the superhuman system.",
     "pedigree": "Slop calibration: a P=NP 'proof' by chaining 59 axioms (flagged as crank in LeanPool triage).",
-    "rubik": "Slop calibration: Rubik's-cube group scaffold, 41% sorried theorems.",
     "gblean": "Slop calibration: Groebner-basis scaffold with more sorries than theorems.",
 }
 
@@ -461,9 +460,8 @@ numbers.</p>""",
         "hygieneProse": f"""
 <p>Seed-Prover's {pct(sp['m7']['dup'])} duplicate-body rate and Meta ATLAS's
 {at['m8']['nsorry']:,} sorried theorems ({pct(at['m8']['sorry'])}) anchor the low end, and
-the slop calibration set behaves as expected — Rubik Cube Group:
-{pct(byk['rubik']['m8']['sorry']) if 'rubik' in byk else '—'} sorried theorems; GBLean:
-{pct(byk['gblean']['m8']['sorry']) if 'gblean' in byk else '—'}; Pedigree Polytopes proves
+the slop calibration set behaves as expected — GBLean:
+{pct(byk['gblean']['m8']['sorry']) if 'gblean' in byk else '—'} sorried theorems; Pedigree Polytopes proves
 P=NP from {byk['pedigree']['m12'].get('n_axioms_declared','—') if 'pedigree' in byk else '—'}
 declared axioms (M12 catches what the sorry counter cannot: axiomatizing your way to a
 headline). The curated AI projects are clean on both counts (TauCeti:
@@ -479,8 +477,8 @@ or machine-generated corpus satisfies incidentally, mirroring the software-measu
 literature where volume indices predict quality poorly and process signals hold up.</p>
 <p>The slop calibration set behaves as floors should: Pedigree Polytopes
 ({comp.get('pedigree',0)*100:.0f}) is exposed by axioms (59 declared) rather than sorries,
-GBLean ({comp.get('gblean',0)*100:.0f}) and Rubik ({comp.get('rubik',0)*100:.0f}) by
-sorry-rates, Seed-Prover ({comp.get('seed-prover',0)*100:.0f}) by duplication and
+GBLean ({comp.get('gblean',0)*100:.0f}) by
+sorry-rate, Seed-Prover ({comp.get('seed-prover',0)*100:.0f}) by duplication and
 isolation. TauCeti and LeanPool sit inside the human band. One cautionary result from an
 earlier revision of this study is worth recording: we separately measured Math Inc's Gauss
 PR against the community Sphere Packing repo, and it passed — indeed topped — every
@@ -506,9 +504,15 @@ chains through Mathlib are credited to M4, not here.</p>""",
         "validityProse": f"""
 <p><b>Tier agreement.</b> Where both tiers exist they correlate at Spearman ρ
 {mv.get('spearman_indeg','—')} across Mathlib's {mv.get('n_joined',0):,} joined
-declarations (0.76–0.79 on every repo checked); the textual tier under-counts dot-notation
-and instance uses but preserves ranking, justifying its use for the unbuildable corpora
-(Seed-Prover, superhuman, Erdős-90, Clawristotle).</p>
+declarations; the textual tier under-counts dot-notation and instance uses but preserves
+ranking. The strongest check comes from the dump genre itself: building Seed-Prover's
+IMO-2025 subproject (it ships its own lakefile pinning Lean v4.14) and comparing tiers on
+that slice gives ρ 0.975 with mean in-degree 1.04 (textual) vs 1.05 (exact) — on
+proof-dump code, the textual tier is essentially exact. Erdős-90 turned out to ship a
+lakefile in its submission tree and is now measured on the exact tier outright; the only
+remaining textual-tier corpora are Seed-Prover's full tree, superhuman (a v4.21 lakefile
+we authored compiles 31 of its 58 files — the corpus mixes mathlib vintages), Meta ATLAS
+(its modules name-collide), and the slop set.</p>
 <p><b>No fitted labels.</b> Nothing here is trained or calibrated against a quality
 labeling: the PCA uses only complete-coverage metrics with no imputation, and the composite
 is an unweighted mean of percentile ranks. Where we assert a metric "discriminates," the

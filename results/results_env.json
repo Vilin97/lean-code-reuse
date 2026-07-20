@@ -4470,6 +4470,373 @@
    }
   }
  },
+ "erdos90": {
+  "meta": {
+   "tier": "env",
+   "join_rate": 0.8761,
+   "label": "Erdos90 (OpenAI)",
+   "category": "AI proof project",
+   "provenance": "AI",
+   "stars": 15,
+   "url": "https://github.com/plby/Erdos90",
+   "files": 1456,
+   "loc": 0,
+   "decls": 37396,
+   "edges": 2579957,
+   "dotted_coverage": 1.0,
+   "parse_errors": 0
+  },
+  "metrics": {
+   "reuse_degree": {
+    "n_reusable_decls": 37396,
+    "degree": {
+     "mean": 6.73,
+     "median": 1.0,
+     "p90": 9.0,
+     "p99": 82.0,
+     "max": 5046
+    },
+    "pct_never_reused": 0.2219,
+    "pct_reused_ge2": 0.4545,
+    "ccdf": {
+     "1": 0.77808,
+     "2": 0.45454,
+     "3": 0.31233,
+     "5": 0.19368,
+     "10": 0.09878,
+     "20": 0.04974,
+     "50": 0.01762,
+     "100": 0.00829,
+     "200": 0.00393,
+     "500": 0.00139,
+     "1000": 0.00048
+    },
+    "top": [
+     {
+      "name": "Submission.CWord",
+      "deg": 5046
+     },
+     {
+      "name": "Submission.TCTex.BCWta",
+      "deg": 3433
+     },
+     {
+      "name": "Submission.TCTex.HEAddres",
+      "deg": 2856
+     },
+     {
+      "name": "Submission.CWord.weight",
+      "deg": 2842
+     },
+     {
+      "name": "Submission.HPAtom",
+      "deg": 2038
+     },
+     {
+      "name": "Submission.TCTex.FreeGenerator",
+      "deg": 1857
+     },
+     {
+      "name": "Submission.TCTex.SPFactora",
+      "deg": 1525
+     },
+     {
+      "name": "Submission.TCTex.LowerCentralTruncation",
+      "deg": 1433
+     },
+     {
+      "name": "Submission.GroupAlgebra.zSubgro",
+      "deg": 1414
+     },
+     {
+      "name": "Submission.TCTex.SPFactor",
+      "deg": 1391
+     },
+     {
+      "name": "Submission.TCTex.HEFam",
+      "deg": 1326
+     },
+     {
+      "name": "Submission.TCTex.concreteBasicCommutators",
+      "deg": 1323
+     },
+     {
+      "name": "Submission.HACoeff.DFTerm",
+      "deg": 1321
+     },
+     {
+      "name": "Submission.HACoeff.LabelledAtom",
+      "deg": 1312
+     },
+     {
+      "name": "Submission.TCTex.WSTrace.Atom",
+      "deg": 1280
+     },
+     {
+      "name": "Submission.GroupAlgebra.dSubgro",
+      "deg": 1268
+     },
+     {
+      "name": "Submission.TCTex.PEAddres.weight",
+      "deg": 1263
+     },
+     {
+      "name": "Submission.TCTex.HEAddres.weight",
+      "deg": 1116
+     },
+     {
+      "name": "Submission.HACoeff.BRecipe",
+      "deg": 955
+     },
+     {
+      "name": "Submission.TCTex.BCWta.FormsAssocGradedbasis",
+      "deg": 925
+     }
+    ]
+   },
+   "statement_vs_proof": {
+    "share_signature": 0.3516,
+    "share_value": 0.1447,
+    "share_proof": 0.5037,
+    "load_bearing_share": 0.4963,
+    "mean_stmt_indeg": 5.683,
+    "mean_proof_indeg": 4.634,
+    "internal_refs_to_theorems": 49073,
+    "internal_refs_to_defs": 336744,
+    "thm_def_ref_ratio": 0.146,
+    "pct_theorems_used_in_statements": 0.0146
+   },
+   "cross_file": {
+    "pct_edges_cross_file": 0.5687,
+    "pct_edges_cross_dir": 0.029,
+    "pct_decls_used_outside_file": 0.261,
+    "pct_decls_used_in_5plus_external_files": 0.036,
+    "mean_user_files_per_used_decl": 1.987,
+    "n_dirs": 9
+   },
+   "external_reuse": {
+    "external_refs_total": 2194130,
+    "external_refs_per_decl": 58.673,
+    "external_internal_ratio": 5.687,
+    "per_dep": {
+     "mathlib4": {
+      "refs": 1539009,
+      "distinct_decls_used": 12656
+     },
+     "batteries": {
+      "refs": 1828,
+      "distinct_decls_used": 46
+     },
+     "aesop": {
+      "refs": 0,
+      "distinct_decls_used": 0
+     },
+     "core": {
+      "refs": 653288,
+      "distinct_decls_used": 1190
+     },
+     "other": {
+      "refs": 5,
+      "distinct_decls_used": 1
+     }
+    },
+    "mathlib_refs_per_decl": 41.154,
+    "mathlib_vocab": 12656,
+    "mathlib_vocab_per_1k_refs": 8.2,
+    "top_mathlib": [
+     {
+      "name": "Group",
+      "refs": 31407
+     },
+     {
+      "name": "DivInvMonoid",
+      "refs": 24224
+     },
+     {
+      "name": "SetLike.instMembership",
+      "refs": 22074
+     },
+     {
+      "name": "Monoid.toMulOneClass",
+      "refs": 19919
+     },
+     {
+      "name": "MulOneClass",
+      "refs": 19738
+     },
+     {
+      "name": "Subgroup",
+      "refs": 19301
+     },
+     {
+      "name": "DFunLike",
+      "refs": 18696
+     },
+     {
+      "name": "Field.toSemifield",
+      "refs": 16308
+     },
+     {
+      "name": "DivisionSemiring",
+      "refs": 16151
+     },
+     {
+      "name": "Semifield.toDivisionSemiring",
+      "refs": 16021
+     },
+     {
+      "name": "Field",
+      "refs": 14684
+     },
+     {
+      "name": "Subgroup.instSetLike",
+      "refs": 14568
+     },
+     {
+      "name": "CommSemiring",
+      "refs": 14407
+     },
+     {
+      "name": "CommRing",
+      "refs": 13803
+     },
+     {
+      "name": "MonoidHom",
+      "refs": 12990
+     },
+     {
+      "name": "CommRing.toCommSemiring",
+      "refs": 12651
+     },
+     {
+      "name": "Semiring.toNonAssocSemiring",
+      "refs": 11531
+     },
+     {
+      "name": "Algebra",
+      "refs": 11398
+     },
+     {
+      "name": "MulOne",
+      "refs": 11304
+     },
+     {
+      "name": "Semifield",
+      "refs": 10668
+     },
+     {
+      "name": "MonoidHom.instFunLike",
+      "refs": 10228
+     },
+     {
+      "name": "Semiring",
+      "refs": 9838
+     },
+     {
+      "name": "QuotientGroup.Quotient.group",
+      "refs": 9730
+     },
+     {
+      "name": "Field.toDivisionRing",
+      "refs": 9666
+     },
+     {
+      "name": "DivisionRing",
+      "refs": 9375
+     }
+    ]
+   },
+   "concentration": {
+    "gini": 0.826,
+    "top1pct_share": 0.4482,
+    "top10pct_share": 0.7599
+   },
+   "dependency_depth": {
+    "max_depth": 109,
+    "mean_depth": 11.349,
+    "p90_depth": 24.0,
+    "pct_in_cycles": 0.0596
+   },
+   "duplication": {
+    "body_dup_rate": 0.0537,
+    "body_dup_n": 23625,
+    "body_max_cluster": 41,
+    "stmt_dup_rate": 0.0305,
+    "stmt_dup_n": 22752,
+    "stmt_max_cluster": 41
+   },
+   "proof_economy": {
+    "stmt_lines": {
+     "mean": 7.403,
+     "median": 6.0,
+     "p90": 14.0,
+     "p99": 26.0,
+     "max": 67
+    },
+    "stmt_chars_median": 186.0,
+    "n_theorems": 25398,
+    "proof_lines": {
+     "mean": 14.43,
+     "median": 8.0,
+     "p90": 31.0,
+     "p99": 99.0,
+     "max": 1063
+    },
+    "refs_per_proof": 53.444,
+    "refs_per_proof_line": 4.011,
+    "sorry_rate": 0.0,
+    "n_sorried_theorems": 0,
+    "n_examples": 0
+   },
+   "import_graph": {
+    "file_loc_stats": null,
+    "median_file_loc": null,
+    "n_files": 1456,
+    "mean_internal_imports_per_file": 0.0,
+    "median_fan_in": 0.0,
+    "pct_files_fan_in_ge2": 0.0,
+    "max_fan_in": 0,
+    "pct_files_importing_all_mathlib": 0.0,
+    "n_distinct_external_modules": 0
+   },
+   "doc_coverage": {
+    "pct_defs_with_doc": 0.7108,
+    "pct_theorems_with_doc": 0.641,
+    "pct_public_decls_with_doc": 0.6632,
+    "comment_density": null
+   },
+   "complexity": {
+    "branch_per_proof": 0.381,
+    "branch_per_100_lines": 2.64,
+    "pct_proofs_branchy": 0.0086,
+    "p90_branch": 1.0
+   },
+   "trust_base": {
+    "n_axioms_declared": 0,
+    "axioms_per_1k_decls": 0.0,
+    "axiom_names": [],
+    "n_native_decide_users": 0
+   },
+   "elab_cost": {
+    "secs_per_kloc": null
+   },
+   "amortization": {
+    "mean_log10_cost": 2.54,
+    "median_log10_cost": 2.09,
+    "p90_log10_cost": 5.25,
+    "max_log10_cost": 18.22,
+    "mean_log10_cost_theorems": 2.69,
+    "total_amortization_exp": 14.35,
+    "n_scored": 35166
+   },
+   "triviality": {
+    "pct_trivial_statements": 0.0,
+    "n_trivial_statements": 0,
+    "pct_trivial_proofs": 0.0618,
+    "pct_statements_no_refs": 0.0
+   }
+  }
+ },
  "clawristotle": {
   "meta": {
    "tier": "env",
