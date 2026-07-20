@@ -60,6 +60,9 @@ ENV_SELF_PREFIXES = {
     "asympstat": ("AsymptoticStatistics",),
     "brownian": ("BrownianMotion",),
     "clawristotle": ("Aristotle",),
+    "erdos90": ("Submission", "Challenge", "Solution"),
+    "superhuman": ("Putnam-2025", "LEAN-IMO-Bench", "Open-Problems"),
+    "seed-prover": ("IMO2025",),
 }
 
 # Auto-generated last name components. Only applied to names NOT found in the
