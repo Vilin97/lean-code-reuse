@@ -327,6 +327,16 @@ REPOS = {
         stars=1,
         provenance="human+AI",
     ),
+    "brownian": dict(
+        label="Brownian Motion",
+        url="https://github.com/RemyDegenne/brownian-motion",
+        dir="brownian",
+        roots=["BrownianMotion"],
+        deps=["mathlib4", "batteries", "aesop", "core"],
+        category="research formalization",
+        stars=57,
+        provenance="human",
+    ),
     "clawristotle": dict(
         label="Clawristotle",
         url="https://github.com/Vilin97/Clawristotle",
@@ -347,7 +357,7 @@ BUILD_ORDER = [
     "tauceti", "lean-pool", "atlas", "seed-prover", "superhuman",
     "erdos90", "clawristotle", "addcombi", "pnt", "carleson", "strongpnt",
     "spherepacking", "sphere-gauss", "pedigree", "rubik", "gblean",
-    "statlearn", "econlib", "econcs", "asympstat",
+    "statlearn", "econlib", "econcs", "asympstat", "brownian",
 ]
 
 EXCLUDED_DIR_PARTS = {

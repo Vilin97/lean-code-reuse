@@ -4470,6 +4470,373 @@
    }
   }
  },
+ "clawristotle": {
+  "meta": {
+   "tier": "env",
+   "join_rate": 0.9776,
+   "label": "Clawristotle",
+   "category": "AI proof project",
+   "provenance": "AI",
+   "stars": 26,
+   "url": "https://github.com/Vilin97/Clawristotle",
+   "files": 34,
+   "loc": 0,
+   "decls": 268,
+   "edges": 55174,
+   "dotted_coverage": 1.0,
+   "parse_errors": 0
+  },
+  "metrics": {
+   "reuse_degree": {
+    "n_reusable_decls": 268,
+    "degree": {
+     "mean": 4.243,
+     "median": 1.0,
+     "p90": 9.0,
+     "p99": 50.29999999999984,
+     "max": 76
+    },
+    "pct_never_reused": 0.0448,
+    "pct_reused_ge2": 0.444,
+    "ccdf": {
+     "1": 0.95522,
+     "2": 0.44403,
+     "3": 0.25,
+     "5": 0.17537,
+     "10": 0.09701,
+     "20": 0.04478,
+     "50": 0.01119,
+     "100": 0.0,
+     "200": 0.0,
+     "500": 0.0,
+     "1000": 0.0
+    },
+    "top": [
+     {
+      "name": "VML.normSq",
+      "deg": 76
+     },
+     {
+      "name": "Torus3",
+      "deg": 57
+     },
+     {
+      "name": "VML.FlatTorus3",
+      "deg": 57
+     },
+     {
+      "name": "VML.vGrad",
+      "deg": 47
+     },
+     {
+      "name": "VML.landauMatrix",
+      "deg": 45
+     },
+     {
+      "name": "VML.coulombKernel",
+      "deg": 33
+     },
+     {
+      "name": "periodicLift",
+      "deg": 32
+     },
+     {
+      "name": "VML.cross",
+      "deg": 29
+     },
+     {
+      "name": "torusMk",
+      "deg": 28
+     },
+     {
+      "name": "VML.VMLInput",
+      "deg": 25
+     },
+     {
+      "name": "torusGradX",
+      "deg": 25
+     },
+     {
+      "name": "VML.eucNorm",
+      "deg": 24
+     },
+     {
+      "name": "VML.equilibriumMaxwellian",
+      "deg": 19
+     },
+     {
+      "name": "VML.UniformSchwartzDecay",
+      "deg": 19
+     },
+     {
+      "name": "torusMk_surjective",
+      "deg": 16
+     },
+     {
+      "name": "VML.innerLandauMatrix",
+      "deg": 16
+     },
+     {
+      "name": "VML.LandauOperator",
+      "deg": 16
+     },
+     {
+      "name": "instFactLtRealOfNat_aristotle",
+      "deg": 16
+     },
+     {
+      "name": "VML.VMLInput.b_loc",
+      "deg": 16
+     },
+     {
+      "name": "VML.VMLInput.c_loc",
+      "deg": 15
+     }
+    ]
+   },
+   "statement_vs_proof": {
+    "share_signature": 0.1868,
+    "share_value": 0.0222,
+    "share_proof": 0.7911,
+    "load_bearing_share": 0.209,
+    "mean_stmt_indeg": 2.205,
+    "mean_proof_indeg": 3.78,
+    "internal_refs_to_theorems": 456,
+    "internal_refs_to_defs": 1148,
+    "thm_def_ref_ratio": 0.397,
+    "pct_theorems_used_in_statements": 0.0043
+   },
+   "cross_file": {
+    "pct_edges_cross_file": 0.6931,
+    "pct_edges_cross_dir": 0.0,
+    "pct_decls_used_outside_file": 0.6007,
+    "pct_decls_used_in_5plus_external_files": 0.0784,
+    "mean_user_files_per_used_decl": 2.078,
+    "n_dirs": 1
+   },
+   "external_reuse": {
+    "external_refs_total": 53570,
+    "external_refs_per_decl": 199.888,
+    "external_internal_ratio": 33.398,
+    "per_dep": {
+     "mathlib4": {
+      "refs": 42999,
+      "distinct_decls_used": 2059
+     },
+     "batteries": {
+      "refs": 43,
+      "distinct_decls_used": 3
+     },
+     "aesop": {
+      "refs": 0,
+      "distinct_decls_used": 0
+     },
+     "core": {
+      "refs": 10528,
+      "distinct_decls_used": 203
+     },
+     "other": {
+      "refs": 0,
+      "distinct_decls_used": 0
+     }
+    },
+    "mathlib_refs_per_decl": 160.444,
+    "mathlib_vocab": 2059,
+    "mathlib_vocab_per_1k_refs": 47.9,
+    "top_mathlib": [
+     {
+      "name": "Real",
+      "refs": 507
+     },
+     {
+      "name": "Real.instZero",
+      "refs": 365
+     },
+     {
+      "name": "Fin.fintype",
+      "refs": 341
+     },
+     {
+      "name": "Real.normedCommRing",
+      "refs": 330
+     },
+     {
+      "name": "Real.instMul",
+      "refs": 313
+     },
+     {
+      "name": "Real.instRCLike",
+      "refs": 278
+     },
+     {
+      "name": "Semiring.toNonAssocSemiring",
+      "refs": 278
+     },
+     {
+      "name": "Real.instOne",
+      "refs": 272
+     },
+     {
+      "name": "CommSemiring",
+      "refs": 270
+     },
+     {
+      "name": "NormedCommRing.toSeminormedCommRing",
+      "refs": 262
+     },
+     {
+      "name": "RCLike.toInnerProductSpaceReal",
+      "refs": 262
+     },
+     {
+      "name": "NonUnitalSeminormedRing.toSeminormedAddCommGroup",
+      "refs": 257
+     },
+     {
+      "name": "InnerProductSpace",
+      "refs": 257
+     },
+     {
+      "name": "NonUnitalSeminormedCommRing",
+      "refs": 256
+     },
+     {
+      "name": "SeminormedCommRing.toNonUnitalSeminormedCommRing",
+      "refs": 256
+     },
+     {
+      "name": "UniformSpace",
+      "refs": 250
+     },
+     {
+      "name": "PseudoMetricSpace",
+      "refs": 250
+     },
+     {
+      "name": "Real.normedAddCommGroup",
+      "refs": 241
+     },
+     {
+      "name": "Real.pseudoMetricSpace",
+      "refs": 239
+     },
+     {
+      "name": "NormedAddCommGroup.toSeminormedAddCommGroup",
+      "refs": 238
+     },
+     {
+      "name": "Real.instAddCommMonoid",
+      "refs": 232
+     },
+     {
+      "name": "AddCommMonoidWithOne",
+      "refs": 229
+     },
+     {
+      "name": "NonAssocSemiring.toAddCommMonoidWithOne",
+      "refs": 229
+     },
+     {
+      "name": "Real.instAdd",
+      "refs": 220
+     },
+     {
+      "name": "AddMonoidWithOne",
+      "refs": 213
+     }
+    ]
+   },
+   "concentration": {
+    "gini": 0.6695,
+    "top1pct_share": 0.117,
+    "top10pct_share": 0.5963
+   },
+   "dependency_depth": {
+    "max_depth": 27,
+    "mean_depth": 5.146,
+    "p90_depth": 12.0,
+    "pct_in_cycles": 0.0
+   },
+   "duplication": {
+    "body_dup_rate": 0.0,
+    "body_dup_n": 225,
+    "body_max_cluster": 1,
+    "stmt_dup_rate": 0.0,
+    "stmt_dup_n": 213,
+    "stmt_max_cluster": 1
+   },
+   "proof_economy": {
+    "stmt_lines": {
+     "mean": 5.702,
+     "median": 4.0,
+     "p90": 11.0,
+     "p99": 31.839999999999918,
+     "max": 46
+    },
+    "stmt_chars_median": 160.0,
+    "n_theorems": 233,
+    "proof_lines": {
+     "mean": 34.858,
+     "median": 19.0,
+     "p90": 77.79999999999998,
+     "p99": 206.15999999999963,
+     "max": 285
+    },
+    "refs_per_proof": 193.462,
+    "refs_per_proof_line": 5.565,
+    "sorry_rate": 0.0,
+    "n_sorried_theorems": 0,
+    "n_examples": 0
+   },
+   "import_graph": {
+    "file_loc_stats": null,
+    "median_file_loc": null,
+    "n_files": 34,
+    "mean_internal_imports_per_file": 0.0,
+    "median_fan_in": 0.0,
+    "pct_files_fan_in_ge2": 0.0,
+    "max_fan_in": 0,
+    "pct_files_importing_all_mathlib": 0.0,
+    "n_distinct_external_modules": 0
+   },
+   "doc_coverage": {
+    "pct_defs_with_doc": 0.8529,
+    "pct_theorems_with_doc": 0.8411,
+    "pct_public_decls_with_doc": 0.8427,
+    "comment_density": null
+   },
+   "complexity": {
+    "branch_per_proof": 1.124,
+    "branch_per_100_lines": 3.23,
+    "pct_proofs_branchy": 0.0667,
+    "p90_branch": 3.0
+   },
+   "trust_base": {
+    "n_axioms_declared": 0,
+    "axioms_per_1k_decls": 0.0,
+    "axiom_names": [],
+    "n_native_decide_users": 0
+   },
+   "elab_cost": {
+    "secs_per_kloc": null
+   },
+   "amortization": {
+    "mean_log10_cost": 1.21,
+    "median_log10_cost": 0.78,
+    "p90_log10_cost": 3.07,
+    "max_log10_cost": 5.47,
+    "mean_log10_cost_theorems": 1.25,
+    "total_amortization_exp": 3.9,
+    "n_scored": 268
+   },
+   "triviality": {
+    "pct_trivial_statements": 0.0,
+    "n_trivial_statements": 0,
+    "pct_trivial_proofs": 0.0,
+    "pct_statements_no_refs": 0.0
+   }
+  }
+ },
  "addcombi": {
   "meta": {
    "tier": "env",
@@ -8229,6 +8596,382 @@
     "pct_trivial_statements": 0.0,
     "n_trivial_statements": 0,
     "pct_trivial_proofs": 0.0283,
+    "pct_statements_no_refs": 0.0
+   }
+  }
+ },
+ "brownian": {
+  "meta": {
+   "tier": "env",
+   "join_rate": 0.9404,
+   "label": "Brownian Motion",
+   "category": "research formalization",
+   "provenance": "human",
+   "stars": 57,
+   "url": "https://github.com/RemyDegenne/brownian-motion",
+   "files": 67,
+   "loc": 15043,
+   "decls": 1308,
+   "edges": 110876,
+   "dotted_coverage": 1.0,
+   "parse_errors": 0
+  },
+  "metrics": {
+   "reuse_degree": {
+    "n_reusable_decls": 1308,
+    "degree": {
+     "mean": 2.469,
+     "median": 1.0,
+     "p90": 5.0,
+     "p99": 34.720000000000255,
+     "max": 64
+    },
+    "pct_never_reused": 0.3035,
+    "pct_reused_ge2": 0.3211,
+    "ccdf": {
+     "1": 0.69648,
+     "2": 0.3211,
+     "3": 0.18349,
+     "5": 0.11544,
+     "10": 0.04969,
+     "20": 0.02294,
+     "50": 0.00306,
+     "100": 0.0,
+     "200": 0.0,
+     "500": 0.0,
+     "1000": 0.0
+    },
+    "top": [
+     {
+      "name": "ProbabilityTheory.SimpleProcess",
+      "deg": 64
+     },
+     {
+      "name": "IsCadlag",
+      "deg": 61
+     },
+     {
+      "name": "MeasureTheory.IsPavingAnalytic",
+      "deg": 59
+     },
+     {
+      "name": "countableSupClosure",
+      "deg": 52
+     },
+     {
+      "name": "MeasureTheory.debut",
+      "deg": 49
+     },
+     {
+      "name": "mesh",
+      "deg": 48
+     },
+     {
+      "name": "ContinuousBilinForm",
+      "deg": 42
+     },
+     {
+      "name": "HasBoundedCoveringNumber",
+      "deg": 40
+     },
+     {
+      "name": "countableInfClosure",
+      "deg": 40
+     },
+     {
+      "name": "MeasureTheory.IsPavingAnalyticFor",
+      "deg": 39
+     },
+     {
+      "name": "Function.IsRightContinuous",
+      "deg": 39
+     },
+     {
+      "name": "predictablePart",
+      "deg": 37
+     },
+     {
+      "name": "ProbabilityTheory.ClassD",
+      "deg": 37
+     },
+     {
+      "name": "instOrderBotSubtypeMemFinsetMesh",
+      "deg": 35
+     },
+     {
+      "name": "instLocallyFiniteOrderSubtypeMemFinsetMesh",
+      "deg": 31
+     },
+     {
+      "name": "meshFiltration",
+      "deg": 30
+     },
+     {
+      "name": "ProbabilityTheory.gaussianLimit",
+      "deg": 30
+     },
+     {
+      "name": "instOrderTopSubtypeMemFinsetMesh",
+      "deg": 28
+     },
+     {
+      "name": "instSuccOrderSubtypeMemFinsetMesh",
+      "deg": 27
+     },
+     {
+      "name": "chainingSequence",
+      "deg": 27
+     }
+    ]
+   },
+   "statement_vs_proof": {
+    "share_signature": 0.2837,
+    "share_value": 0.0589,
+    "share_proof": 0.6573,
+    "load_bearing_share": 0.3426,
+    "mean_stmt_indeg": 1.277,
+    "mean_proof_indeg": 2.153,
+    "internal_refs_to_theorems": 1309,
+    "internal_refs_to_defs": 3177,
+    "thm_def_ref_ratio": 0.412,
+    "pct_theorems_used_in_statements": 0.0036
+   },
+   "cross_file": {
+    "pct_edges_cross_file": 0.235,
+    "pct_edges_cross_dir": 0.0341,
+    "pct_decls_used_outside_file": 0.1728,
+    "pct_decls_used_in_5plus_external_files": 0.0015,
+    "mean_user_files_per_used_decl": 1.186,
+    "n_dirs": 6
+   },
+   "external_reuse": {
+    "external_refs_total": 106390,
+    "external_refs_per_decl": 81.338,
+    "external_internal_ratio": 23.716,
+    "per_dep": {
+     "mathlib4": {
+      "refs": 82974,
+      "distinct_decls_used": 4507
+     },
+     "batteries": {
+      "refs": 22,
+      "distinct_decls_used": 5
+     },
+     "aesop": {
+      "refs": 3,
+      "distinct_decls_used": 1
+     },
+     "core": {
+      "refs": 23388,
+      "distinct_decls_used": 471
+     },
+     "other": {
+      "refs": 3,
+      "distinct_decls_used": 3
+     }
+    },
+    "mathlib_refs_per_decl": 63.436,
+    "mathlib_vocab": 4507,
+    "mathlib_vocab_per_1k_refs": 54.3,
+    "top_mathlib": [
+     {
+      "name": "PartialOrder",
+      "refs": 1380
+     },
+     {
+      "name": "MeasurableSpace",
+      "refs": 1369
+     },
+     {
+      "name": "Preorder",
+      "refs": 1255
+     },
+     {
+      "name": "Set",
+      "refs": 1226
+     },
+     {
+      "name": "Real",
+      "refs": 1113
+     },
+     {
+      "name": "UniformSpace",
+      "refs": 977
+     },
+     {
+      "name": "MeasureTheory.Measure",
+      "refs": 975
+     },
+     {
+      "name": "Lattice.toSemilatticeInf",
+      "refs": 849
+     },
+     {
+      "name": "LinearOrder",
+      "refs": 848
+     },
+     {
+      "name": "NormedAddCommGroup.toSeminormedAddCommGroup",
+      "refs": 820
+     },
+     {
+      "name": "SemilatticeInf",
+      "refs": 803
+     },
+     {
+      "name": "PseudoMetricSpace",
+      "refs": 802
+     },
+     {
+      "name": "DistribLattice",
+      "refs": 791
+     },
+     {
+      "name": "instDistribLatticeOfLinearOrder",
+      "refs": 785
+     },
+     {
+      "name": "TopologicalSpace",
+      "refs": 736
+     },
+     {
+      "name": "NormedAddCommGroup",
+      "refs": 732
+     },
+     {
+      "name": "MeasureTheory.Filtration",
+      "refs": 728
+     },
+     {
+      "name": "Set.instMembership",
+      "refs": 722
+     },
+     {
+      "name": "OrderBot",
+      "refs": 611
+     },
+     {
+      "name": "SeminormedAddCommGroup",
+      "refs": 611
+     },
+     {
+      "name": "ENNReal",
+      "refs": 581
+     },
+     {
+      "name": "DFunLike",
+      "refs": 567
+     },
+     {
+      "name": "SecondCountableTopology",
+      "refs": 535
+     },
+     {
+      "name": "NormedSpace",
+      "refs": 524
+     },
+     {
+      "name": "NNReal",
+      "refs": 469
+     }
+    ]
+   },
+   "concentration": {
+    "gini": 0.7184,
+    "top1pct_share": 0.1879,
+    "top10pct_share": 0.6121
+   },
+   "dependency_depth": {
+    "max_depth": 36,
+    "mean_depth": 5.651,
+    "p90_depth": 12.0,
+    "pct_in_cycles": 0.0
+   },
+   "duplication": {
+    "body_dup_rate": 0.0034,
+    "body_dup_n": 878,
+    "body_max_cluster": 2,
+    "stmt_dup_rate": 0.0,
+    "stmt_dup_n": 1025,
+    "stmt_max_cluster": 1
+   },
+   "proof_economy": {
+    "stmt_lines": {
+     "mean": 3.282,
+     "median": 3.0,
+     "p90": 6.0,
+     "p99": 9.0,
+     "max": 17
+    },
+    "stmt_chars_median": 135.0,
+    "n_theorems": 1121,
+    "proof_lines": {
+     "mean": 11.166,
+     "median": 6.0,
+     "p90": 24.0,
+     "p99": 84.43000000000006,
+     "max": 174
+    },
+    "refs_per_proof": 67.293,
+    "refs_per_proof_line": 6.169,
+    "sorry_rate": 0.033,
+    "n_sorried_theorems": 37,
+    "n_examples": 0
+   },
+   "import_graph": {
+    "file_loc_stats": {
+     "mean": 224.5,
+     "median": 107.0,
+     "p90": 513.9999999999999,
+     "max": 1446
+    },
+    "median_file_loc": 107.0,
+    "n_files": 67,
+    "mean_internal_imports_per_file": 1.134,
+    "median_fan_in": 1.0,
+    "pct_files_fan_in_ge2": 0.2239,
+    "max_fan_in": 6,
+    "pct_files_importing_all_mathlib": 0.0,
+    "n_distinct_external_modules": 99
+   },
+   "doc_coverage": {
+    "pct_defs_with_doc": 0.7018,
+    "pct_theorems_with_doc": 0.1687,
+    "pct_public_decls_with_doc": 0.2416,
+    "comment_density": 0.0831
+   },
+   "complexity": {
+    "branch_per_proof": 0.629,
+    "branch_per_100_lines": 5.64,
+    "pct_proofs_branchy": 0.0284,
+    "p90_branch": 2.0
+   },
+   "trust_base": {
+    "n_axioms_declared": 0,
+    "axioms_per_1k_decls": 0.0,
+    "axiom_names": [],
+    "n_native_decide_users": 0
+   },
+   "elab_cost": {
+    "secs_per_kloc": 13.7,
+    "secs_per_kloc_median": 13.7,
+    "files_sampled": 12,
+    "loc_sampled": 3875,
+    "import_baseline_secs": 2.95
+   },
+   "amortization": {
+    "mean_log10_cost": 1.07,
+    "median_log10_cost": 0.6,
+    "p90_log10_cost": 2.81,
+    "max_log10_cost": 5.64,
+    "mean_log10_cost_theorems": 1.13,
+    "total_amortization_exp": 3.55,
+    "n_scored": 1308
+   },
+   "triviality": {
+    "pct_trivial_statements": 0.0,
+    "n_trivial_statements": 0,
+    "pct_trivial_proofs": 0.0366,
     "pct_statements_no_refs": 0.0
    }
   }
