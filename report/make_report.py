@@ -51,18 +51,22 @@ DESC = {
     "lean-pool": "A pool absorbing stale formalization projects: 65 human / 38 AI / 20 mixed sub-projects.",
     "tauceti": "An 'AIs-welcome' library downstream of Mathlib where AI implements and reviews under explicit process rules.",
     "strongpnt": "Math Inc's strong prime number theorem, produced by their Gauss autoformalization agent.",
-    "atlas": "Meta's Autoformalized Textbook Library At Scale: 2,653 machine-generated textbook modules.",
+    "atlas": "Meta's Autoformalized Textbook Library At Scale — 2,653 machine-generated textbook modules. Its files redefine names across modules, so they cannot load as one environment; measured on a deterministic 180-module stratified sample, each extracted in isolation.",
     "erdos90": "OpenAI's formalization of the Erdős-90 unit-distance counterexample (submission tree).",
     "clawristotle": "Single-theorem AI formalizations (Landau Coulomb, Grothendieck vanishing) — the artifact of arXiv:2606.13925.",
-    "seed-prover": "ByteDance's IMO-style proof dump: per-problem files from the Seed-Prover system.",
-    "superhuman": "DeepMind's 58-file corpus of competition proofs from the superhuman system.",
-    "pedigree": "Slop calibration: a P=NP 'proof' by chaining 59 axioms (flagged as crank in LeanPool triage).",
+    "seed-prover": "ByteDance's IMO-style proof dump from the Seed-Prover system — measured on its IMO 2025 subproject, the slice that ships a lakefile and builds.",
+    "superhuman": "DeepMind's 58-file corpus of competition proofs from the superhuman system — measured on the 31 files that compile under a v4.21 toolchain (files collide on top-level names, so each is loaded in its own environment).",
+    "pedigree": "Slop calibration: a P=NP 'proof' propped up by declared axioms (flagged as crank in LeanPool triage).",
     "gblean": "Slop calibration: Groebner-basis scaffold with more sorries than theorems.",
 }
 
 CCDF_KEYS = None  # all repos
 VOCAB_KEYS = ["carleson", "flt", "tauceti", "strongpnt", "erdos90"]
-DISPLAY_LABEL = {}
+DISPLAY_LABEL = {
+    "seed-prover": "Seed-Prover (IMO 2025)",
+    "superhuman": "superhuman (31/58)",
+    "atlas": "Meta ATLAS (180-mod sample)",
+}
 
 # metrics used in the composite quality score: (label, accessor, higher_is_better)
 COMPOSITE = [
@@ -180,12 +184,11 @@ def main():
     repos = []
     for k in ORDER:
         if k in env:
-            r = pack_repo(k, env[k], "exact")
-        elif k in tx:
-            r = pack_repo(k, tx[k], "textual")
+            repos.append(pack_repo(k, env[k], "exact"))
         else:
-            continue
-        repos.append(r)
+            # exact tier only: repos that cannot be built (even partially)
+            # are excluded from the corpus rather than approximated textually
+            print(f"[report] {k}: no exact-tier results — excluded from corpus")
     byk = {r["key"]: r for r in repos}
 
     totals = {
@@ -317,7 +320,12 @@ def main():
     }
 
     # ---- metric-level cross-tier validation --------------------------------
-    dual = [k for k in ORDER if k in env and k in tx]
+    # repos whose exact tier covers a partial slice (buildable subproject or
+    # per-module subset) — their textual results describe a different file set,
+    # so a same-repo aggregate tier comparison would be apples-to-oranges.
+    # clawristotle: exact = Landau subproject, textual = Landau + grothendieck.
+    PARTIAL_EXACT = {"seed-prover", "superhuman", "pedigree", "atlas", "clawristotle"}
+    dual = [k for k in ORDER if k in env and k in tx and k not in PARTIAL_EXACT]
     tv_metrics = [
         ("share reused >=2", lambda m: m["reuse_degree"]["pct_reused_ge2"]),
         ("share never reused", lambda m: m["reuse_degree"]["pct_never_reused"]),
@@ -366,10 +374,14 @@ def main():
         "vocab": vocab,
         "auc": auc_rows,
         "composite": comp,
-        "validation": validation,
-        "verdicts": VERDICTS,
+        "composite_n_checks": len(COMPOSITE),
+        # per-repo decl-level agreement table: only repos whose two tiers cover
+        # the same file set (partial-exact slices would compare mismatched
+        # graphs and inflate the textual degree columns)
+        "validation": {k: v for k, v in validation.items()
+                       if k not in PARTIAL_EXACT and k in byk},
         "prose": build_prose(byk, validation, {c["key"]: c["score"] for c in comp}),
-        "footer": FOOTER,
+        "footer": FOOTER.format(nrepos=len(repos)),
     }
 
     tpl = open(os.path.join(os.path.dirname(__file__), "template.html")).read()
@@ -379,27 +391,10 @@ def main():
     print(f"wrote {args.out} ({len(html)//1024} KB)")
 
 
-VERDICTS = [
-    {"good": True, "title": "Amortization exponent (M14)",
-     "text": "Reuse measured as compression: log₁₀ of the fully-inlined dependency tree. Mathlib averages 10^7.5 (deepest 10^41); unreviewed dumps sit near 10^0.5–0.8, and chain-splitting cannot inflate it, since a chain of length k only reaches cost k."},
-    {"good": True, "title": "Cross-directory reuse (M3)",
-     "text": "The strongest structural separator: Mathlib routes 62% of reuse edges across top-level directories; every AI-heavy corpus — curated included — sits below 2%. LeanPool's 93 directories with 0.1% cross-dir reuse reflect its pool-of-projects design, not its authorship."},
-    {"good": True, "title": "Docstring coverage (M10)",
-     "text": "A process signal: Mathlib's linter enforces docstrings on definitions (99.4% coverage) and the habit propagates through reviewed projects; both Gauss-completed corpora sit near 20%. Mirrors the SE finding that process metrics out-predict product metrics."},
-    {"good": True, "title": "Hygiene profile (M7/M8/M9)",
-     "text": "Sorries, duplicate bodies, wholesale imports, trivial statements: each catches a different failure mode — ATLAS's 2,900 sorries, Seed-Prover's 60% duplication, superhuman's blanket `import Mathlib`, Pedigree's 59 axioms. Jointly with locality they flag every unreviewed corpus in this study."},
-    {"good": False, "title": "Raw reuse counts (M1)",
-     "text": "Median in-degree separates nothing. Never-reused even inverts — superhuman's bespoke proof towers reuse 97% of their lemmas, exactly once each. Citation volume cannot tell a cathedral from scaffolding; that is what M14 fixes."},
-    {"good": False, "title": "Elaboration cost per LOC (M13) — refuted",
-     "text": "The heartbeats hypothesis inverts: sorried or shallow content elaborates cheaply (ATLAS: 12 s/kLOC) while TauCeti's 73 s/kLOC reflects genuinely hard mathematics. Cost per line measures effort, not quality — expensive-per-line *and* nothing-reused is the actual smell."},
-    {"good": False, "title": "Depth, leverage, statement share",
-     "text": "Depth is inheritable via vendored code (LeanPool's 163-deep chain runs through a vendored logic library); Mathlib leverage measures participation, which every serious pipeline has; statement share inverts on hypothesis-heavy restated problem statements."},
-]
-
 FOOTER = (
-    "Generated 2026-07-19 by the <span class=\"mono\">lean_reuse</span> toolkit — "
-    "25 corpora, 15 metric families. Textual tier: scoping parser; exact "
-    "tier: Lean metaprogram over elaborated environments (getUsedConstants on types and "
+    "Generated 2026-07-20 by the <span class=\"mono\">lean_reuse</span> toolkit — "
+    "{nrepos} corpora, 15 metric families, all measured on the exact tier: a Lean "
+    "metaprogram over elaborated environments (getUsedConstants on types and "
     "values, generated auxiliaries contracted). Elaboration cost: timed re-elaboration of "
     "sampled files, import baseline subtracted. Amortization: log-space inlined-cost DP "
     "over the declaration DAG. Repos pinned 2026-07-18/19. Code: lean-code-reuse repo, "
@@ -425,7 +420,38 @@ def build_prose(byk, validation, comp=None):
     def pct(v):
         return f"{v*100:.1f}%" if v is not None else "—"
 
+    ncorp = len(byk)
+    NUMWORD = {23: "Twenty-three", 24: "Twenty-four", 25: "Twenty-five",
+               26: "Twenty-six", 27: "Twenty-seven", 28: "Twenty-eight"}
+    ncorp_word = NUMWORD.get(ncorp, str(ncorp))
+    # low-curation AI corpora that actually made the exact-tier cut
+    lowcur = [("atlas", "Meta&nbsp;ATLAS"), ("seed-prover", "Seed-Prover"),
+              ("superhuman", "DeepMind superhuman"), ("erdos90", "OpenAI's Erdős-90"),
+              ("clawristotle", "Clawristotle")]
+    lowcur_present = [name for k, name in lowcur if k in byk]
+    lowcur_str = ", ".join(lowcur_present[:-1]) + ", " + lowcur_present[-1] if len(lowcur_present) > 1 else (lowcur_present[0] if lowcur_present else "")
+    slop = [("pedigree", "Pedigree&nbsp;Polytopes' axiomatized P=NP"), ("gblean", "GBLean")]
+    slop_present = [name for k, name in slop if k in byk]
+    slop_str = " and ".join(slop_present)
+    slop_lead = {2: "two community-flagged slop repos", 1: "one community-flagged slop repo"}.get(len(slop_present), f"{len(slop_present)} community-flagged slop repos")
+
     return {
+        "corpusIntroProse": f"""
+<p>{ncorp_word} corpora — formalization projects plus a declared slop calibration set,
+every one measured on the exact tier (a repo that cannot be built at all is excluded, not
+approximated). (Math&nbsp;Inc's Gauss PR against the Sphere Packing repo was measured in an
+earlier revision and is excluded here; §12 records the lesson it taught.) Compiler
+internals, teaching games and statements-only conjecture lists are excluded by design, and
+so are SciLean and Tao's <i>Analysis&nbsp;I</i>: their <code>sorry_proof</code> and
+exercises-for-the-reader conventions are deliberate choices that hygiene checks misread.
+The corpus spans Mathlib and its reviewed satellites (FLT, PFR, AddCombi, Carleson, PNT+,
+CSLib, Physlib, Equational Theories, the community Sphere Packing project, and four domain
+libraries: Stat Learning Theory, EconLib, EconCSLib, Asymptotic Statistics),
+mixed-authorship pools (LeanPool — 65 human / 38 AI / 20 mixed projects), curated AI
+projects (TauCeti, Math&nbsp;Inc's StrongPNT), low-curation AI corpora ({lowcur_str}), and
+{slop_lead} for calibration ({slop_str}). Provenance is shown as color, but it is
+<em>not</em> the analysis axis: the question is what separates low-quality from high-quality
+corpora, whoever wrote them.</p>""",
         "reuseProse": f"""
 <p>Mathlib's curve is the reference: a heavy tail riding on a thick middle —
 {pct(ml['m1']['ge2'])} of its {ml['decls']:,} reusable declarations are used by at least two
@@ -451,15 +477,11 @@ quality. TauCeti cites {tc['m4']['ml_per_decl']:.0f} references per declaration 
 maintainer's own count its 123 projects split 65 human / 38 AI / 20 mixed, so its
 human-band scores are expected, not surprising. The discriminating signal in this chart is the vertical axis:
 internal dead weight at comparable leverage.</p>
-<p class="note">Two hygiene asides found by the extractor itself: LeanPool redeclares
-Mathlib names (<code>LieHom.snd</code>), so it cannot be imported alongside full Mathlib;
-and Meta ATLAS's own modules collide with each other (<code>jacobianMatrix</code> is defined
-in two files), so its 2,653 modules cannot be loaded as one environment at all — it is a
-collection of files that compile, not a library. That is why ATLAS carries textual-tier
-numbers.</p>""",
+<p class="note">A hygiene aside found by the extractor itself: LeanPool redeclares
+Mathlib names (<code>LieHom.snd</code>), so it cannot be imported alongside full Mathlib.{
+" And several corpora name-collide internally — Meta&nbsp;ATLAS defines <code>jacobianMatrix</code> in two files, DeepMind superhuman and Pedigree redefine core types across files — so they cannot load as one environment; we extract each colliding module in isolation and merge the graphs, which loses only cross-file edges those corpora barely have." if (at or sh or byk.get("pedigree")) else ""}</p>""",
         "hygieneProse": f"""
-<p>Seed-Prover's {pct(sp['m7']['dup'])} duplicate-body rate and Meta ATLAS's
-{at['m8']['nsorry']:,} sorried theorems ({pct(at['m8']['sorry'])}) anchor the low end, and
+<p>Seed-Prover's {pct(sp['m7']['dup'])} duplicate-body rate{f" and Meta ATLAS's {at['m8']['nsorry']:,} sorried theorems ({pct(at['m8']['sorry'])})" if at else ""} anchor{"" if at else "s"} the low end, and
 the slop calibration set behaves as expected — GBLean:
 {pct(byk['gblean']['m8']['sorry']) if 'gblean' in byk else '—'} sorried theorems; Pedigree Polytopes proves
 P=NP from {byk['pedigree']['m12'].get('n_axioms_declared','—') if 'pedigree' in byk else '—'}
@@ -476,7 +498,7 @@ citation counts, depth, Mathlib leverage, statement share, elaboration cost — 
 or machine-generated corpus satisfies incidentally, mirroring the software-measurement
 literature where volume indices predict quality poorly and process signals hold up.</p>
 <p>The slop calibration set behaves as floors should: Pedigree Polytopes
-({comp.get('pedigree',0)*100:.0f}) is exposed by axioms (59 declared) rather than sorries,
+({comp.get('pedigree',0)*100:.0f}) is exposed by axioms ({byk['pedigree']['m12'].get('n_axioms_declared','several') if 'pedigree' in byk else 'several'} declared in the built library) rather than sorries,
 GBLean ({comp.get('gblean',0)*100:.0f}) by
 sorry-rate, Seed-Prover ({comp.get('seed-prover',0)*100:.0f}) by duplication and
 isolation. TauCeti and LeanPool sit inside the human band. One cautionary result from an
@@ -502,17 +524,18 @@ corpora that never compound. Two caveats: the exponent grows with library size (
 but compare like-sized repos), and it measures each repo's <em>internal</em> economy —
 chains through Mathlib are credited to M4, not here.</p>""",
         "validityProse": f"""
-<p><b>Tier agreement.</b> Where both tiers exist they correlate at Spearman ρ
-{mv.get('spearman_indeg','—')} across Mathlib's {mv.get('n_joined',0):,} joined
-declarations; the textual tier under-counts dot-notation and instance uses but preserves
-ranking. The strongest check comes from the dump genre itself: building Seed-Prover's
-IMO-2025 subproject (it ships its own lakefile pinning Lean v4.14) and comparing tiers on
-that slice gives ρ 0.975 with mean in-degree 1.04 (textual) vs 1.05 (exact) — on
-proof-dump code, the textual tier is essentially exact. Erdős-90 turned out to ship a
-lakefile in its submission tree and is now measured on the exact tier outright; the only
-remaining textual-tier corpora are Seed-Prover's full tree, superhuman (a v4.21 lakefile
-we authored compiles 31 of its 58 files — the corpus mixes mathlib vintages), Meta ATLAS
-(its modules name-collide), and the slop set.</p>
+<p><b>Every row is exact now — at the price of coverage.</b> Corpora that ship no lakefile
+were built anyway: Erdős-90 and Seed-Prover's IMO-2025 subproject ship lakefiles in
+subdirectories (found by archaeology, v4.30 and v4.14); superhuman got a v4.21 lakefile we
+authored (31 of 58 files compile — the corpus mixes mathlib vintages — and the files
+name-collide, so each is loaded in its own environment and the graphs merged); Pedigree's
+library core builds module-by-module. Where the buildable slice is a strict subset of the
+tree, the row says so in the corpus table — we measure what compiles, which for proof
+dumps is itself part of the finding. The retired textual tier remains as a cross-check:
+on Mathlib the tiers correlate at Spearman ρ {mv.get('spearman_indeg','—')} across
+{mv.get('n_joined',0):,} joined declarations, and on Seed-Prover's built slice ρ 0.975
+with mean in-degree 1.04 (textual) vs 1.05 (exact) — the parser was a good approximation
+for hygiene and locality, and a hopeless one for the amortization exponent.</p>
 <p><b>No fitted labels.</b> Nothing here is trained or calibrated against a quality
 labeling: the PCA uses only complete-coverage metrics with no imputation, and the composite
 is an unweighted mean of percentile ranks. Where we assert a metric "discriminates," the

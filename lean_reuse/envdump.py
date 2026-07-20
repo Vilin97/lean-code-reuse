@@ -137,6 +137,57 @@ def parse_dump(path: str) -> Dump:
     return d
 
 
+def parse_dumps(paths: list[str]) -> Dump:
+    """Merge several per-module dumps of the same repo into one Dump.
+
+    Used when a corpus's modules name-collide and cannot be loaded into a
+    single environment (each module is then extracted alone). Rows are
+    deduplicated by name — first occurrence wins, except an empty-deps row is
+    upgraded when a later dump carries deps for the same name. Dep ids are
+    remapped from each file's local numbering to the merged one.
+    """
+    if len(paths) == 1:
+        return parse_dump(paths[0])
+    d = Dump()
+    seen_mods: set[str] = set()
+    collisions = 0
+    for p in paths:
+        d2 = parse_dump(p)
+        for m in d2.modules:
+            if m not in seen_mods:
+                seen_mods.add(m)
+                d.modules.append(m)
+        local2global: list[int] = []
+        fresh: list[int] = []
+        for i, name in enumerate(d2.names):
+            gi = d.by_name.get(name)
+            if gi is None:
+                gi = len(d.names)
+                d.names.append(name)
+                d.kind.append(d2.kind[i])
+                d.mod.append(d2.mod[i])
+                d.inst.append(d2.inst[i])
+                d.priv.append(d2.priv[i])
+                d.proj.append(d2.proj[i])
+                d.tdeps.append(array("i"))
+                d.vdeps.append(array("i"))
+                d.by_name[name] = gi
+                fresh.append(i)
+            elif d2.tdeps[i] or d2.vdeps[i]:
+                collisions += 1
+            local2global.append(gi)
+        for i in fresh:
+            gi = local2global[i]
+            if d2.tdeps[i]:
+                d.tdeps[gi] = array("i", (local2global[k] for k in d2.tdeps[i]))
+            if d2.vdeps[i]:
+                d.vdeps[gi] = array("i", (local2global[k] for k in d2.vdeps[i]))
+    if collisions:
+        print(f"[envdump] merge: {collisions} colliding self-decl rows dropped "
+              f"(same name defined in several modules)", flush=True)
+    return d
+
+
 def effective_kind(d: Dump, i: int) -> str:
     k = d.kind[i]
     if k == "def" and d.inst[i]:
@@ -221,7 +272,11 @@ def build_env_cache(
     self_prefixes = ENV_SELF_PREFIXES[key]
 
     def matches(mod: str, prefixes) -> bool:
-        return any(mod == p or mod.startswith(p + ".") for p in prefixes)
+        # `toString` guillemet-quotes name components that are not valid
+        # identifiers (e.g. hyphenated `«LEAN-IMO-Bench»`); strip the quotes
+        # so prefixes stored unquoted still match.
+        m = mod.replace("«", "").replace("»", "")
+        return any(m == p or m.startswith(p + ".") for p in prefixes)
 
     # bucket per module
     dep_keys = [k for k, _ in DEP_BUCKETS if k != key]
@@ -252,14 +307,18 @@ def build_env_cache(
     local = {i: li for li, i in enumerate(self_ids)}
     n = len(self_ids)
 
-    # files
+    # files — guillemets are `toString` quoting of non-identifier name
+    # components, not part of the path
     mods_sorted = sorted({dump.mod[i] for i in self_ids})
     file_of_mod = {m: fi for fi, m in enumerate(mods_sorted)}
-    files = [m.replace(".", "/") + ".lean" for m in mods_sorted]
+    files = [
+        m.replace("«", "").replace("»", "").replace(".", "/") + ".lean"
+        for m in mods_sorted
+    ]
 
     # textual join
     tx_by_name: dict[str, int] = {}
-    tx_file_stats: dict[str, tuple[int, list]] = {}
+    tx_file_stats: dict[str, tuple[int, list, int, int]] = {}
     tx = textual_cache
     if tx:
         for ti, nm in enumerate(tx["decls"]["name"]):
@@ -274,10 +333,26 @@ def build_env_cache(
                 tfk[fi] if tfk is not None else 0,
             )
 
-    file_loc = array("i", (tx_file_stats.get(f, (0, [], 0, 0))[0] for f in files))
-    imports = [tx_file_stats.get(f, (0, [], 0, 0))[1] for f in files]
-    file_comment = array("q", (tx_file_stats.get(f, (0, [], 0, 0))[2] for f in files))
-    file_code = array("q", (tx_file_stats.get(f, (0, [], 0, 0))[3] for f in files))
+    # the env module path is a suffix of the textual source path (which may
+    # carry a build-root prefix like `leap/solutions/` or `SeedProver/imo2025/`)
+    _tx_suffix: dict[str, tuple[int, list, int, int]] = {}
+    for tf, stats in tx_file_stats.items():
+        _tx_suffix.setdefault(tf, stats)
+
+    def _file_stats(f: str) -> tuple[int, list, int, int]:
+        s = tx_file_stats.get(f)
+        if s is not None:
+            return s
+        for tf, stats in _tx_suffix.items():
+            if tf == f or tf.endswith("/" + f):
+                return stats
+        return (0, [], 0, 0)
+
+    _fs = [_file_stats(f) for f in files]
+    file_loc = array("i", (s[0] for s in _fs))
+    imports = [s[1] for s in _fs]
+    file_comment = array("q", (s[2] for s in _fs))
+    file_code = array("q", (s[3] for s in _fs))
 
     # plumbing aux constants owned by each self decl (deps fold into parent).
     # Same-module only: equation lemmas / recursor equations can be *realized*
@@ -473,14 +548,14 @@ def main() -> None:
     from .repos import REPOS
 
     ap = argparse.ArgumentParser()
-    ap.add_argument("--dump", required=True)
+    ap.add_argument("--dump", required=True, help="dump path, or comma-separated per-module dumps to merge")
     ap.add_argument("--repos", required=True, help="comma-separated repo keys to emit")
     ap.add_argument("--textual-cache-dir", required=True)
     ap.add_argument("--out-cache-dir", required=True)
     args = ap.parse_args()
 
     print(f"[envdump] parsing {args.dump} ...", flush=True)
-    dump = parse_dump(args.dump)
+    dump = parse_dumps([p for p in args.dump.split(",") if p])
     print(f"[envdump] {len(dump.names)} constants, {len(dump.modules)} modules", flush=True)
     os.makedirs(args.out_cache_dir, exist_ok=True)
 

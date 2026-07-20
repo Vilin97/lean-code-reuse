@@ -47,6 +47,18 @@
   "textual_zero_env_nonzero": 0.0375,
   "env_zero_textual_nonzero": 0.0033
  },
+ "atlas": {
+  "n_joined": 15107,
+  "join_rate_env": 0.9664,
+  "spearman_indeg": 0.85,
+  "pearson_log1p": 0.868,
+  "never_textual": 0.2809,
+  "never_env": 0.2525,
+  "mean_deg_textual": 2.805,
+  "mean_deg_env": 2.833,
+  "textual_zero_env_nonzero": 0.0477,
+  "env_zero_textual_nonzero": 0.0193
+ },
  "batteries": {
   "n_joined": 2215,
   "join_rate_env": 0.7874,
@@ -191,6 +203,18 @@
   "textual_zero_env_nonzero": 0.0306,
   "env_zero_textual_nonzero": 0.0526
  },
+ "gblean": {
+  "n_joined": 84,
+  "join_rate_env": 1.0,
+  "spearman_indeg": 0.941,
+  "pearson_log1p": 0.948,
+  "never_textual": 0.1905,
+  "never_env": 0.2143,
+  "mean_deg_textual": 3.381,
+  "mean_deg_env": 3.81,
+  "textual_zero_env_nonzero": 0.0119,
+  "env_zero_textual_nonzero": 0.0357
+ },
  "lean-pool": {
   "n_joined": 37452,
   "join_rate_env": 0.8454,
@@ -214,6 +238,18 @@
   "mean_deg_env": 20.232,
   "textual_zero_env_nonzero": 0.1354,
   "env_zero_textual_nonzero": 0.0246
+ },
+ "pedigree": {
+  "n_joined": 369,
+  "join_rate_env": 0.9342,
+  "spearman_indeg": 0.469,
+  "pearson_log1p": 0.437,
+  "never_textual": 0.4851,
+  "never_env": 0.2276,
+  "mean_deg_textual": 1.564,
+  "mean_deg_env": 4.182,
+  "textual_zero_env_nonzero": 0.2629,
+  "env_zero_textual_nonzero": 0.0054
  },
  "pfr": {
   "n_joined": 999,
@@ -250,6 +286,18 @@
   "mean_deg_env": 4.227,
   "textual_zero_env_nonzero": 0.0297,
   "env_zero_textual_nonzero": 0.0039
+ },
+ "seed-prover": {
+  "n_joined": 234,
+  "join_rate_env": 1.0,
+  "spearman_indeg": 0.975,
+  "pearson_log1p": 0.98,
+  "never_textual": 0.0855,
+  "never_env": 0.0812,
+  "mean_deg_textual": 1.038,
+  "mean_deg_env": 1.047,
+  "textual_zero_env_nonzero": 0.0043,
+  "env_zero_textual_nonzero": 0.0
  },
  "sphere-gauss": {
   "n_joined": 2833,
@@ -298,6 +346,18 @@
   "mean_deg_env": 1.71,
   "textual_zero_env_nonzero": 0.0009,
   "env_zero_textual_nonzero": 0.0036
+ },
+ "superhuman": {
+  "n_joined": 261,
+  "join_rate_env": 0.9631,
+  "spearman_indeg": 0.71,
+  "pearson_log1p": 0.621,
+  "never_textual": 0.1762,
+  "never_env": 0.1226,
+  "mean_deg_textual": 2.264,
+  "mean_deg_env": 1.467,
+  "textual_zero_env_nonzero": 0.0575,
+  "env_zero_textual_nonzero": 0.0038
  },
  "tauceti": {
   "n_joined": 6958,
