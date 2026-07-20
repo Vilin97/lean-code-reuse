@@ -15,17 +15,30 @@ for k, spec in REPOS.items():
 PY
 echo "-- run the printed clones (branch 'gauss' for sphere-gauss), then:"
 
-# 2. Build the buildable repos (lake exe cache get && lake build in each).
-# 3. Textual tier over everything:
+# 2. Build every repo (lake exe cache get && lake build in each). Proof dumps
+#    that ship no lakefile need one first: guess the toolchain from the first
+#    commit date (lakefile archaeology), or build the subproject that ships one
+#    (Seed-Prover's imo2025, Erdős-90's src/submission). A repo that cannot be
+#    built at all is DROPPED from the corpus — the dashboard is exact-tier only.
+# 3. Textual tier over everything — now only a cross-check for §13, not a corpus
+#    tier. Repos are never shipped on it.
 python3 -m lean_reuse.run_all --repos-dir $REPOS --cache-dir $CACHE \
     --out $WORK/results_textual.json
 # 4. Exact tier: extract env graphs from built repos (dyn variant avoids
-#    notation clashes; enumerate built oleans for repos with empty roots):
+#    notation clashes; enumerate built oleans under .lake/build/lib[/lean]):
 #    python3 -m lean_reuse.extract_runner --repo-dir <repo> --imports <Root> \
 #        --full-prefixes <Prefix> --out $DUMPS/<key>.tsv --scratch $DUMPS
 #    Mathlib/Batteries/Aesop/core come free from any built downstream repo via
 #    'import Mathlib' (see README "Exact-tier pipeline").
-# 5. Convert dumps:
+#    Collision-heavy corpora (files that redefine names across modules — ATLAS,
+#    superhuman, Pedigree) cannot load as one environment. Two options:
+#      a) greedy-drop: load all modules, drop whichever collides, retry — works
+#         only when modules do NOT import each other (else the drop is undone
+#         transitively). superhuman uses this (drops 1 of 31).
+#      b) per-module: extract each module alone, then merge the dumps (envdump
+#         accepts a comma-separated list; duplicate self-decls are folded). Use
+#         for pedigree (all 40) and a deterministic ATLAS sample (180 of 2653).
+# 5. Convert dumps (one repo, or a comma-separated list of per-module dumps):
 #    python3 -m lean_reuse.envdump --dump $DUMPS/<key>.tsv --repos <key> \
 #        --textual-cache-dir $CACHE --out-cache-dir $CACHE_ENV
 # 6. Elaboration benchmark (writes bench.json; see bench_config in results/):

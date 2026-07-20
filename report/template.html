@@ -163,7 +163,7 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
 <div class="wrap">
 
 <header class="hero">
-  <div class="eyebrow" id="eyebrow">An empirical study · formalization projects · two measurement tiers</div>
+  <div class="eyebrow" id="eyebrow">An empirical study · formalization projects · exact-tier measurement</div>
   <h1>Macroscopic quality signatures of Lean formalization projects</h1>
   <p class="sub">
     As AI-generated Lean corpora proliferate, we need statistical measures of quality that
@@ -196,32 +196,17 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
 <section id="corpus">
   <div class="secno">01</div>
   <h2>The corpus</h2>
+  <div class="prose" id="corpusIntroProse"></div>
   <div class="prose">
     <p>
-      Twenty-five corpora — formalization projects plus a declared slop calibration set.
-      (Math&nbsp;Inc's Gauss PR against the Sphere Packing repo was measured in an earlier
-      revision and is excluded here; §12 records the lesson it taught.)
-      Compiler internals, teaching games and statements-only conjecture lists are excluded
-      by design, and so are SciLean and Tao's <i>Analysis I</i>: their
-      <code>sorry_proof</code> and exercises-for-the-reader conventions are deliberate
-      choices that hygiene checks misread. The corpus spans Mathlib and its reviewed
-      satellites (FLT, PFR, AddCombi, Carleson, PNT+, CSLib, Physlib, Equational Theories,
-      the community Sphere Packing project, and four domain libraries: Stat Learning
-      Theory, EconLib, EconCSLib, Asymptotic Statistics), mixed-authorship pools (LeanPool — 65 human /
-      38 AI / 20 mixed projects), curated AI projects (TauCeti, Math&nbsp;Inc's StrongPNT),
-      low-curation AI corpora (Meta ATLAS, Seed-Prover, DeepMind superhuman, OpenAI's
-      Erdős-90, Clawristotle), and two community-flagged slop repos
-      for calibration (Pedigree Polytopes' axiomatized P=NP, Rubik Cube Group, GBLean).
-      Provenance is shown as color, but it is <em>not</em> the analysis axis: the question
-      is what separates low-quality from high-quality corpora, whoever wrote them.
-    </p>
-    <p>
-      Where the repo could be built, metrics come from the <b>exact tier</b>: a Lean
-      metaprogram walks the elaborated environment and reads <code>getUsedConstants</code>
-      off every declaration's type and value — capturing instance uses, notation-mediated
-      references, and dot-notation that textual analysis cannot see. Repos that ship no
-      lakefile (the proof dumps) use the <b>textual tier</b>, an approximate name-resolution
-      parser validated against the exact tier in §9.
+      Every corpus row is measured on the <b>exact tier</b>: a Lean metaprogram walks the
+      elaborated environment and reads <code>getUsedConstants</code> off every declaration's
+      type and value — capturing instance uses, notation-mediated references, and
+      dot-notation that textual analysis cannot see. Proof dumps that ship no lakefile were
+      given one (or measured on the subproject that ships one); corpora whose files
+      name-collide are loaded one module per environment and merged. A repo that cannot be
+      built at all is excluded rather than approximated — the earlier textual
+      (parser-based) tier survives only as a cross-check, quantified in §13.
     </p>
   </div>
   <div class="legend" id="groupLegend"></div>
@@ -247,7 +232,7 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
   </div>
   <div class="card">
     <h4>Amortization exponent (log₁₀ of fully-inlined dependency-tree size)</h4>
-    <div class="sub">Dot = mean over declarations; tick = p90. A value of 7 means the average declaration sits on a tree 10⁷ nodes large if nothing were shared. Exact-tier repos only — the tier-agreement analysis (§13) shows textual approximations of this metric are unreliable, so textual-tier repos are excluded here and in the composite.</div>
+    <div class="sub">Dot = mean over declarations; tick = p90. A value of 7 means the average declaration sits on a tree 10⁷ nodes large if nothing were shared. This metric needs the elaborated dependency graph — the tier-agreement analysis (§13) shows parser-level approximations of it are unreliable, which is one reason the whole corpus is measured on the exact tier.</div>
     <div class="chartwrap" id="amortChart"></div>
   </div>
   <div class="card">
@@ -270,7 +255,7 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
   </div>
   <div class="card">
     <h4>CCDF of internal reuse degree (log–log)</h4>
-    <div class="sub">All corpus repos; fraction of declarations with in-degree ≥ x. Dashed = textual tier.</div>
+    <div class="sub">All corpus repos; fraction of declarations with in-degree ≥ x.</div>
     <div class="legend" id="ccdfLegend"></div>
     <div class="chartwrap" id="ccdfChart"></div>
     <div class="sub" style="margin-top:10px">Per-repo aggregate: average internal in-degree (distinct users per declaration), sorted:</div>
@@ -414,7 +399,7 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
   </div>
   <div class="card">
     <h4>Sorried theorems</h4>
-    <div class="sub">Share of theorems whose proof (transitively) uses <code>sorryAx</code> — exact tier — or contains a <code>sorry</code> token — textual tier.</div>
+    <div class="sub">Share of theorems whose proof (transitively) uses <code>sorryAx</code> in the elaborated proof term.</div>
     <div class="chartwrap" id="sorryChart"></div>
   </div>
   <div class="card">
@@ -515,15 +500,18 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
   <div class="secno">13</div>
   <h2>Validity, and what this can't see</h2>
   <div class="prose" id="validityProse"></div>
-  <h3>Does the textual tier agree with the exact tier?</h3>
+  <h3>Cross-check: did the earlier textual tier agree with the exact tier?</h3>
   <div class="prose">
     <p>
-      For every repo measured on <em>both</em> tiers, we compare the tiers metric by
-      metric: the cross-tier Spearman correlation of repo values (does the textual tier
-      rank repos the same way the exact tier does?) and the median absolute difference of
-      the values themselves. Rankings agree strongly on every reported metric; absolute
-      levels differ most where the exact tier sees what text cannot (instance and
-      dot-notation references inflate exact in-degrees).
+      Earlier iterations of this study approximated unbuildable repos with a
+      <em>textual</em> tier (a scoping parser over source text). Every corpus row is now
+      measured exactly, but the comparison remains useful as a validity check on the
+      instrument: for every repo measured on both tiers, we compare them metric by
+      metric — the cross-tier Spearman correlation of repo values and the median absolute
+      difference. Rankings agree strongly on hygiene and locality metrics; absolute levels
+      differ most where the exact tier sees what text cannot (instance and dot-notation
+      references inflate exact in-degrees), and the amortization exponent is not
+      recoverable from text at all — the finding that forced the exact-only corpus.
     </p>
   </div>
   <div class="tablewrap"><table class="data" id="tiervalTable"></table></div>
@@ -568,7 +556,7 @@ function svgEl(tag, attrs, parent) {
   const t = DATA.totals;
   const tiles = [
     [t.repos, 'repositories'], [fmtNum(t.decls), 'declarations'],
-    [fmtNum(t.edges), 'dependency edges'], [t.envRepos, 'exact-tier repos'],
+    [fmtNum(t.edges), 'dependency edges'],
     [fmtNum(t.loc), 'lines analyzed'],
   ];
   document.getElementById('heroTiles').innerHTML = tiles.map(([v,k]) =>
@@ -585,7 +573,6 @@ document.getElementById('groupLegend').innerHTML = legendHTML(GROUPS);
 (function() {
   const cols = [
     ['Repository', r => `<span class="dotb" style="background:${GCOL(r.group)}"></span><a href="${r.url}">${r.label}</a>`, r => r.label],
-    ['tier', r => `<span class="tiertag">${r.tier}</span>`, r => r.tier],
     ['★', r => fmtNum(r.stars), r => r.stars],
     ['files', r => r.files, r => r.files],
     ['kLOC', r => (r.loc/1000).toFixed(0), r => r.loc],
@@ -797,8 +784,7 @@ const byKey = {}; DATA.repos.forEach(r => byKey[r.key] = r);
 
 // 04 — CCDF
 ccdfChart('ccdfChart', DATA.ccdf);
-document.getElementById('ccdfLegend').innerHTML = legendHTML(GROUPS) +
-  '<span class="note" style="margin-left:8px">dashed = textual tier (unbuildable repo)</span>';
+document.getElementById('ccdfLegend').innerHTML = legendHTML(GROUPS);
 // aggregate readout: one chip per repo, sorted by share reused >=2
 (function() {
   const el = document.getElementById('ccdfAgg');
@@ -812,7 +798,7 @@ document.getElementById('ccdfLegend').innerHTML = legendHTML(GROUPS) +
 // 04 — reused >= 2
 dotRank('ge2Chart', charted.map(r => ({
   label: r.label, value: r.m1.ge2, group: r.group,
-  tip: `<b>${esc(r.label)}</b> <span class="tiertag">(${r.tier})</span><br>reused ≥2: ${fmtPct(r.m1.ge2)}<br>never reused: ${fmtPct(r.m1.never)}<br>median in-degree: ${r.m1.median} · mean: ${r.m1.mean}`
+  tip: `<b>${esc(r.label)}</b><br>reused ≥2: ${fmtPct(r.m1.ge2)}<br>never reused: ${fmtPct(r.m1.never)}<br>median in-degree: ${r.m1.median} · mean: ${r.m1.mean}`
 })).sort((a,b) => b.value - a.value), { fmt: fmtPct, max: 1, ticks: 4 });
 
 // 05 — context stack
@@ -865,7 +851,7 @@ dotRank('sorryChart', charted.map(r => ({
 
 // eyebrow
 document.getElementById('eyebrow').textContent =
-  `An empirical study · ${DATA.totals.repos} formalization projects · two measurement tiers`;
+  `An empirical study · ${DATA.totals.repos} formalization projects · exact-tier measurement`;
 
 // 08 — doc coverage + elaboration cost
 dotRank('docChart', charted.filter(r => r.m10 && r.m10.pct_defs_with_doc != null).map(r => ({
@@ -935,7 +921,7 @@ sizePanel('fileLenChart', r => r.m9.file_stats);
     const t = svgEl('text', { x: cx + 9, y: ly, 'font-size': 11, fill: 'var(--ink2)' }, svg);
     t.textContent = mark + p.label;
     prevY = ly; prevX = cx;
-    c.addEventListener('mousemove', ev => showTip(ev, `<b>${esc(p.label)}</b> <span class="tiertag">(${p.tier})</span><br>PC1 ${p.x} · PC2 ${p.y}`));
+    c.addEventListener('mousemove', ev => showTip(ev, `<b>${esc(p.label)}</b><br>PC1 ${p.x} · PC2 ${p.y}`));
     c.addEventListener('mouseleave', hideTip);
   });
 })();
@@ -945,7 +931,7 @@ document.getElementById('compLegend').innerHTML = legendHTML(GROUPS.slice(0,4));
 dotRank('compChart', DATA.composite.map(c => ({
   label: (c.anchor === 'high' ? '▲ ' : c.anchor === 'low' ? '▼ ' : '') + c.label,
   value: c.score, group: c.group,
-  tip: `<b>${esc(c.label)}</b> <span class="tiertag">(${c.tier})</span><br>composite percentile: ${(c.score*100).toFixed(0)}<br>${c.n_metrics} of 7 checks measured${c.anchor ? '<br>anchor: ' + c.anchor : ''}`
+  tip: `<b>${esc(c.label)}</b><br>composite percentile: ${(c.score*100).toFixed(0)}<br>${c.n_metrics} of ${DATA.composite_n_checks || 10} checks measured${c.anchor ? '<br>anchor: ' + c.anchor : ''}`
 })), { fmt: v => (v*100).toFixed(0), max: 1, ticks: 4 });
 
 // 09 — classical metrics adaptation table
@@ -1019,7 +1005,7 @@ dotRank('amortChart', charted.filter(r => r.tier === 'exact' && r.m14 && r.m14.m
 // per-chart computation details
 (function() {
   const HOW = {
-    ccdfChart: 'For each reusable declaration (theorem/def/structure/…; instances and anonymous decls excluded) count distinct other declarations in the same repo that reference it — exact tier: appears in their elaborated type or value via getUsedConstants; textual tier: name resolves in their source text. Plot the fraction of declarations with in-degree ≥ x, both axes log.',
+    ccdfChart: 'For each reusable declaration (theorem/def/structure/…; instances and anonymous decls excluded) count distinct other declarations in the same repo whose elaborated type or value references it (getUsedConstants on the environment). Plot the fraction of declarations with in-degree ≥ x, both axes log.',
     ge2Chart: 'Share of reusable declarations whose distinct-user in-degree (as above) is at least 2.',
     ctxChart: 'Every resolved reference is classified by where it occurs: the declaration\u2019s type (statement), a definition\u2019s body (value), or a proof term. Shares are occurrence-weighted over all references, internal + upstream.',
     crossChart: 'A declaration counts as "used outside its file" if at least one referencing declaration lives in a different source file. Cross-directory edges compare the first two path components of the two files.',
@@ -1027,7 +1013,7 @@ dotRank('amortChart', charted.filter(r => r.tier === 'exact' && r.m14 && r.m14.m
     depthChart: 'Longest path in the internal declaration DAG (generated auxiliaries contracted into parents, residual cycles excluded), computed by topological peeling; depth(v) = 1 + max depth over v\u2019s internal dependencies.',
     giniChart: 'Sort reusable declarations by in-degree; the value shown is the share of all internal reference-pairs absorbed by the top 1% of declarations.',
     dupChart: 'Whitespace-normalized declaration bodies (value + proof, ≥ 60 chars) hashed; the rate is 1 − unique/total among named declarations.',
-    sorryChart: 'Exact tier: the proof term transitively contains sorryAx. Textual tier: a sorry/admit/sorry_proof token in the proof text.',
+    sorryChart: 'A theorem counts as sorried when its elaborated proof term transitively depends on sorryAx.',
     docChart: 'A declaration "has a docstring" if a /-- … -/ block ends within 4 lines above its keyword (attributes may sit between). Coverage is over public (non-private, named) defs/structures/classes/inductives.',
     elabChart: '12 random built files per repo (≥30 LOC) re-elaborated with lake env lean, wall-clock timed; a stub containing only the file\u2019s import header is timed once per distinct import set and subtracted. Value = median over files of elaboration-seconds per 1,000 source lines.',
     amortChart: 'cost(v) = 1 + Σ cost(u) over v\u2019s internal dependencies, with repetition — the size of the fully-inlined dependency tree. Computed in log-space (log-sum-exp) over the acyclic graph in topological order; shown as log₁₀. Mean over declarations; tick = p90.',

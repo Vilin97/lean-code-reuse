@@ -10,15 +10,25 @@ high-quality corpora — regardless of whether a human or an AI wrote them.
 Metrics are calibrated against declared quality anchors (maintainer-reviewed
 projects vs unreviewed dumps), not against provenance.
 
-## Two measurement tiers
+## Measurement tiers
 
 | tier | engine | needs a build? | what it sees |
 |------|--------|----------------|--------------|
 | **env** (exact) | Lean metaprogram over the elaborated `Environment` (`lean_reuse/extract/extract_template.lean`) | yes (`.olean`s) | true `getUsedConstants` of every declaration's type (statement) and value (proof/body): instances, notation-mediated refs, dot-notation — everything the kernel saw |
 | **textual** (approximate) | regex/scoping parser (`lean_reuse/parser.py`, `resolver.py`) | no | direct name references with namespace/`open` resolution; misses dot-notation on locals (`μ.prod`), notation, and instance usage |
 
-The env tier is primary. The textual tier covers repos that cannot be built
-(bare proof dumps without a lakefile) and doubles as a validation baseline.
+**Every corpus row on the dashboard is measured on the exact `env` tier.** Proof
+dumps that ship no lakefile were built anyway — via lakefile archaeology (guess
+the toolchain from the first commit date) or by building the subproject that
+ships one (Seed-Prover's `imo2025`, Erdős-90's `src/submission`). Corpora whose
+files redefine names across modules (ATLAS, superhuman, Pedigree) cannot load as
+one environment; they are extracted one module at a time and the graphs merged
+(`envdump.py` accepts a comma-separated dump list and folds duplicate
+self-decls), with ATLAS measured on a deterministic 180-of-2653 module sample. A
+repo that cannot be built at all is **dropped** from the corpus rather than
+approximated. The textual tier survives only as the cross-check in §13 of the
+report (it ranks hygiene/locality well, but cannot recover the amortization
+exponent — which is why the corpus is exact-only).
 
 ### Exact-tier pipeline
 

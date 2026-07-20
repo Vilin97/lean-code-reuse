@@ -24,7 +24,10 @@ def kindOf : ConstantInfo → String
   | .ctorInfo _   => "ctor"
   | .recInfo _    => "rec"
 
-def isFullMod (fulls : Array String) (m : String) : Bool :=
+def isFullMod (fulls : Array String) (m0 : String) : Bool :=
+  -- `toString` guillemet-quotes non-identifier name components; strip them so
+  -- an unquoted prefix like `LEAN-IMO-Bench` still matches `«LEAN-IMO-Bench».…`.
+  let m := (m0.replace "«" "").replace "»" ""
   fulls.isEmpty || fulls.any (fun p => m == p || m.startsWith (p ++ "."))
 
 def depsStr (ids : Std.HashMap Name Nat) (arr : Array Name) : String := Id.run do
@@ -40,9 +43,11 @@ unsafe def main : IO Unit := do
   let out := (← IO.getEnv "EXTRACT_OUT").getD "extract_dump.tsv"
   let fulls : Array String :=
     ((((← IO.getEnv "FULL_PREFIXES").getD "").splitOn ",").filter (· ≠ "")).toArray
+  -- Build names via mkStr fold: String.toName validates identifiers on newer
+  -- toolchains and maps segments like `Putnam-2025` to .anonymous.
   let importNames : List Name :=
     (((← IO.getEnv "EXTRACT_IMPORTS").getD "").splitOn ",").filter (· ≠ "")
-      |>.map String.toName
+      |>.map (fun s => (s.splitOn ".").foldl .mkStr .anonymous)
   let imports : Array Import := importNames.toArray.map (fun n => { module := n })
   let env ← importModules imports {} (trustLevel := 1024) -- LEVEL_ARG
   let mods := env.header.moduleNames
