@@ -12,6 +12,10 @@ import argparse
 import json
 import math
 import os
+import sys
+
+# allow `from lean_reuse import ...` when run as a script from anywhere
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # provenance groups (colors only — the analysis axis is quality, not authorship)
 GROUP_OF = {
@@ -68,19 +72,9 @@ DISPLAY_LABEL = {
     "atlas": "Meta ATLAS (180-mod sample)",
 }
 
-# metrics used in the composite quality score: (label, accessor, higher_is_better)
-COMPOSITE = [
-    ("cross-dir reuse", lambda r: r["m3"]["crossdir"]),
-    ("used outside file", lambda r: r["m3"]["outside"]),
-    ("granular imports", lambda r: -r["m9"]["whole_ml"]),
-    ("no sorries", lambda r: -r["m8"]["sorry"]),
-    ("no duplication", lambda r: -r["m7"]["dup"]),
-    ("doc coverage", lambda r: r["m10"].get("pct_defs_with_doc")),
-    ("amortization", lambda r: r["m14"].get("mean_log10_cost") if r["tier"] == "exact" else None),
-    ("elab economy", lambda r: -r["m13"]["secs_per_kloc"] if r["m13"].get("secs_per_kloc") is not None else None),
-    ("no trivial statements", lambda r: -r["m15"]["pct_trivial_statements"] if r["m15"].get("pct_trivial_statements") is not None else None),
-    ("Mathlib vocabulary breadth", lambda r: r["m4"].get("vocab1k")),
-]
+# The composite and PCA batteries are now defined inside main() in terms of the
+# size-adjusted metric ids (see SCORED / COMPOSITE_IDS), so quality is scored at
+# fixed size. See lean_reuse/size_confound.py.
 
 
 def pack_repo(key, res, tier):
@@ -227,65 +221,105 @@ def main():
         for k in VOCAB_KEYS if k in byk and byk[k]["m4"]["vocab"]
     ]
 
-    # ---- metric battery (definitions reused by PCA and composite) ----------
-    def fmtv(v, pct=False):
-        if v is None:
-            return "—"
-        return f"{v * 100:.1f}%" if pct else f"{v:.2f}" if isinstance(v, float) else str(v)
-
-    metrics = [
-        ("M3 · edges crossing directories", lambda r: r["m3"]["crossdir"], True, True),
-        ("M3 · decls used outside their file", lambda r: r["m3"]["outside"], True, True),
-        ("M9 · files importing all of Mathlib", lambda r: r["m9"]["whole_ml"], False, True),
-        ("M10 · defs with docstrings", lambda r: r["m10"].get("pct_defs_with_doc"), True, True),
-        ("M10 · comment density", lambda r: r["m10"].get("comment_density"), True, True),
-        ("M13 · elaboration secs per kLOC", lambda r: r["m13"].get("secs_per_kloc"), False, False),
-        ("M8 · sorried theorems", lambda r: r["m8"]["sorry"], False, True),
-        ("M7 · duplicate bodies", lambda r: r["m7"]["dup"], False, True),
-        ("M11 · branching tactics per proof", lambda r: r["m11"].get("branch_per_proof"), False, False),
-        ("M1 · share reused >=2", lambda r: r["m1"]["ge2"], True, True),
-        ("M1 · share never reused", lambda r: r["m1"]["never"], False, True),
-        ("M2 · statement share of refs", lambda r: r["m2"]["sig"], True, True),
-        ("M5 · top-1% reuse share", lambda r: r["m5"]["top1"] or 0, False, True),
-        ("M6 · max dependency depth", lambda r: r["m6"]["maxd"], True, False),
-        ("M12 · axioms per 1k decls", lambda r: r["m12"].get("axioms_per_1k_decls"), False, False),
-        ("M14 · amortization: mean log10 inlined cost", lambda r: r["m14"].get("mean_log10_cost") if r["tier"] == "exact" else None, True, False),
-        ("M14 · amortization: p90 log10 inlined cost", lambda r: r["m14"].get("p90_log10_cost") if r["tier"] == "exact" else None, True, False),
-        ("M8 · median proof length (lines)", lambda r: r["m8"]["pl_med"], False, False),
-        ("M8 · p90 proof length (lines)", lambda r: r["m8"]["pl_p90"], False, False),
-        ("M8 · median statement length (chars)", lambda r: r["m8"].get("stmt_med"), False, False),
-        ("M9 · median file length (LOC)", lambda r: r["m9"].get("file_med"), False, False),
-        ("M15 · trivial statements", lambda r: r["m15"].get("pct_trivial_statements"), False, True),
-        ("M15 · trivial one-liner proofs", lambda r: r["m15"].get("pct_trivial_proofs"), False, True),
-    ]
     auc_rows = []
 
-    # ---- composite of mechanical checks (percentile-rank mean) -------------
+    # ---- size-confounding audit + size-adjusted metric layer ---------------
+    # Every scored metric is residualized against log10(decls) so the analysis
+    # measures quality at fixed size, not size. See lean_reuse/size_confound.py.
+    from lean_reuse import size_confound as _scmod
+    sc = _scmod.compute(env, ORDER)
+    # adjusted value accessor: metric-id -> {repo key -> size-adjusted value}
+    adjv = {mid: m["adj"] for mid, m in sc["metrics"].items()}
+
+    def av(r, mid):
+        return adjv.get(mid, {}).get(r["key"])
+
+    # size-adjusted percentile per metric (0..1, oriented so higher = better
+    # quality at fixed size). This is what the composite averages, and what the
+    # per-metric charts plot, so every chart is size-independent by construction.
+    _hib = {mid: hib for mid, _, hib, _ in [
+        ("m3_crossdir","",True,0),("m3_outside","",True,0),("m9_whole_ml","",False,0),
+        ("m10_doc","",True,0),("m10_comment","",True,0),("m8_sorry","",False,0),
+        ("m7_dup","",False,0),("m15_triv_stmt","",False,0),("m15_triv_proof","",False,0),
+        ("m12_axioms","",False,0),("m2_stmt_share","",False,0),("m5_top1","",True,0),
+        ("m1_mean_indeg","",True,0),("m1_ge2","",True,0),("m1_never","",False,0),
+        ("m6_maxd","",True,0),("m6_meand","",True,0),("m14_amort_mean","",True,0),
+        ("m14_amort_p90","",True,0),("m4_ext_int","",True,0),("m11_branch","",True,0),
+        ("m13_elab","",False,0),("m8_proof_med","",False,0),("m9_file_med","",False,0),
+        ("m4_ext_refs","",True,0),("m4_vocab1k","",True,0)]}
+    adj_pct = {}   # mid -> {key -> percentile 0..1}
+    for mid, m in sc["metrics"].items():
+        sign = 1 if _hib.get(mid, True) else -1
+        items = [(k, m["adj"][k] * sign) for k in m["adj"]]
+        vals = [v for _, v in items]
+        adj_pct[mid] = {
+            k: (sum(1 for o in vals if o < v) + 0.5 * sum(1 for o in vals if o == v)) / len(vals)
+            for k, v in items}
+
+    # attach size-adjusted percentile + raw values to each repo for the charts
+    for r in repos:
+        r["adjPct"] = {mid: (round(adj_pct[mid][r["key"]], 4) if r["key"] in adj_pct.get(mid, {}) else None)
+                       for mid in sc["metrics"]}
+        r["adjRaw"] = {mid: (round(m["raw"][r["key"]], 4) if r["key"] in m["raw"] else None)
+                       for mid, m in sc["metrics"].items()}
+        r["adjOn"] = {mid: m["adjusted"] for mid, m in sc["metrics"].items()}
+
+    # canonical scored battery (size-adjusted): (metric_id, display, higher_better, in_composite)
+    SCORED = [
+        ("m3_crossdir",    "M3 · cross-directory reuse",        True,  True),
+        ("m3_outside",     "M3 · used outside defining file",   True,  True),
+        ("m9_whole_ml",    "M9 · files importing all Mathlib",  False, True),
+        ("m10_doc",        "M10 · docstring coverage",          True,  True),
+        ("m8_sorry",       "M8 · sorried theorems",             False, True),
+        ("m7_dup",         "M7 · duplicate bodies",             False, True),
+        ("m14_amort_mean", "M14 · amortization exponent",       True,  True),
+        ("m13_elab",       "M13 · elaboration cost / kLOC",     False, True),
+        ("m15_triv_stmt",  "M15 · trivial statements",          False, True),
+        ("m4_vocab1k",     "M4 · Mathlib vocabulary breadth",   True,  True),
+        ("m10_comment",    "M10 · comment density",             True,  False),
+        ("m2_stmt_share",  "M2 · statement share of refs",      False, False),
+        ("m5_top1",        "M5 · top-1% reuse concentration",   True,  False),
+        ("m1_mean_indeg",  "M1 · mean in-degree",               True,  False),
+        ("m1_ge2",         "M1 · share reused ≥2",              True,  False),
+        ("m1_never",       "M1 · share never reused",           False, False),
+        ("m6_maxd",        "M6 · max dependency depth",         True,  False),
+        ("m6_meand",       "M6 · mean dependency depth",        True,  False),
+        ("m14_amort_p90",  "M14 · amortization p90",            True,  False),
+        ("m4_ext_int",     "M4 · external/internal ratio",      True,  False),
+        ("m11_branch",     "M11 · branching tactics / proof",   True,  False),
+        ("m15_triv_proof", "M15 · trivial one-liner proofs",    False, False),
+        ("m12_axioms",     "M12 · axioms per 1k decls",         False, False),
+    ]
+    # dedup by metric-id, keeping the first (labelled) occurrence
+    _seen = set(); SCORED = [s for s in SCORED if s[1] and not (s[0] in _seen or _seen.add(s[0]))]
+    COMPOSITE_IDS = [(mid, hib) for mid, _, hib, inc in SCORED if inc]
+
+    # ---- composite of mechanical checks (percentile-rank mean, size-adjusted)
     comp = []
     for r in repos:
         parts = []
-        for label, f in COMPOSITE:
-            v = f(r)
+        for mid, hib in COMPOSITE_IDS:
+            v = av(r, mid)
             if v is None:
                 continue
-            others = [f(o) for o in repos if f(o) is not None]
-            rank = sum(1 for o in others if o < v) + 0.5 * sum(1 for o in others if o == v)
+            sign = 1 if hib else -1
+            others = [av(o, mid) * sign for o in repos if av(o, mid) is not None]
+            vv = v * sign
+            rank = sum(1 for o in others if o < vv) + 0.5 * sum(1 for o in others if o == vv)
             parts.append(rank / len(others))
         comp.append({"key": r["key"], "label": r["label"], "group": r["group"],
                      "tier": r["tier"], "anchor": r["anchor"],
-                     "score": round(sum(parts) / len(parts), 3),
+                     "score": round(sum(parts) / len(parts), 3) if parts else 0.0,
                      "n_metrics": len(parts)})
     comp.sort(key=lambda c: -c["score"])
 
-    # ---- PCA over the standardized metric battery --------------------------
+    # ---- PCA over the standardized, size-adjusted metric battery -----------
     import numpy as _np
-    all_metrics = [(lbl, f) for lbl, f, _, _ in metrics]
-    # no imputation: keep only metrics computed for EVERY corpus repo
     pca_metrics = [
-        (lbl, f) for lbl, f in all_metrics
-        if all(f(r) is not None for r in repos)
+        (lbl, mid) for mid, lbl, hib, inc in SCORED
+        if all(av(r, mid) is not None for r in repos)
     ]
-    M = _np.array([[f(r) for _, f in pca_metrics] for r in repos], dtype=float)
+    M = _np.array([[av(r, mid) for _, mid in pca_metrics] for r in repos], dtype=float)
     for j in range(M.shape[1]):
         col = M[:, j]
         sd = col.std()
@@ -317,6 +351,76 @@ def main():
         "load2": [{"m": l, "w": round(float(w), 2)} for l, w in load2],
         "load3": [{"m": l, "w": round(float(w), 2)} for l, w in load3],
         "included": [l for l, _ in pca_metrics],
+    }
+
+    # ---- size-confounding payload for the "are we measuring size?" section --
+    label_of = {mid: lbl for mid, lbl, _, _ in SCORED}
+    conf_rows = sorted(
+        [{"label": label_of.get(mid, mid), "rho_raw": m["rho_raw"],
+          "rho_adj": m["rho_adj"], "adjusted": m["adjusted"]}
+         for mid, m in sc["metrics"].items() if mid in label_of],
+        key=lambda r: -abs(r["rho_raw"]))
+    # raw composite (same checks, UN-adjusted) to show the size correlation it
+    # would have carried, vs the size-adjusted composite actually shipped
+    log_size = sc["log_size"]
+    raw_comp = {}
+    for r in repos:
+        parts = []
+        for mid, hib in COMPOSITE_IDS:
+            raws = sc["metrics"].get(mid, {}).get("raw", {})
+            v = raws.get(r["key"])
+            if v is None:
+                continue
+            sign = 1 if hib else -1
+            others = [raws[o] * sign for o in raws]
+            vv = v * sign
+            parts.append((sum(1 for o in others if o < vv) + 0.5 * sum(1 for o in others if o == vv)) / len(others))
+        raw_comp[r["key"]] = sum(parts) / len(parts) if parts else 0.0
+    ks = [r["key"] for r in repos]
+    adj_comp = {c["key"]: c["score"] for c in comp}
+    comp_rho_raw = _scmod.spearman([raw_comp[k] for k in ks], [log_size[k] for k in ks])
+    comp_rho_adj = _scmod.spearman([adj_comp[k] for k in ks], [log_size[k] for k in ks])
+
+    # size-matched cohorts: quality still separates at fixed size?
+    Q = {"mathlib4":1,"flt":1,"pfr":1,"addcombi":1,"carleson":1,"pnt":1,"brownian":1,
+         "cslib":1,"physlib":1,"tauceti":1,"strongpnt":1,"clawristotle":1,
+         "seed-prover":-1,"superhuman":-1,"pedigree":-1,"gblean":-1,"atlas":-1}
+    # (metric_id, label, is_pct, higher_is_better)
+    COHORT_METRICS = [("m3_crossdir","cross-dir reuse",True,True),
+                      ("m10_doc","doc coverage",True,True),
+                      ("m14_amort_mean","amortization (log₁₀)",False,True),
+                      ("m6_maxd","max depth",False,True),
+                      ("m7_dup","duplicate bodies",True,False),
+                      ("m8_sorry","sorry rate",True,False)]
+    def cohort(lo, hi):
+        cks = sorted([k for k in ORDER if k in byk and lo <= byk[k]["alldecls"] < hi and Q.get(k, 0)],
+                     key=lambda k: byk[k]["alldecls"])
+        rows = []
+        for mid, mlabel, is_pct, hib in COHORT_METRICS:
+            raws = sc["metrics"].get(mid, {}).get("raw", {})
+            pos = [raws[k] for k in cks if Q[k] > 0 and k in raws]
+            neg = [raws[k] for k in cks if Q[k] < 0 and k in raws]
+            if not pos or not neg:
+                continue
+            rev, slp = sum(pos)/len(pos), sum(neg)/len(neg)
+            rows.append({"metric": mlabel, "pct": is_pct,
+                         "reviewed": round(rev, 3), "slop": round(slp, 3),
+                         "sep": (rev >= slp) == hib})
+        return {"repos": [{"key": k, "label": byk[k]["label"], "decls": byk[k]["alldecls"],
+                           "q": Q[k]} for k in cks], "rows": rows}
+    _sizes = [byk[k]["alldecls"] for k in byk]
+    size_confound = {
+        "rows": conf_rows,
+        "n_adjusted": sc["n_adjusted"], "n_total": sc["n_total"],
+        "max_abs_rho_adj": sc["max_abs_rho_adj"],
+        "comp_rho_raw": round(comp_rho_raw, 2),
+        "comp_rho_adj": round(comp_rho_adj, 2),
+        "cohort_small": cohort(80, 600),
+        "cohort_large": cohort(5000, 400000),
+        "span_orders": round(math.log10(max(_sizes) / max(1, min(_sizes))), 1),
+        "max_raw": (lambda r: f"{r['rho_raw']:+.2f}")(max(conf_rows, key=lambda r: abs(r["rho_raw"]))) if conf_rows else "+0.80",
+        "addcombi_decls": f"{byk['addcombi']['alldecls']:,}" if "addcombi" in byk else "242",
+        "atlas_decls": f"{byk['atlas']['alldecls']:,}" if "atlas" in byk else "15,633",
     }
 
     # ---- metric-level cross-tier validation --------------------------------
@@ -374,13 +478,14 @@ def main():
         "vocab": vocab,
         "auc": auc_rows,
         "composite": comp,
-        "composite_n_checks": len(COMPOSITE),
+        "composite_n_checks": len(COMPOSITE_IDS),
+        "size_confound": size_confound,
         # per-repo decl-level agreement table: only repos whose two tiers cover
         # the same file set (partial-exact slices would compare mismatched
         # graphs and inflate the textual degree columns)
         "validation": {k: v for k, v in validation.items()
                        if k not in PARTIAL_EXACT and k in byk},
-        "prose": build_prose(byk, validation, {c["key"]: c["score"] for c in comp}),
+        "prose": build_prose(byk, validation, {c["key"]: c["score"] for c in comp}, size_confound),
         "footer": FOOTER.format(nrepos=len(repos)),
     }
 
@@ -402,7 +507,7 @@ FOOTER = (
 )
 
 
-def build_prose(byk, validation, comp=None):
+def build_prose(byk, validation, comp=None, size_conf=None):
     comp = comp or {}
     ml = byk["mathlib4"]
     sp = byk.get("seed-prover")
@@ -435,7 +540,32 @@ def build_prose(byk, validation, comp=None):
     slop_str = " and ".join(slop_present)
     slop_lead = {2: "two community-flagged slop repos", 1: "one community-flagged slop repo"}.get(len(slop_present), f"{len(slop_present)} community-flagged slop repos")
 
+    scd = size_conf or {}
+    top_size = sorted(scd.get("rows", []), key=lambda r: -abs(r["rho_raw"]))[:3]
+    top_names = ", ".join(r["label"].split(" · ")[-1] for r in top_size) if top_size else "the amortization exponent, dependency depth and concentration"
+
     return {
+        "sizeProse": f"""
+<p>A fair worry: with corpora spanning {scd.get('span_orders','3.5')} orders of magnitude in size
+(102 to 303,000 declarations), a metric that merely grows with a library could masquerade as a
+quality signal. It is a real effect for a specific cluster — raw, the most size-correlated metrics are
+<b>{top_names}</b> (Spearman ρ up to {scd.get('max_raw','+0.80')} against log-size), and they are exactly
+the reuse metrics this dashboard surfaces first. The hygiene ratios (sorry rate, trivial-statement share,
+axiom density) were already near-independent.</p>
+<p><b>What we do about it.</b> Every scored metric is residualized against log₁₀(declarations), so the
+dashboard measures quality <em>at fixed size</em>. After adjustment no metric correlates with size by
+more than |ρ| = {scd.get('max_abs_rho_adj','0.16')}; the composite's own size correlation drops from
+{scd.get('comp_rho_raw','0.18')} to {scd.get('comp_rho_adj','0.10')}. The per-metric charts plot the
+size-adjusted percentile, and the composite and PCA are built from the adjusted values. (Three
+genuinely distributional panels stay raw and descriptive: the reuse CCDF, the statement/proof/file-length
+histograms, and the Mathlib-leverage scatter — they show shapes, not a single score to adjust.)</p>""",
+        "cohortProse": f"""
+<p>Adjustment removes the correlation — but does any quality signal survive it, or was size all there was?
+The groups overlap in size (AddCombi, a reviewed library, has {scd.get('addcombi_decls','242')} declarations —
+smaller than three of the slop dumps; ATLAS, slop, has {scd.get('atlas_decls','15,633')} — larger than most
+reviewed libraries), so we can compare quality <em>within</em> a size band. In both bands the reviewed repos
+still separate from the slop dumps on nearly every metric — including the size-heavy amortization and depth.
+The signal is real; size just inflated its raw magnitude.</p>""",
         "corpusIntroProse": f"""
 <p>{ncorp_word} corpora — formalization projects plus a declared slop calibration set,
 every one measured on the exact tier (a repo that cannot be built at all is excluded, not
@@ -519,10 +649,18 @@ design philosophy. The same construction appears independently in Freedman et&nb
 <a href="https://arxiv.org/abs/2603.20396"><i>Compression is all you need: modeling
 mathematics</i></a> (2026), as "wrapped" versus "unwrapped" length measured on Mathlib —
 their observation that unwrapped length grows exponentially with depth while wrapped length
-stays constant is precisely why we report the exponent, and why it separates libraries from
-corpora that never compound. Two caveats: the exponent grows with library size (part of the point,
-but compare like-sized repos), and it measures each repo's <em>internal</em> economy —
-chains through Mathlib are credited to M4, not here.</p>""",
+stays constant is precisely why we report the exponent.</p>
+<p><b>The size caveat, taken seriously.</b> Those raw exponents are the single most
+size-driven number in this study — they correlate with log-declarations at ρ = +0.79, so a
+big library scores high largely <em>because</em> it is big. The chart above therefore plots
+the <b>size-adjusted</b> exponent (§14): controlling for size, Mathlib falls to the
+{ (lambda p: f"{int(round(p*100))}th" if p is not None else "middle")(byk['mathlib4']['adjPct'].get('m14_amort_mean')) }
+percentile and the metric becomes a much weaker separator than its raw form suggests — an
+honest demotion of what earlier drafts called the winning reuse metric. It does not vanish:
+the size-matched cohorts in §14 show reviewed repos still out-compound the dumps at equal
+size. Two further caveats: it measures each repo's <em>internal</em> economy (chains through
+Mathlib are credited to M4, not here), and it needs the elaborated graph, so it is
+exact-tier only.</p>""",
         "validityProse": f"""
 <p><b>Every row is exact now — at the price of coverage.</b> Corpora that ship no lakefile
 were built anyway: Erdős-90 and Seed-Prover's IMO-2025 subproject ship lakefiles in
