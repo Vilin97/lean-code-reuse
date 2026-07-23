@@ -32,6 +32,7 @@ MODULES = [
     "elab_cost",
     "amortization",
     "triviality",
+    "architecture",
 ]
 
 

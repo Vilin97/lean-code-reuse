@@ -276,6 +276,15 @@
     "n_trivial_statements": 5,
     "pct_trivial_proofs": 0.0531,
     "pct_statements_no_refs": 0.0001
+   },
+   "architecture": {
+    "dir_breadth_mean": 1.573319,
+    "crossdir_vs_random": 0.842719,
+    "modularity_q": 0.133238,
+    "def_thm_indeg_ratio": 6.670178,
+    "def_reuse_auc": 0.625011,
+    "hub_def_share": 0.828015,
+    "reuse_entropy": 0.660682
    }
   }
  },
@@ -543,6 +552,15 @@
     "n_trivial_statements": 0,
     "pct_trivial_proofs": 0.101,
     "pct_statements_no_refs": 0.0
+   },
+   "architecture": {
+    "dir_breadth_mean": 1.019054,
+    "crossdir_vs_random": 0.041139,
+    "modularity_q": 0.313557,
+    "def_thm_indeg_ratio": 3.888332,
+    "def_reuse_auc": 0.635936,
+    "hub_def_share": 0.862069,
+    "reuse_entropy": 0.890184
    }
   }
  },
@@ -810,6 +828,15 @@
     "n_trivial_statements": 0,
     "pct_trivial_proofs": 0.0,
     "pct_statements_no_refs": 0.0
+   },
+   "architecture": {
+    "dir_breadth_mean": 1.465147,
+    "crossdir_vs_random": 0.429134,
+    "modularity_q": 0.499964,
+    "def_thm_indeg_ratio": 6.931705,
+    "def_reuse_auc": 0.689432,
+    "hub_def_share": 1.0,
+    "reuse_entropy": 0.84329
    }
   }
  },
@@ -1081,6 +1108,15 @@
     "n_trivial_statements": 1,
     "pct_trivial_proofs": 0.0859,
     "pct_statements_no_refs": 0.0
+   },
+   "architecture": {
+    "dir_breadth_mean": 1.647786,
+    "crossdir_vs_random": 0.698972,
+    "modularity_q": 0.265143,
+    "def_thm_indeg_ratio": 19.884057,
+    "def_reuse_auc": 0.741072,
+    "hub_def_share": 0.687549,
+    "reuse_entropy": 0.679427
    }
   }
  },
@@ -1457,6 +1493,15 @@
     "n_trivial_statements": 0,
     "pct_trivial_proofs": 0.1019,
     "pct_statements_no_refs": 0.0
+   },
+   "architecture": {
+    "dir_breadth_mean": 1.066745,
+    "crossdir_vs_random": 0.15059,
+    "modularity_q": 0.651416,
+    "def_thm_indeg_ratio": 10.043749,
+    "def_reuse_auc": 0.715533,
+    "hub_def_share": 0.986755,
+    "reuse_entropy": 0.848563
    }
   }
  },
@@ -1833,6 +1878,15 @@
     "n_trivial_statements": 0,
     "pct_trivial_proofs": 0.086,
     "pct_statements_no_refs": 0.0
+   },
+   "architecture": {
+    "dir_breadth_mean": 1.181213,
+    "crossdir_vs_random": 0.272384,
+    "modularity_q": 0.640705,
+    "def_thm_indeg_ratio": 11.442307,
+    "def_reuse_auc": 0.719189,
+    "hub_def_share": 0.936455,
+    "reuse_entropy": 0.810166
    }
   }
  },
@@ -2213,6 +2267,15 @@
     "n_trivial_statements": 0,
     "pct_trivial_proofs": 0.0954,
     "pct_statements_no_refs": 0.0
+   },
+   "architecture": {
+    "dir_breadth_mean": 1.133333,
+    "crossdir_vs_random": 0.186374,
+    "modularity_q": 0.724123,
+    "def_thm_indeg_ratio": 5.487057,
+    "def_reuse_auc": 0.724234,
+    "hub_def_share": 0.881773,
+    "reuse_entropy": 0.871075
    }
   }
  },
@@ -2589,6 +2652,15 @@
     "n_trivial_statements": 0,
     "pct_trivial_proofs": 0.0197,
     "pct_statements_no_refs": 0.0
+   },
+   "architecture": {
+    "dir_breadth_mean": 1.64523,
+    "crossdir_vs_random": 0.573892,
+    "modularity_q": 0.283034,
+    "def_thm_indeg_ratio": 3.197341,
+    "def_reuse_auc": 0.289115,
+    "hub_def_share": 0.6,
+    "reuse_entropy": 0.822836
    }
   }
  },
@@ -2965,6 +3037,15 @@
     "n_trivial_statements": 3,
     "pct_trivial_proofs": 0.0604,
     "pct_statements_no_refs": 0.0
+   },
+   "architecture": {
+    "dir_breadth_mean": 1.372238,
+    "crossdir_vs_random": 0.306228,
+    "modularity_q": 0.599104,
+    "def_thm_indeg_ratio": 11.077713,
+    "def_reuse_auc": 0.757614,
+    "hub_def_share": 0.956757,
+    "reuse_entropy": 0.831911
    }
   }
  },
@@ -3343,6 +3424,15 @@
     "n_trivial_statements": 0,
     "pct_trivial_proofs": 0.0022,
     "pct_statements_no_refs": 0.0
+   },
+   "architecture": {
+    "dir_breadth_mean": 1.53965,
+    "crossdir_vs_random": 1.169718,
+    "modularity_q": -0.122791,
+    "def_thm_indeg_ratio": 14.720438,
+    "def_reuse_auc": 0.925724,
+    "hub_def_share": 0.954722,
+    "reuse_entropy": 0.734048
    }
   }
  },
@@ -3715,6 +3805,15 @@
     "n_trivial_statements": 5,
     "pct_trivial_proofs": 0.0101,
     "pct_statements_no_refs": 0.0
+   },
+   "architecture": {
+    "dir_breadth_mean": 1.080284,
+    "crossdir_vs_random": 0.209112,
+    "modularity_q": 0.689396,
+    "def_thm_indeg_ratio": 19.944696,
+    "def_reuse_auc": 0.899524,
+    "hub_def_share": 0.996154,
+    "reuse_entropy": 0.937091
    }
   }
  },
@@ -4091,6 +4190,15 @@
     "n_trivial_statements": 0,
     "pct_trivial_proofs": 0.099,
     "pct_statements_no_refs": 0.0
+   },
+   "architecture": {
+    "dir_breadth_mean": 1.018872,
+    "crossdir_vs_random": 0.01665,
+    "modularity_q": 0.842934,
+    "def_thm_indeg_ratio": 14.838646,
+    "def_reuse_auc": 0.915906,
+    "hub_def_share": 0.891061,
+    "reuse_entropy": 0.845201
    }
   }
  },
@@ -4467,6 +4575,15 @@
     "n_trivial_statements": 7,
     "pct_trivial_proofs": 0.0516,
     "pct_statements_no_refs": 0.0
+   },
+   "architecture": {
+    "dir_breadth_mean": 1.001815,
+    "crossdir_vs_random": 0.000589,
+    "modularity_q": 0.813878,
+    "def_thm_indeg_ratio": 7.450503,
+    "def_reuse_auc": 0.681791,
+    "hub_def_share": 0.897065,
+    "reuse_entropy": 0.824394
    }
   }
  },
@@ -4845,6 +4962,15 @@
     "n_trivial_statements": 0,
     "pct_trivial_proofs": 0.0171,
     "pct_statements_no_refs": 0.0
+   },
+   "architecture": {
+    "dir_breadth_mean": 1.000514,
+    "crossdir_vs_random": 0.000877,
+    "modularity_q": 0.886862,
+    "def_thm_indeg_ratio": 6.046061,
+    "def_reuse_auc": 0.71533,
+    "hub_def_share": 0.974392,
+    "reuse_entropy": 0.891043
    }
   }
  },
@@ -5217,6 +5343,15 @@
     "n_trivial_statements": 0,
     "pct_trivial_proofs": 0.0,
     "pct_statements_no_refs": 0.0
+   },
+   "architecture": {
+    "dir_breadth_mean": 1.0,
+    "crossdir_vs_random": 0.0,
+    "modularity_q": 0.683682,
+    "def_thm_indeg_ratio": 0.0,
+    "def_reuse_auc": 0.5,
+    "hub_def_share": 0.0,
+    "reuse_entropy": 0.987963
    }
   }
  },
@@ -5589,6 +5724,15 @@
     "n_trivial_statements": 0,
     "pct_trivial_proofs": 0.0283,
     "pct_statements_no_refs": 0.0
+   },
+   "architecture": {
+    "dir_breadth_mean": 1.0,
+    "crossdir_vs_random": 0.0,
+    "modularity_q": 0.689533,
+    "def_thm_indeg_ratio": 3.782337,
+    "def_reuse_auc": 0.834626,
+    "hub_def_share": 1.0,
+    "reuse_entropy": 0.9391
    }
   }
  },
@@ -5961,6 +6105,15 @@
     "n_trivial_statements": 0,
     "pct_trivial_proofs": 0.0618,
     "pct_statements_no_refs": 0.0
+   },
+   "architecture": {
+    "dir_breadth_mean": 1.032168,
+    "crossdir_vs_random": 0.063265,
+    "modularity_q": 0.429296,
+    "def_thm_indeg_ratio": 9.873533,
+    "def_reuse_auc": 0.809349,
+    "hub_def_share": 0.926699,
+    "reuse_entropy": 0.809706
    }
   }
  },
@@ -6333,6 +6486,15 @@
     "n_trivial_statements": 0,
     "pct_trivial_proofs": 0.0,
     "pct_statements_no_refs": 0.0
+   },
+   "architecture": {
+    "dir_breadth_mean": 1.0,
+    "crossdir_vs_random": 0.0,
+    "modularity_q": 0.0,
+    "def_thm_indeg_ratio": 10.390541,
+    "def_reuse_auc": 0.952974,
+    "hub_def_share": 1.0,
+    "reuse_entropy": 0.826697
    }
   }
  },
@@ -6709,6 +6871,15 @@
     "n_trivial_statements": 0,
     "pct_trivial_proofs": 0.019,
     "pct_statements_no_refs": 0.0
+   },
+   "architecture": {
+    "dir_breadth_mean": 1.072993,
+    "crossdir_vs_random": 0.208766,
+    "modularity_q": 0.465766,
+    "def_thm_indeg_ratio": 7.475838,
+    "def_reuse_auc": 0.39442,
+    "hub_def_share": 0.666667,
+    "reuse_entropy": 0.771811
    }
   }
  },
@@ -7085,6 +7256,15 @@
     "n_trivial_statements": 0,
     "pct_trivial_proofs": 0.0035,
     "pct_statements_no_refs": 0.0
+   },
+   "architecture": {
+    "dir_breadth_mean": 1.030668,
+    "crossdir_vs_random": 0.134092,
+    "modularity_q": 0.219679,
+    "def_thm_indeg_ratio": 8.329422,
+    "def_reuse_auc": 0.755246,
+    "hub_def_share": 0.545012,
+    "reuse_entropy": 0.769119
    }
   }
  },
@@ -7461,6 +7641,15 @@
     "n_trivial_statements": 0,
     "pct_trivial_proofs": 0.0083,
     "pct_statements_no_refs": 0.0
+   },
+   "architecture": {
+    "dir_breadth_mean": 1.367369,
+    "crossdir_vs_random": 0.716146,
+    "modularity_q": 0.258372,
+    "def_thm_indeg_ratio": 19.496638,
+    "def_reuse_auc": 0.810311,
+    "hub_def_share": 0.91875,
+    "reuse_entropy": 0.711222
    }
   }
  },
@@ -7837,6 +8026,15 @@
     "n_trivial_statements": 0,
     "pct_trivial_proofs": 0.0157,
     "pct_statements_no_refs": 0.0
+   },
+   "architecture": {
+    "dir_breadth_mean": 1.028921,
+    "crossdir_vs_random": 0.121381,
+    "modularity_q": 0.68508,
+    "def_thm_indeg_ratio": 14.247274,
+    "def_reuse_auc": 0.843707,
+    "hub_def_share": 0.607143,
+    "reuse_entropy": 0.865226
    }
   }
  },
@@ -8216,6 +8414,15 @@
     "n_trivial_statements": 0,
     "pct_trivial_proofs": 0.0651,
     "pct_statements_no_refs": 0.0
+   },
+   "architecture": {
+    "dir_breadth_mean": 1.045997,
+    "crossdir_vs_random": 0.137275,
+    "modularity_q": 0.544808,
+    "def_thm_indeg_ratio": 5.153534,
+    "def_reuse_auc": 0.736831,
+    "hub_def_share": 0.797297,
+    "reuse_entropy": 0.877816
    }
   }
  },
@@ -8592,6 +8799,15 @@
     "n_trivial_statements": 0,
     "pct_trivial_proofs": 0.0375,
     "pct_statements_no_refs": 0.0
+   },
+   "architecture": {
+    "dir_breadth_mean": 1.0875,
+    "crossdir_vs_random": 0.257048,
+    "modularity_q": 0.497914,
+    "def_thm_indeg_ratio": 5.380725,
+    "def_reuse_auc": 0.716833,
+    "hub_def_share": 0.833333,
+    "reuse_entropy": 0.883812
    }
   }
  },
@@ -8981,6 +9197,15 @@
     "n_trivial_statements": 1,
     "pct_trivial_proofs": 0.0467,
     "pct_statements_no_refs": 0.0
+   },
+   "architecture": {
+    "dir_breadth_mean": 1.0,
+    "crossdir_vs_random": 0.0,
+    "modularity_q": 0.010217,
+    "def_thm_indeg_ratio": 5.099597,
+    "def_reuse_auc": 0.699279,
+    "hub_def_share": 1.0,
+    "reuse_entropy": 0.803146
    }
   }
  },
@@ -9359,6 +9584,15 @@
     "n_trivial_statements": 0,
     "pct_trivial_proofs": 0.0333,
     "pct_statements_no_refs": 0.0
+   },
+   "architecture": {
+    "dir_breadth_mean": 1.641975,
+    "crossdir_vs_random": 0.698278,
+    "modularity_q": 0.197949,
+    "def_thm_indeg_ratio": 4.888889,
+    "def_reuse_auc": 0.7125,
+    "hub_def_share": 1.0,
+    "reuse_entropy": 0.792192
    }
   }
  },
@@ -9735,6 +9969,15 @@
     "n_trivial_statements": 0,
     "pct_trivial_proofs": 0.0232,
     "pct_statements_no_refs": 0.0
+   },
+   "architecture": {
+    "dir_breadth_mean": 1.107831,
+    "crossdir_vs_random": 0.122498,
+    "modularity_q": 0.775393,
+    "def_thm_indeg_ratio": 7.810747,
+    "def_reuse_auc": 0.869403,
+    "hub_def_share": 0.960396,
+    "reuse_entropy": 0.891347
    }
   }
  },
@@ -10111,6 +10354,15 @@
     "n_trivial_statements": 0,
     "pct_trivial_proofs": 0.0737,
     "pct_statements_no_refs": 0.0
+   },
+   "architecture": {
+    "dir_breadth_mean": 1.096659,
+    "crossdir_vs_random": 0.144399,
+    "modularity_q": 0.683242,
+    "def_thm_indeg_ratio": 9.063609,
+    "def_reuse_auc": 0.844623,
+    "hub_def_share": 0.980132,
+    "reuse_entropy": 0.858987
    }
   }
  },
@@ -10487,6 +10739,15 @@
     "n_trivial_statements": 0,
     "pct_trivial_proofs": 0.0902,
     "pct_statements_no_refs": 0.0
+   },
+   "architecture": {
+    "dir_breadth_mean": 1.029777,
+    "crossdir_vs_random": 0.054092,
+    "modularity_q": 0.747581,
+    "def_thm_indeg_ratio": 7.109765,
+    "def_reuse_auc": 0.747655,
+    "hub_def_share": 1.0,
+    "reuse_entropy": 0.867191
    }
   }
  },
@@ -10863,6 +11124,15 @@
     "n_trivial_statements": 0,
     "pct_trivial_proofs": 0.0283,
     "pct_statements_no_refs": 0.0
+   },
+   "architecture": {
+    "dir_breadth_mean": 1.304217,
+    "crossdir_vs_random": 0.516328,
+    "modularity_q": 0.414848,
+    "def_thm_indeg_ratio": 10.370075,
+    "def_reuse_auc": 0.844973,
+    "hub_def_share": 0.983333,
+    "reuse_entropy": 0.814579
    }
   }
  },
@@ -11239,6 +11509,15 @@
     "n_trivial_statements": 0,
     "pct_trivial_proofs": 0.0366,
     "pct_statements_no_refs": 0.0
+   },
+   "architecture": {
+    "dir_breadth_mean": 1.018661,
+    "crossdir_vs_random": 0.048885,
+    "modularity_q": 0.662587,
+    "def_thm_indeg_ratio": 8.865461,
+    "def_reuse_auc": 0.822134,
+    "hub_def_share": 0.923077,
+    "reuse_entropy": 0.881361
    }
   }
  }

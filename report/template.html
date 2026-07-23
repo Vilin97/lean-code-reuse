@@ -168,11 +168,11 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
   <p class="sub">
     As AI-generated Lean corpora proliferate, we need statistical measures of quality that
     don't require reading the code — and that measure the artifact, not its author. This
-    study implements fifteen metric families (reuse structure, hygiene, documentation,
-    elaboration cost, and an amortization exponent that measures reuse as compression),
-    extracts exact declaration-level dependency graphs from elaborated environments,
-    calibrates every metric against declared high/low quality anchors, and asks which ones
-    actually discriminate.
+    study implements sixteen metric families (reuse structure, hygiene, documentation,
+    elaboration cost, an amortization exponent that measures reuse as compression, and
+    intensive architecture signals), extracts exact declaration-level dependency graphs
+    from elaborated environments, calibrates every metric against declared high/low
+    quality anchors, and asks which ones actually discriminate.
   </p>
   <div class="tiles" id="heroTiles"></div>
 </header>
@@ -191,6 +191,7 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
   <a href="#classic">Classic metrics</a>
   <a href="#taxonomy">Expert review</a>
   <a href="#validity">Validity</a>
+  <a href="#sizecontrol">Architecture</a>
 </nav>
 
 <section id="corpus">
@@ -229,20 +230,20 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
       <code>log₁₀ cost</code>: the number of <em>orders of magnitude of duplication that
       sharing eliminates</em>.
     </p>
-    <p class="note">This is the metric most entangled with size — raw, it correlates with
-      log-declarations at ρ = +0.79. The charts below therefore plot the <b>size-adjusted
-      percentile</b> (100 = most compounding reuse among repos of comparable size); the raw
-      log₁₀ cost is in every tooltip, and §14 shows the adjustment and proves the signal
-      survives it.</p>
+    <p class="note">This is the metric most entangled with size — it correlates with
+      log-declarations at ρ = +0.79 and <b>fails the discriminant test</b> of §14 (the three
+      largest uncurated corpora out-compound the reviewed median purely from bulk), so it is
+      badged a size proxy, kept out of the composite, and shown raw as a descriptive
+      measure.</p>
   </div>
   <div class="card">
-    <h4>Amortization exponent — size-adjusted percentile</h4>
-    <div class="sub">Rank of each repo's size-adjusted amortization exponent (100 = most compounding reuse at its size). Raw mean log₁₀ inlined-cost in tooltip. This metric needs the elaborated dependency graph — §13 shows parser-level approximations are unreliable, one reason the whole corpus is measured on the exact tier.</div>
+    <h4>Amortization exponent</h4>
+    <div class="sub">Mean log₁₀ inlined dependency-tree size; tick = p90. This metric needs the elaborated dependency graph — §13 shows parser-level approximations are unreliable, one reason the whole corpus is measured on the exact tier.</div>
     <div class="chartwrap" id="amortChart"></div>
   </div>
   <div class="card">
-    <h4>Longest internal dependency chain — size-adjusted percentile</h4>
-    <div class="sub">Rank of each repo's size-adjusted max dependency depth (raw max/mean in tooltip). Depth grows with size (raw ρ = +0.73), so it too is shown size-adjusted.</div>
+    <h4>Longest internal dependency chain</h4>
+    <div class="sub">Max depth in the internal declaration DAG; tick = mean. Depth grows with size (ρ = +0.73) and fails the discriminant test — a size proxy, shown for shape, not score.</div>
     <div class="chartwrap" id="depthChart"></div>
   </div>
   <div class="prose" id="amortProse"></div>
@@ -283,7 +284,7 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
   </div>
   <div class="card">
     <h4>Elaboration cost per kLOC (heartbeats proxy)</h4>
-    <div class="sub">Median seconds to re-elaborate 1,000 source lines, from 12 sampled built files per repo; import-loading baseline subtracted. Only repos with working builds. <b>Chart: size-adjusted percentile</b> (100 = best at its size; raw value in tooltip).</div>
+    <div class="sub">Median seconds to re-elaborate 1,000 source lines, from 12 sampled built files per repo; import-loading baseline subtracted. Only repos with working builds.</div>
     <div class="chartwrap" id="elabChart"></div>
   </div>
 </section>
@@ -293,10 +294,11 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
   <div class="prose">
     <p>
       Rather than fitting to labels, this section lets the metrics speak jointly: a PCA of
-      the full battery (no imputation — only metrics computed for every corpus repo enter),
-      and an unweighted composite of the mechanical checks. Both are built from the
-      <b>size-adjusted</b> metrics (§14), so a repo cannot score well just by being large —
-      the composite's own correlation with size is ρ = 0.10. Neither is a quality
+      the battery (no imputation — only metrics computed for every corpus repo enter),
+      and an unweighted composite of the mechanical checks. Both are built from raw values
+      of the <b>discriminant-valid</b> metrics only (§14): checks on which a huge uncurated
+      corpus scores high from bulk alone (the amortization exponent, depth, mean in-degree)
+      are excluded, so a repo cannot score well just by being large. Neither is a quality
       certificate; §12 documents the Gauss-PR case where every mechanical check passes and
       community review still said no.
     </p>
@@ -310,7 +312,7 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
   </div>
   <div class="card">
     <h4>Composite of mechanical checks</h4>
-    <div class="sub">Mean <b>size-adjusted</b> percentile rank across ten mechanical checks (cross-dir reuse, outside-file reuse, granular imports, sorries, duplication, doc coverage, elaboration economy, amortization, no trivial statements, Mathlib vocabulary breadth). Each check is residualized on log-declarations first (§14), so the score measures quality at fixed size. Purely descriptive — §12 shows exactly what it cannot certify.</div>
+    <div class="sub" id="compSub">Mean percentile rank across the discriminant-valid mechanical checks (raw values — §14 explains why raw beats residualized). Checks that fail the discriminant test are excluded. Purely descriptive — §12 shows exactly what it cannot certify.</div>
     <div class="legend" id="compLegend"></div>
     <div class="chartwrap" id="compChart"></div>
   </div>
@@ -318,7 +320,7 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
 </section>
 <section id="metrics">
   <div class="secno">06</div>
-  <h2>Fifteen ways to measure quality</h2>
+  <h2>Sixteen ways to measure quality</h2>
   <div class="mgrid" id="metricCards"></div>
 </section>
 <section id="where">
@@ -340,7 +342,7 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
   </div>
   <div class="card">
     <h4>Reuse that crosses file boundaries</h4>
-    <div class="sub">Share of reusable declarations referenced from at least one other file. <b>Chart: size-adjusted percentile</b> (100 = best at its size; raw value in tooltip).</div>
+    <div class="sub">Share of reusable declarations referenced from at least one other file.</div>
     <div class="chartwrap" id="crossChart"></div>
   </div>
   <div class="prose" id="whereProse"></div>
@@ -380,12 +382,12 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
   </div>
   <div class="card">
     <h4>Share of declarations reused at least twice</h4>
-    <div class="sub">Distinct-user in-degree ≥ 2, as a share of reusable declarations. <b>Chart: size-adjusted percentile</b> (100 = best at its size; raw value in tooltip).</div>
+    <div class="sub">Distinct-user in-degree ≥ 2, as a share of reusable declarations.</div>
     <div class="chartwrap" id="ge2Chart"></div>
   </div>
   <div class="card">
     <h4>Reuse concentration: share absorbed by top 1% of declarations</h4>
-    <div class="sub">Occupying the far right means a few hubs get all reuse and the rest is dead weight. <b>Chart: size-adjusted percentile</b> (100 = best at its size; raw value in tooltip).</div>
+    <div class="sub">Occupying the far right means a few hubs get all reuse and the rest is dead weight.</div>
     <div class="chartwrap" id="giniChart"></div>
   </div>
 </section>
@@ -401,22 +403,22 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
   </div>
   <div class="card">
     <h4>Exact-duplicate declaration bodies</h4>
-    <div class="sub">Share of whitespace-normalized bodies (≥60 chars) appearing more than once. <b>Chart: size-adjusted percentile</b> (100 = best at its size; raw value in tooltip).</div>
+    <div class="sub">Share of whitespace-normalized bodies (≥60 chars) appearing more than once.</div>
     <div class="chartwrap" id="dupChart"></div>
   </div>
   <div class="card">
     <h4>Sorried theorems</h4>
-    <div class="sub">Share of theorems whose proof (transitively) uses <code>sorryAx</code> in the elaborated proof term. Already size-independent (ρ = −0.08), so shown as the raw rate.</div>
+    <div class="sub">Share of theorems whose proof (transitively) uses <code>sorryAx</code> in the elaborated proof term.</div>
     <div class="chartwrap" id="sorryChart"></div>
   </div>
   <div class="card">
     <h4>Trivial and vacuous theorems (M15)</h4>
-    <div class="sub">Share of theorems proved by a bare one-liner (<code>trivial</code>/<code>rfl</code>/<code>decide</code>/<code>norm_num</code>/<code>simp</code>). Tooltip shows statements that normalize to <code>True</code>/numerals-only and statements referencing zero declarations. <b>Chart: size-adjusted percentile</b> (100 = best at its size; raw value in tooltip).</div>
+    <div class="sub">Share of theorems proved by a bare one-liner (<code>trivial</code>/<code>rfl</code>/<code>decide</code>/<code>norm_num</code>/<code>simp</code>). Tooltip shows statements that normalize to <code>True</code>/numerals-only and statements referencing zero declarations.</div>
     <div class="chartwrap" id="trivChart"></div>
   </div>
   <div class="card">
     <h4>Docstring coverage on definitions</h4>
-    <div class="sub">Share of public defs/structures/classes carrying a <code>/-- ... -/</code> docstring. Mathlib enforces this by linter — a process signal. <b>Chart: size-adjusted percentile</b> (100 = best at its size; raw value in tooltip).</div>
+    <div class="sub">Share of public defs/structures/classes carrying a <code>/-- ... -/</code> docstring. Mathlib enforces this by linter — a process signal.</div>
     <div class="chartwrap" id="docChart"></div>
   </div>
   <div class="prose" id="hygieneProse"></div>
@@ -492,9 +494,9 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
   <div class="prose">
     <p>
       The scorecard is humbling and confirms the paper's thesis: Clawristotle lands
-      mid-pack on our composite — structural metrics see its clean file-level organization
-      and zero duplication, and are <em>blind</em> to the definition-quality and API-design
-      deficiencies the reviewers found. Two of four issue classes are partially visible
+      near the top of our composite (2nd of 25) — structural metrics see its clean
+      file-level organization and zero duplication, and are <em>blind</em> to the
+      definition-quality and API-design deficiencies the reviewers found. Two of four issue classes are partially visible
       (organization; reusability via never-reused definitions), two are invisible
       (definition quality, theorem generality). Mechanically checkable metrics bound quality
       from below; they do not certify it. The GitClear findings on AI-assisted code — clone
@@ -527,17 +529,28 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
 
 <section id="sizecontrol">
   <div class="secno">14</div>
-  <h2>Are we just measuring size?</h2>
+  <h2>Architecture, not size</h2>
   <div class="prose" id="sizeProse"></div>
   <div class="card">
-    <h4>Each metric's correlation with repo size — before and after adjustment</h4>
-    <div class="sub">Spearman ρ of the metric against log₁₀(declarations) across all corpora. Bar = raw metric; dot = after residualizing on size. Every metric shown on the dashboard uses the adjusted value.</div>
+    <h4>The Architecture Index</h4>
+    <div class="sub" id="archSub"></div>
+    <div class="legend" id="archLegend"></div>
+    <div class="chartwrap" id="archChart"></div>
+  </div>
+  <details class="how"><summary>How the index is built, and the max-separation variant</summary>
+    <div id="archHow"></div>
+  </details>
+  <div class="card">
+    <h4>The discriminant test: does a large-but-bad library score high?</h4>
+    <div class="sub">Each metric's value for Mathlib, the median over the reviewed libraries, and the median over the three largest <em>uncurated</em> corpora (lean-pool 44k decls, Erdős-90 37k, Meta ATLAS 16k). A real architecture signal ranks the big-uncurated corpora low despite their bulk; a size proxy lets them beat the reviewed median from bulk alone.</div>
+    <div class="tablewrap"><table class="data" id="archTable"></table></div>
+  </div>
+  <div class="card">
+    <h4>Every scored metric: size correlation and discriminant verdict</h4>
+    <div class="sub">Spearman ρ of the raw metric against log₁₀(declarations), colored by the discriminant verdict. Correlation with size alone does not disqualify a metric — cross-directory reuse carries ρ ≈ +0.45 yet the huge uncurated corpora score near zero on it. The verdict, not the ρ, decides what enters the composite.</div>
     <div id="confoundChart"></div>
     <div class="note" id="confoundLegend" style="margin-top:6px"></div>
   </div>
-  <details class="how"><summary>How the adjustment works</summary>
-    <div>Each metric is rank-residualized against log₁₀(decls): we regress the metric's rank on the size rank across the 25 corpora and keep the residual (z-scored), which is size-independent by construction. A metric is only replaced by its residual when that actually lowers |ρ(size)| — metrics already uncorrelated with size (the sorry rate, trivial-statement share, axiom density, whole-Mathlib imports) are kept as-is, because residualizing a mostly-tied metric would inject spurious correlation. The per-metric charts then plot the <b>size-adjusted percentile</b> (rank of the adjusted value, 100 = best at its size), and the composite and PCA are built from the adjusted values. Raw values remain in every tooltip.</div>
-  </details>
   <h3>Does quality still separate at fixed size?</h3>
   <div class="prose" id="cohortProse"></div>
   <div class="mgrid">
@@ -662,6 +675,7 @@ document.getElementById('groupLegend').innerHTML = legendHTML(GROUPS);
     ['M13','Elaboration cost','Seconds per kLOC to re-elaborate sampled files, import baseline subtracted — the heartbeats proxy.'],
     ['M14','Amortization exponent','log₁₀ of the fully-inlined dependency-tree size: reuse measured as compression.'],
     ['M15','Triviality & vacuity','True-typed and numerals-only statements, zero-reference statements, one-liner trivial proofs.'],
+    ['M16','Architecture','Intensive reuse-shape signals: directory breadth of reuse, cross-directory wiring vs a random baseline, definitions-are-hubs — the discriminant-valid family behind the Architecture Index (§14).'],
   ];
   document.getElementById('metricCards').innerHTML = M.map(([id,t,d]) =>
     `<div class="mcard"><span class="id">${id}</span><h4>${t}</h4><p>${d}</p></div>`).join('');
@@ -823,32 +837,40 @@ document.getElementById('ccdfLegend').innerHTML = legendHTML(GROUPS);
     `${esc(r.label)} avg <b>${r.m1.mean.toFixed(1)}</b></span>`).join('');
 })();
 
-// Size-adjusted metric chart: plots each repo's SIZE-ADJUSTED PERCENTILE
-// (100 = best quality among repos of comparable size). The raw value stays in
-// the tooltip. Every such chart has ρ(size) ≈ 0 by construction — see §14.
-const PCT_OPTS = { max: 100, ticks: 5, fmt: v => v.toFixed(0), suffix: '' };
-function adjChart(elId, mid, rawTip, opts) {
-  const rows = charted.filter(r => r.adjPct && r.adjPct[mid] != null).map(r => {
-    const p = r.adjPct[mid] * 100;
-    const note = r.adjOn && r.adjOn[mid] ? 'size-adjusted percentile' : 'percentile (already size-independent)';
-    return { label: r.label, value: p, group: r.group,
-             tip: rawTip(r) + `<br><span class="note">${note}: <b>${p.toFixed(0)}</b></span>` };
-  }).sort((a, b) => b.value - a.value);
-  dotRank(elId, rows, Object.assign({}, PCT_OPTS, opts || {}));
+// Every per-metric chart plots RAW values; each carries a discriminant-verdict
+// badge from §14 (real signal vs size proxy) instead of being residualized.
+const MID_OF_CHART = { ge2Chart: 'm1_ge2', crossChart: 'm3_outside', depthChart: 'm6_maxd',
+  giniChart: 'm5_top1', dupChart: 'm7_dup', sorryChart: 'm8_sorry', docChart: 'm10_doc',
+  elabChart: 'm13_elab', trivChart: 'm15_triv_proof', amortChart: 'm14_amort_mean' };
+function addVerdictBadges() {
+  const V = DATA.verdicts || {};
+  for (const [cid, mid] of Object.entries(MID_OF_CHART)) {
+    if (!(mid in V)) continue;
+    const el = document.getElementById(cid);
+    const sub = el && el.closest('.card') && el.closest('.card').querySelector('.sub');
+    if (!sub) continue;
+    sub.innerHTML += V[mid]
+      ? ' <span class="badge" style="color:var(--good); border-color:var(--good)">real signal · discriminant-valid (§14)</span>'
+      : ' <span class="badge" style="color:var(--critical); border-color:var(--critical)">size proxy · fails the discriminant test (§14)</span>';
+  }
 }
 
-// 04 — reused >= 2  (size-adjusted)
-adjChart('ge2Chart', 'm1_ge2', r =>
-  `<b>${esc(r.label)}</b><br>reused ≥2: ${fmtPct(r.m1.ge2)}<br>never reused: ${fmtPct(r.m1.never)}<br>median in-degree: ${r.m1.median} · mean: ${r.m1.mean}`);
+// 04 — reused >= 2
+dotRank('ge2Chart', charted.map(r => ({
+  label: r.label, value: r.m1.ge2, group: r.group,
+  tip: `<b>${esc(r.label)}</b><br>reused ≥2: ${fmtPct(r.m1.ge2)}<br>never reused: ${fmtPct(r.m1.never)}<br>median in-degree: ${r.m1.median} · mean: ${r.m1.mean}`
+})).sort((a,b) => b.value - a.value), { fmt: fmtPct, max: 1, ticks: 4 });
 
 // 05 — context stack
 stackedChart('ctxChart', charted.map(r => ({
   label: r.label, group: r.group, parts: [r.m2.sig, r.m2.val, r.m2.prf]
 })).sort((a,b) => (b.parts[0]+b.parts[1]) - (a.parts[0]+a.parts[1])));
 
-// 05 — cross-file  (size-adjusted)
-adjChart('crossChart', 'm3_outside', r =>
-  `<b>${esc(r.label)}</b><br>used outside defining file: ${fmtPct(r.m3.outside)}<br>edges crossing files: ${fmtPct(r.m3.crossfile)}<br>edges crossing top dirs: ${fmtPct(r.m3.crossdir)}`);
+// 05 — cross-file
+dotRank('crossChart', charted.map(r => ({
+  label: r.label, value: r.m3.outside, group: r.group,
+  tip: `<b>${esc(r.label)}</b><br>used outside defining file: ${fmtPct(r.m3.outside)}<br>edges crossing files: ${fmtPct(r.m3.crossfile)}<br>edges crossing top dirs: ${fmtPct(r.m3.crossdir)}`
+})).sort((a,b) => b.value - a.value), { fmt: fmtPct, max: 1, ticks: 4 });
 
 // 06 — mathlib scatter
 const downstream = charted.filter(r => r.m4.ml_per_decl > 0 && r.group < 4);
@@ -864,37 +886,48 @@ document.getElementById('vocabChips').innerHTML = DATA.vocab.map(v =>
    <div class="sub">${fmtNum(v.vocab)} distinct Mathlib declarations referenced</div>
    <div class="chips">${v.top.map(t => `<span class="chip">${esc(t.name)} <b>${fmtNum(t.refs)}</b></span>`).join('')}</div></div>`).join('');
 
-// 07 — depth  (size-adjusted)
-adjChart('depthChart', 'm6_maxd', r =>
-  `<b>${esc(r.label)}</b><br>max depth: ${r.m6.maxd}<br>mean depth: ${r.m6.meand}<br>p90: ${r.m6.p90d}`);
+// 07 — depth
+dotRank('depthChart', charted.map(r => ({
+  label: r.label, value: r.m6.maxd, tick: r.m6.meand, group: r.group,
+  tip: `<b>${esc(r.label)}</b><br>max depth: ${r.m6.maxd}<br>mean depth: ${r.m6.meand}<br>p90: ${r.m6.p90d}`
+})).sort((a,b) => b.value - a.value), { ticks: 5 });
 
-// 07 — concentration  (size-adjusted)
-adjChart('giniChart', 'm5_top1', r =>
-  `<b>${esc(r.label)}</b><br>top 1% share: ${fmtPct(r.m5.top1 ?? 0)}<br>top 10% share: ${fmtPct(r.m5.top10 ?? 0)}<br>Gini: ${r.m5.gini ?? '—'}`);
+// 07 — concentration
+dotRank('giniChart', charted.map(r => ({
+  label: r.label, value: r.m5.top1 ?? 0, group: r.group,
+  tip: `<b>${esc(r.label)}</b><br>top 1% share: ${fmtPct(r.m5.top1 ?? 0)}<br>top 10% share: ${fmtPct(r.m5.top10 ?? 0)}<br>Gini: ${r.m5.gini ?? '—'}`
+})).sort((a,b) => b.value - a.value), { fmt: fmtPct, max: 1, ticks: 4 });
 
-// 08 — duplication + sorry  (size-adjusted)
-adjChart('dupChart', 'm7_dup', r =>
-  `<b>${esc(r.label)}</b><br>duplicate bodies: ${fmtPct(r.m7.dup)} of ${fmtNum(r.m7.dupn)}<br>largest clone cluster: ${r.m7.dupmax}<br>duplicate statements: ${fmtPct(r.m7.sdup)}`);
+// 08 — duplication + sorry
+dotRank('dupChart', charted.map(r => ({
+  label: r.label, value: r.m7.dup, group: r.group,
+  tip: `<b>${esc(r.label)}</b><br>duplicate bodies: ${fmtPct(r.m7.dup)} of ${fmtNum(r.m7.dupn)}<br>largest clone cluster: ${r.m7.dupmax}<br>duplicate statements: ${fmtPct(r.m7.sdup)}`
+})).sort((a,b) => b.value - a.value), { fmt: fmtPct, ticks: 4 });
 
-// sorry rate is already size-independent (ρ = −0.08), so it is shown raw
 dotRank('sorryChart', charted.map(r => ({
   label: r.label, value: r.m8.sorry, group: r.group,
-  tip: `<b>${esc(r.label)}</b><br>sorried theorems: ${fmtPct(r.m8.sorry)} (${fmtNum(r.m8.nsorry)})<br><span class="note">already size-independent — shown raw</span>`
+  tip: `<b>${esc(r.label)}</b><br>sorried theorems: ${fmtPct(r.m8.sorry)} (${fmtNum(r.m8.nsorry)})`
 })).sort((a,b) => b.value - a.value), { fmt: fmtPct, max: 1, ticks: 4 });
 
 // eyebrow
 document.getElementById('eyebrow').textContent =
   `An empirical study · ${DATA.totals.repos} formalization projects · exact-tier measurement`;
 
-// 08 — doc coverage + elaboration cost  (size-adjusted)
-adjChart('docChart', 'm10_doc', r =>
-  `<b>${esc(r.label)}</b><br>defs with docstring: ${fmtPct(r.m10.pct_defs_with_doc)}<br>theorems with docstring: ${r.m10.pct_theorems_with_doc != null ? fmtPct(r.m10.pct_theorems_with_doc) : '—'}<br>comment density: ${r.m10.comment_density != null ? fmtPct(r.m10.comment_density) : '—'}`);
+// 08 — doc coverage + elaboration cost
+dotRank('docChart', charted.filter(r => r.m10 && r.m10.pct_defs_with_doc != null).map(r => ({
+  label: r.label, value: r.m10.pct_defs_with_doc, group: r.group,
+  tip: `<b>${esc(r.label)}</b><br>defs with docstring: ${fmtPct(r.m10.pct_defs_with_doc)}<br>theorems with docstring: ${r.m10.pct_theorems_with_doc != null ? fmtPct(r.m10.pct_theorems_with_doc) : '—'}<br>comment density: ${r.m10.comment_density != null ? fmtPct(r.m10.comment_density) : '—'}`
+})).sort((a,b) => b.value - a.value), { fmt: fmtPct, max: 1, ticks: 4 });
 
-adjChart('elabChart', 'm13_elab', r =>
-  `<b>${esc(r.label)}</b><br>median: ${r.m13.secs_per_kloc_median} s/kLOC · mean: ${r.m13.secs_per_kloc}<br>${r.m13.files_sampled} files, ${fmtNum(r.m13.loc_sampled)} LOC sampled`);
+dotRank('elabChart', charted.filter(r => r.m13 && r.m13.secs_per_kloc != null).map(r => ({
+  label: r.label, value: r.m13.secs_per_kloc_median ?? r.m13.secs_per_kloc, group: r.group,
+  tip: `<b>${esc(r.label)}</b><br>median: ${r.m13.secs_per_kloc_median} s/kLOC · mean: ${r.m13.secs_per_kloc}<br>${r.m13.files_sampled} files, ${fmtNum(r.m13.loc_sampled)} LOC sampled`
+})).sort((a,b) => b.value - a.value), { ticks: 5 });
 
-adjChart('trivChart', 'm15_triv_proof', r =>
-  `<b>${esc(r.label)}</b><br>one-liner trivial proofs: ${fmtPct(r.m15.pct_trivial_proofs)}<br>True/numeral-only statements: ${r.m15.n_trivial_statements ?? 0} (${fmtPct(r.m15.pct_trivial_statements ?? 0)})<br>statements referencing nothing: ${fmtPct(r.m15.pct_statements_no_refs ?? 0)}`);
+dotRank('trivChart', charted.filter(r => r.m15 && r.m15.pct_trivial_proofs != null).map(r => ({
+  label: r.label, value: r.m15.pct_trivial_proofs, group: r.group,
+  tip: `<b>${esc(r.label)}</b><br>one-liner trivial proofs: ${fmtPct(r.m15.pct_trivial_proofs)}<br>True/numeral-only statements: ${r.m15.n_trivial_statements ?? 0} (${fmtPct(r.m15.pct_trivial_statements ?? 0)})<br>statements referencing nothing: ${fmtPct(r.m15.pct_statements_no_refs ?? 0)}`
+})).sort((a,b) => b.value - a.value), { fmt: fmtPct, ticks: 4 });
 
 // size panels
 function sizePanel(id, get) {
@@ -913,7 +946,7 @@ sizePanel('fileLenChart', r => r.m9.file_stats);
   const P = DATA.pca;
   if (!P) return;
   document.getElementById('pcaSub').textContent =
-    `Size-adjusted metrics with complete coverage across all repos (no imputation), standardized to unit variance, projected onto the first two principal components — PC1 explains ${(P.expl[0]*100).toFixed(0)}% of variance, PC2 ${(P.expl[1]*100).toFixed(0)}%.`;
+    `Discriminant-valid metrics (raw values) with complete coverage across all repos (no imputation), standardized to unit variance, projected onto the first two principal components — PC1 explains ${(P.expl[0]*100).toFixed(0)}% of variance, PC2 ${(P.expl[1]*100).toFixed(0)}%.`;
   document.getElementById('pcaLegend').innerHTML = legendHTML(GROUPS);
   document.getElementById('pcaLoadings').innerHTML =
     '<b>PC1 strongest loadings:</b> ' + P.load1.map(l => `${esc(l.m)} (${l.w > 0 ? '+' : ''}${l.w})`).join(' · ') +
@@ -1005,10 +1038,11 @@ for (const [id, html] of Object.entries(DATA.prose)) {
       `<td>${v.mean_deg_textual.toFixed(1)}</td><td>${v.mean_deg_env.toFixed(1)}</td></tr>`).join('');
 })();
 
-// 02 — amortization  (size-adjusted; this metric is the most size-correlated
-// raw, so the adjustment matters most here — see §14)
-adjChart('amortChart', 'm14_amort_mean', r =>
-  `<b>${esc(r.label)}</b><br>raw mean log₁₀ inlined cost: ${r.m14.mean_log10_cost}<br>median: ${r.m14.median_log10_cost} · p90: ${r.m14.p90_log10_cost} · max: ${r.m14.max_log10_cost}<br>raw ρ with size: +0.79`);
+// 02 — amortization (a size proxy per the §14 discriminant test — badged, not residualized)
+dotRank('amortChart', charted.filter(r => r.m14 && r.m14.mean_log10_cost != null).map(r => ({
+  label: r.label, value: r.m14.mean_log10_cost, tick: r.m14.p90_log10_cost, group: r.group,
+  tip: `<b>${esc(r.label)}</b><br>mean log₁₀ inlined cost: ${r.m14.mean_log10_cost}<br>median: ${r.m14.median_log10_cost} · p90: ${r.m14.p90_log10_cost} · max: ${r.m14.max_log10_cost}<br>ρ with size: +0.79 — size proxy, see §14`
+})).sort((a,b) => b.value - a.value), { ticks: 5 });
 
 // taxonomy mapping table
 (function() {
@@ -1028,10 +1062,56 @@ adjChart('amortChart', 'm14_amort_mean', r =>
     rows.map(r => `<tr><td style="text-align:left">${r[0]}</td><td class="${cls[r[2]]}">${r[1]}</td><td style="text-align:left; white-space:normal; max-width:420px">${r[3]}</td></tr>`).join('');
 })();
 
-// 14 — size-confounding: raw vs adjusted correlation with size
+// 14 — Architecture, not size
 (function() {
-  const SC = DATA.size_confound;
-  if (!SC) return;
+  const SC = DATA.size_confound, A = DATA.architecture;
+  if (!SC || !A) return;
+  const P = A.primary, X = A.max_separation;
+  const COMP_LABEL = { crossdir: 'cross-directory reuse', dir_breadth: 'directory breadth',
+    crossdir_v_rand: 'cross-dir vs random', def_hub_ratio: 'definitions-are-hubs' };
+
+  // Architecture Index chart (primary, max-size-independence variant)
+  document.getElementById('archSub').innerHTML =
+    `Mean percentile rank of the three discriminant-valid wiring metrics — ` +
+    `<b>cross-directory reuse</b>, <b>directory breadth of reuse</b>, and <b>cross-directory reuse vs a random-wiring baseline</b>. ` +
+    `Reviewed-vs-slop AUC <b>${P.auc.toFixed(2)}</b> · residual size correlation ρ = ${P.rho_size.toFixed(2)} · ` +
+    `the big-uncurated control corpora rank ${Object.entries(P.big_uncurated_ranks).map(([k,v]) => `#${v}`).join(', ')} of ${DATA.totals.repos} despite their bulk.`;
+  document.getElementById('archLegend').innerHTML = legendHTML(GROUPS);
+  dotRank('archChart', P.ranking.filter(k => byKey[k]).map(k => {
+    const r = byKey[k], cp = P.comp_pct[k] || {};
+    return { label: r.label, value: P.score[k], group: r.group,
+      tip: `<b>${esc(r.label)}</b><br>Architecture Index: ${P.score[k]}` +
+           Object.entries(cp).map(([m, v]) => `<br>${COMP_LABEL[m] || m}: p${v.toFixed(0)}`).join('') };
+  }), { max: 100, ticks: 5, fmt: v => v.toFixed(0) });
+
+  document.getElementById('archHow').innerHTML =
+    `<p>Each component is a percentile rank over the ${DATA.totals.repos} corpora (ties averaged); the index is their mean.
+    Mathlib and Equational Theories share the exact top score (${P.score['mathlib4']}); the ranking lists Mathlib first by
+    stable sort order, and the AUC and discriminant facts are unaffected by how that tie is broken.
+    Components: <b>cross-directory reuse</b> (share of internal reference pairs whose two declarations live under
+    different top-level directories), <b>directory breadth</b> (mean number of distinct directories using each reused
+    declaration — generality), and <b>cross-directory reuse divided by its random-wiring expectation</b> (so a repo
+    is compared with a null model that has the same directory sizes). All three pass the discriminant test below.</p>
+    <p><b>Max-separation variant:</b> swapping directory breadth for the definitions-are-hubs ratio (mean in-degree of
+    definitions ÷ mean in-degree of theorems) gives AUC ${X.auc.toFixed(2)} with Mathlib #${X.mathlib_rank} and every slop
+    corpus in the bottom seven (Seed-Prover ${X.score['seed-prover'] ?? '—'}, superhuman ${X.score['superhuman'] ?? '—'},
+    Pedigree ${X.score['pedigree'] ?? '—'}) — at the price of a higher residual size correlation
+    (ρ = ${X.rho_size.toFixed(2)}, still discriminant-valid: big-uncurated ranks
+    ${Object.entries(X.big_uncurated_ranks).map(([k,v]) => `#${v}`).join(', ')}). The size-independent variant leads the
+    dashboard; this one is the sharpest separator.</p>`;
+
+  // discriminant table
+  (function() {
+    const fmtv = (r, v) => v == null ? '—' : (r.pct ? (v*100).toFixed(1)+'%' : (typeof v === 'number' ? (Number.isInteger(v) ? v : v.toFixed(2)) : v));
+    document.getElementById('archTable').innerHTML =
+      '<tr><th>metric</th><th>Mathlib</th><th>reviewed median</th><th>big-uncurated median</th><th>ρ size</th><th>AUC</th><th>verdict</th></tr>' +
+      A.table.map(r =>
+        `<tr><td style="text-align:left">${esc(r.label)}</td><td>${fmtv(r, r.mathlib)}</td><td>${fmtv(r, r.reviewed_med)}</td>` +
+        `<td>${fmtv(r, r.big_uncurated_med)}</td><td>${r.rho_size >= 0 ? '+' : ''}${r.rho_size.toFixed(2)}</td><td>${r.auc.toFixed(2)}</td>` +
+        `<td>${r.real_signal ? '<span class="verdict-good">✓ real architecture</span>' : '<span class="verdict-bad">✗ size proxy</span>'}</td></tr>`).join('');
+  })();
+
+  // per-metric ρ with size, colored by discriminant verdict
   const el = document.getElementById('confoundChart');
   const rows = SC.rows;
   const W = Math.max(640, Math.min(el.clientWidth || 900, 980));
@@ -1039,7 +1119,6 @@ adjChart('amortChart', 'm14_amort_mean', r =>
   const H = rows.length * rowH + padT + padB;
   const x = rho => padL + (rho + 1) / 2 * (W - padL - padR);   // ρ in [-1,1]
   const svg = svgEl('svg', { width: W, height: H, viewBox: `0 0 ${W} ${H}` }, el);
-  // axis: -1, -0.5, 0, 0.5, 1
   [-1,-0.5,0,0.5,1].forEach(t => {
     const gx = x(t);
     svgEl('line', { x1: gx, y1: padT, x2: gx, y2: H - padB, stroke: t===0?'var(--axis)':'var(--grid)', 'stroke-width': t===0?1.5:1 }, svg);
@@ -1048,20 +1127,21 @@ adjChart('amortChart', 'm14_amort_mean', r =>
   });
   rows.forEach((r, i) => {
     const cy = padT + i * rowH + rowH / 2;
+    const col = r.real ? 'var(--good)' : 'var(--critical)';
     const lbl = svgEl('text', { x: padL - 10, y: cy + 4, 'text-anchor': 'end', 'font-size': 12, fill: 'var(--ink2)' }, svg);
     lbl.textContent = r.label.replace(/^M\d+ · /, '');
-    // raw bar from 0 to rho_raw
-    svgEl('line', { x1: x(0), y1: cy, x2: x(r.rho_raw), y2: cy, stroke: 'var(--critical)', 'stroke-width': 5, opacity: 0.30, 'stroke-linecap': 'round' }, svg);
-    // adjusted dot
-    svgEl('circle', { cx: x(r.rho_adj), cy, r: 4.5, fill: 'var(--good)', stroke: 'var(--surface)', 'stroke-width': 1.5 }, svg);
-    // raw endpoint marker
-    svgEl('circle', { cx: x(r.rho_raw), cy, r: 3, fill: 'var(--critical)', opacity: 0.5 }, svg);
+    svgEl('line', { x1: x(0), y1: cy, x2: x(r.rho_raw), y2: cy, stroke: col, 'stroke-width': 5, opacity: 0.35, 'stroke-linecap': 'round' }, svg);
+    svgEl('circle', { cx: x(r.rho_raw), cy, r: 4, fill: col }, svg);
     const hit = svgEl('rect', { x: 0, y: padT + i*rowH, width: W, height: rowH, fill: 'transparent' }, svg);
-    hit.addEventListener('mousemove', ev => showTip(ev, `<b>${esc(r.label)}</b><br>raw ρ with size: ${r.rho_raw>=0?'+':''}${r.rho_raw.toFixed(2)}<br>adjusted ρ: ${r.rho_adj>=0?'+':''}${r.rho_adj.toFixed(2)}<br>${r.adjusted ? 'residualized on log(size)' : 'kept raw (already size-independent)'}`));
+    hit.addEventListener('mousemove', ev => showTip(ev, `<b>${esc(r.label)}</b><br>ρ with log-size: ${r.rho_raw>=0?'+':''}${r.rho_raw.toFixed(2)}<br>` +
+      (r.real ? 'real signal — big-uncurated corpora rank low' : 'size proxy — big-uncurated corpora rank high') +
+      (r.bb_ranks && r.bb_ranks.length ? `<br>big-uncurated oriented ranks: ${r.bb_ranks.join(', ')} of ${DATA.totals.repos}` : '')));
     hit.addEventListener('mouseleave', hideTip);
   });
   document.getElementById('confoundLegend').innerHTML =
-    `<span style="color:var(--critical)">■</span> raw metric &nbsp; <span style="color:var(--good)">●</span> after size-adjustment &nbsp;·&nbsp; max adjusted |ρ| = ${SC.max_abs_rho_adj}, across ${SC.n_total} metrics (${SC.n_adjusted} residualized, ${SC.n_total - SC.n_adjusted} already clean)`;
+    `<span style="color:var(--good)">●</span> real signal (discriminant-valid) &nbsp; <span style="color:var(--critical)">●</span> size proxy &nbsp;·&nbsp; ` +
+    `${SC.n_real} of ${SC.n_total} metrics pass · composite (real-signal checks only) carries ρ(size) = ${SC.comp_rho_raw}` +
+    (SC.composite_dropped && SC.composite_dropped.length ? ` · dropped from the composite: ${SC.composite_dropped.map(esc).join(', ')}` : '');
 
   // cohort tables
   function cohortTable(tblId, headId, subId, coh, big) {
@@ -1098,12 +1178,13 @@ adjChart('amortChart', 'm14_amort_mean', r =>
     docChart: 'A declaration "has a docstring" if a /-- … -/ block ends within 4 lines above its keyword (attributes may sit between). Coverage is over public (non-private, named) defs/structures/classes/inductives.',
     elabChart: '12 random built files per repo (≥30 LOC) re-elaborated with lake env lean, wall-clock timed; a stub containing only the file\u2019s import header is timed once per distinct import set and subtracted. Value = median over files of elaboration-seconds per 1,000 source lines.',
     amortChart: 'cost(v) = 1 + Σ cost(u) over v\u2019s internal dependencies, with repetition — the size of the fully-inlined dependency tree. Computed in log-space (log-sum-exp) over the acyclic graph in topological order; shown as log₁₀. Mean over declarations; tick = p90.',
-    pcaChart: 'One column per metric, restricted to metrics computed for every corpus repo (no imputation — the excluded columns are those undefined for some repo, e.g. Mathlib-leverage for Mathlib itself or elaboration cost for unbuildable dumps). Each column standardized to zero mean and unit variance, then projected onto the top two right-singular vectors (SVD). Axes oriented so Mathlib sits at positive PC1 and Seed-Prover at negative PC2. The exact metric list is printed under the chart.',
+    pcaChart: 'One column per discriminant-valid metric (raw values), restricted to metrics computed for every corpus repo (no imputation — the excluded columns are those undefined for some repo, e.g. Mathlib-leverage for Mathlib itself or elaboration cost for unbuildable dumps). Each column standardized to zero mean and unit variance, then projected onto the top two right-singular vectors (SVD). Axes oriented so Mathlib sits at positive PC1 and Seed-Prover at negative PC2. The exact metric list is printed under the chart.',
+    archChart: 'Each component is a percentile rank over the corpus (ties averaged); the index is the mean of the three. Cross-directory reuse comes from the M3 family; directory breadth and the random-wiring baseline are the M16 architecture metrics, computed on the exact-tier dependency graph. Directory = first two path components of the source file.',
     trivChart: 'A theorem statement is "trivial" if its normalized signature is `True` or contains only numerals and arithmetic operators; a proof is a trivial one-liner if it normalizes to trivial/rfl/decide/norm_num/simp. Zero-reference statements come from the dependency graph: theorems whose statement cites no declaration at all.',
     stmtLenChart: 'Line count of each theorem\u2019s signature text (binders + statement, before := ). Median and p90 over theorems.',
     proofLenChart: 'Line count of each theorem\u2019s proof text; empty proofs excluded. Median and p90.',
     fileLenChart: 'Non-blank, non-comment lines per source file. Median and p90 over files.',
-    compChart: 'For each of the 8 checks (cross-dir reuse, outside-file reuse, granular imports, no sorries, no duplication, doc coverage, elaboration economy, amortization) every repo gets its percentile rank among repos where the check is measurable; the score is the mean of available ranks. Anchors are never weighted differently — the score is descriptive, not fitted.',
+    compChart: 'Every composite check gets its raw-value percentile rank among repos where the check is measurable; the score is the mean of available ranks. Only checks that pass the §14 discriminant test enter — size proxies (the amortization exponent among them) are excluded, so a repo cannot buy a good score with bulk. Anchors are never weighted differently — the score is descriptive, not fitted.',
   };
   for (const [id, txt] of Object.entries(HOW)) {
     const el = document.getElementById(id);
@@ -1117,6 +1198,8 @@ adjChart('amortChart', 'm14_amort_mean', r =>
   }
 
 })();
+
+addVerdictBadges();
 
 document.getElementById('footerText').innerHTML = DATA.footer;
 </script>

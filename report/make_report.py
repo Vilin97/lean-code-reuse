@@ -72,9 +72,9 @@ DISPLAY_LABEL = {
     "atlas": "Meta ATLAS (180-mod sample)",
 }
 
-# The composite and PCA batteries are now defined inside main() in terms of the
-# size-adjusted metric ids (see SCORED / COMPOSITE_IDS), so quality is scored at
-# fixed size. See lean_reuse/size_confound.py.
+# The composite and PCA batteries are defined inside main() in terms of the
+# SCORED metric ids, restricted to discriminant-valid metrics (see
+# lean_reuse/architecture_index.py) and scored on raw values.
 
 
 def pack_repo(key, res, tier):
@@ -223,48 +223,25 @@ def main():
 
     auc_rows = []
 
-    # ---- size-confounding audit + size-adjusted metric layer ---------------
-    # Every scored metric is residualized against log10(decls) so the analysis
-    # measures quality at fixed size, not size. See lean_reuse/size_confound.py.
+    # ---- size audit + discriminant-validity layer --------------------------
+    # size_confound still quantifies each metric's raw correlation with size,
+    # but nothing is residualized any more: correlation with size does not
+    # prove a metric MEASURES size (good libraries grow, so genuine quality
+    # signals co-vary with size — residualizing them away pushed Mathlib to
+    # mid-pack on metrics where it genuinely leads). The operative test is
+    # discriminant validity: does a large-but-uncurated corpus score high?
+    # See lean_reuse/architecture_index.py.
+    from lean_reuse import architecture_index as _arch
     from lean_reuse import size_confound as _scmod
     sc = _scmod.compute(env, ORDER)
-    # adjusted value accessor: metric-id -> {repo key -> size-adjusted value}
-    adjv = {mid: m["adj"] for mid, m in sc["metrics"].items()}
+    arch = _arch.compute(env, ORDER)
+    verdicts = _arch.classify_battery(
+        env, ORDER, [(mid, path, hib) for mid, path, hib in _scmod.BATTERY])
 
-    def av(r, mid):
-        return adjv.get(mid, {}).get(r["key"])
+    def rawv(r, mid):
+        return sc["metrics"].get(mid, {}).get("raw", {}).get(r["key"])
 
-    # size-adjusted percentile per metric (0..1, oriented so higher = better
-    # quality at fixed size). This is what the composite averages, and what the
-    # per-metric charts plot, so every chart is size-independent by construction.
-    _hib = {mid: hib for mid, _, hib, _ in [
-        ("m3_crossdir","",True,0),("m3_outside","",True,0),("m9_whole_ml","",False,0),
-        ("m10_doc","",True,0),("m10_comment","",True,0),("m8_sorry","",False,0),
-        ("m7_dup","",False,0),("m15_triv_stmt","",False,0),("m15_triv_proof","",False,0),
-        ("m12_axioms","",False,0),("m2_stmt_share","",False,0),("m5_top1","",True,0),
-        ("m1_mean_indeg","",True,0),("m1_ge2","",True,0),("m1_never","",False,0),
-        ("m6_maxd","",True,0),("m6_meand","",True,0),("m14_amort_mean","",True,0),
-        ("m14_amort_p90","",True,0),("m4_ext_int","",True,0),("m11_branch","",True,0),
-        ("m13_elab","",False,0),("m8_proof_med","",False,0),("m9_file_med","",False,0),
-        ("m4_ext_refs","",True,0),("m4_vocab1k","",True,0)]}
-    adj_pct = {}   # mid -> {key -> percentile 0..1}
-    for mid, m in sc["metrics"].items():
-        sign = 1 if _hib.get(mid, True) else -1
-        items = [(k, m["adj"][k] * sign) for k in m["adj"]]
-        vals = [v for _, v in items]
-        adj_pct[mid] = {
-            k: (sum(1 for o in vals if o < v) + 0.5 * sum(1 for o in vals if o == v)) / len(vals)
-            for k, v in items}
-
-    # attach size-adjusted percentile + raw values to each repo for the charts
-    for r in repos:
-        r["adjPct"] = {mid: (round(adj_pct[mid][r["key"]], 4) if r["key"] in adj_pct.get(mid, {}) else None)
-                       for mid in sc["metrics"]}
-        r["adjRaw"] = {mid: (round(m["raw"][r["key"]], 4) if r["key"] in m["raw"] else None)
-                       for mid, m in sc["metrics"].items()}
-        r["adjOn"] = {mid: m["adjusted"] for mid, m in sc["metrics"].items()}
-
-    # canonical scored battery (size-adjusted): (metric_id, display, higher_better, in_composite)
+    # canonical scored battery: (metric_id, display, higher_better, in_composite)
     SCORED = [
         ("m3_crossdir",    "M3 · cross-directory reuse",        True,  True),
         ("m3_outside",     "M3 · used outside defining file",   True,  True),
@@ -276,6 +253,7 @@ def main():
         ("m13_elab",       "M13 · elaboration cost / kLOC",     False, True),
         ("m15_triv_stmt",  "M15 · trivial statements",          False, True),
         ("m4_vocab1k",     "M4 · Mathlib vocabulary breadth",   True,  True),
+        ("m12_axioms",     "M12 · axioms per 1k decls",         False, True),
         ("m10_comment",    "M10 · comment density",             True,  False),
         ("m2_stmt_share",  "M2 · statement share of refs",      False, False),
         ("m5_top1",        "M5 · top-1% reuse concentration",   True,  False),
@@ -292,18 +270,23 @@ def main():
     ]
     # dedup by metric-id, keeping the first (labelled) occurrence
     _seen = set(); SCORED = [s for s in SCORED if s[1] and not (s[0] in _seen or _seen.add(s[0]))]
-    COMPOSITE_IDS = [(mid, hib) for mid, _, hib, inc in SCORED if inc]
+    # composite: only checks that pass the discriminant test enter (a size
+    # proxy in the composite would let a repo score well just by being large)
+    COMPOSITE_IDS = [(mid, hib) for mid, _, hib, inc in SCORED
+                     if inc and verdicts.get(mid, {}).get("real_signal", True)]
+    composite_dropped = [mid for mid, _, hib, inc in SCORED
+                         if inc and not verdicts.get(mid, {}).get("real_signal", True)]
 
-    # ---- composite of mechanical checks (percentile-rank mean, size-adjusted)
+    # ---- composite of mechanical checks (percentile-rank mean, raw values) --
     comp = []
     for r in repos:
         parts = []
         for mid, hib in COMPOSITE_IDS:
-            v = av(r, mid)
+            v = rawv(r, mid)
             if v is None:
                 continue
             sign = 1 if hib else -1
-            others = [av(o, mid) * sign for o in repos if av(o, mid) is not None]
+            others = [rawv(o, mid) * sign for o in repos if rawv(o, mid) is not None]
             vv = v * sign
             rank = sum(1 for o in others if o < vv) + 0.5 * sum(1 for o in others if o == vv)
             parts.append(rank / len(others))
@@ -313,13 +296,14 @@ def main():
                      "n_metrics": len(parts)})
     comp.sort(key=lambda c: -c["score"])
 
-    # ---- PCA over the standardized, size-adjusted metric battery -----------
+    # ---- PCA over the standardized raw battery (discriminant-valid metrics) --
     import numpy as _np
     pca_metrics = [
         (lbl, mid) for mid, lbl, hib, inc in SCORED
-        if all(av(r, mid) is not None for r in repos)
+        if verdicts.get(mid, {}).get("real_signal", True)
+        and all(rawv(r, mid) is not None for r in repos)
     ]
-    M = _np.array([[av(r, mid) for _, mid in pca_metrics] for r in repos], dtype=float)
+    M = _np.array([[rawv(r, mid) for _, mid in pca_metrics] for r in repos], dtype=float)
     for j in range(M.shape[1]):
         col = M[:, j]
         sd = col.std()
@@ -353,33 +337,27 @@ def main():
         "included": [l for l, _ in pca_metrics],
     }
 
-    # ---- size-confounding payload for the "are we measuring size?" section --
+    # ---- payload for the "architecture, not size" section ------------------
     label_of = {mid: lbl for mid, lbl, _, _ in SCORED}
     conf_rows = sorted(
         [{"label": label_of.get(mid, mid), "rho_raw": m["rho_raw"],
-          "rho_adj": m["rho_adj"], "adjusted": m["adjusted"]}
+          "real": verdicts.get(mid, {}).get("real_signal", True),
+          "bb_ranks": verdicts.get(mid, {}).get("big_uncurated_ranks", [])}
          for mid, m in sc["metrics"].items() if mid in label_of],
         key=lambda r: -abs(r["rho_raw"]))
-    # raw composite (same checks, UN-adjusted) to show the size correlation it
-    # would have carried, vs the size-adjusted composite actually shipped
+    # the three M16 architecture components join the verdict chart with their
+    # own rho/verdict rows (the other DISCRIMINANT_TABLE entries are already
+    # present as M3/M14/M6/M1 battery rows)
+    for t in arch["table"]:
+        if t["id"] not in ("dir_breadth", "crossdir_v_rand", "def_hub_ratio"):
+            continue
+        conf_rows.append({"label": "M16 · " + t["label"], "rho_raw": t["rho_size"],
+                          "real": t["real_signal"], "bb_ranks": t["big_uncurated_ranks"]})
+    conf_rows.sort(key=lambda r: -abs(r["rho_raw"]))
     log_size = sc["log_size"]
-    raw_comp = {}
-    for r in repos:
-        parts = []
-        for mid, hib in COMPOSITE_IDS:
-            raws = sc["metrics"].get(mid, {}).get("raw", {})
-            v = raws.get(r["key"])
-            if v is None:
-                continue
-            sign = 1 if hib else -1
-            others = [raws[o] * sign for o in raws]
-            vv = v * sign
-            parts.append((sum(1 for o in others if o < vv) + 0.5 * sum(1 for o in others if o == vv)) / len(others))
-        raw_comp[r["key"]] = sum(parts) / len(parts) if parts else 0.0
     ks = [r["key"] for r in repos]
-    adj_comp = {c["key"]: c["score"] for c in comp}
-    comp_rho_raw = _scmod.spearman([raw_comp[k] for k in ks], [log_size[k] for k in ks])
-    comp_rho_adj = _scmod.spearman([adj_comp[k] for k in ks], [log_size[k] for k in ks])
+    comp_by_k = {c["key"]: c["score"] for c in comp}
+    comp_rho_raw = _scmod.spearman([comp_by_k[k] for k in ks], [log_size[k] for k in ks])
 
     # size-matched cohorts: quality still separates at fixed size?
     Q = {"mathlib4":1,"flt":1,"pfr":1,"addcombi":1,"carleson":1,"pnt":1,"brownian":1,
@@ -411,10 +389,10 @@ def main():
     _sizes = [byk[k]["alldecls"] for k in byk]
     size_confound = {
         "rows": conf_rows,
-        "n_adjusted": sc["n_adjusted"], "n_total": sc["n_total"],
-        "max_abs_rho_adj": sc["max_abs_rho_adj"],
+        "n_real": sum(1 for r in conf_rows if r["real"]),
+        "n_total": len(conf_rows),
         "comp_rho_raw": round(comp_rho_raw, 2),
-        "comp_rho_adj": round(comp_rho_adj, 2),
+        "composite_dropped": [label_of.get(m, m) for m in composite_dropped],
         "cohort_small": cohort(80, 600),
         "cohort_large": cohort(5000, 400000),
         "span_orders": round(math.log10(max(_sizes) / max(1, min(_sizes))), 1),
@@ -480,12 +458,14 @@ def main():
         "composite": comp,
         "composite_n_checks": len(COMPOSITE_IDS),
         "size_confound": size_confound,
+        "architecture": arch,
+        "verdicts": {mid: v["real_signal"] for mid, v in verdicts.items()},
         # per-repo decl-level agreement table: only repos whose two tiers cover
         # the same file set (partial-exact slices would compare mismatched
         # graphs and inflate the textual degree columns)
         "validation": {k: v for k, v in validation.items()
                        if k not in PARTIAL_EXACT and k in byk},
-        "prose": build_prose(byk, validation, {c["key"]: c["score"] for c in comp}, size_confound),
+        "prose": build_prose(byk, validation, {c["key"]: c["score"] for c in comp}, size_confound, arch),
         "footer": FOOTER.format(nrepos=len(repos)),
     }
 
@@ -497,8 +477,8 @@ def main():
 
 
 FOOTER = (
-    "Generated 2026-07-20 by the <span class=\"mono\">lean_reuse</span> toolkit — "
-    "{nrepos} corpora, 15 metric families, all measured on the exact tier: a Lean "
+    "Generated 2026-07-22 by the <span class=\"mono\">lean_reuse</span> toolkit — "
+    "{nrepos} corpora, 16 metric families, all measured on the exact tier: a Lean "
     "metaprogram over elaborated environments (getUsedConstants on types and "
     "values, generated auxiliaries contracted). Elaboration cost: timed re-elaboration of "
     "sampled files, import baseline subtracted. Amortization: log-space inlined-cost DP "
@@ -507,8 +487,9 @@ FOOTER = (
 )
 
 
-def build_prose(byk, validation, comp=None, size_conf=None):
+def build_prose(byk, validation, comp=None, size_conf=None, arch=None):
     comp = comp or {}
+    arch = arch or {}
     ml = byk["mathlib4"]
     sp = byk.get("seed-prover")
     sh = byk.get("superhuman")
@@ -544,28 +525,47 @@ def build_prose(byk, validation, comp=None, size_conf=None):
     top_size = sorted(scd.get("rows", []), key=lambda r: -abs(r["rho_raw"]))[:3]
     top_names = ", ".join(r["label"].split(" · ")[-1] for r in top_size) if top_size else "the amortization exponent, dependency depth and concentration"
 
+    pri = arch.get("primary", {})
+    sep = arch.get("max_separation", {})
+    bb_pri = pri.get("big_uncurated_ranks", {})
+    bb_str = ", ".join(f"{DISPLAY_LABEL.get(k, byk[k]['label'] if k in byk else k)} #{v}"
+                       for k, v in sorted(bb_pri.items(), key=lambda t: t[1]))
     return {
         "sizeProse": f"""
 <p>A fair worry: with corpora spanning {scd.get('span_orders','3.5')} orders of magnitude in size
 (102 to 303,000 declarations), a metric that merely grows with a library could masquerade as a
-quality signal. It is a real effect for a specific cluster — raw, the most size-correlated metrics are
-<b>{top_names}</b> (Spearman ρ up to {scd.get('max_raw','+0.80')} against log-size), and they are exactly
-the reuse metrics this dashboard surfaces first. The hygiene ratios (sorry rate, trivial-statement share,
-axiom density) were already near-independent.</p>
-<p><b>What we do about it.</b> Every scored metric is residualized against log₁₀(declarations), so the
-dashboard measures quality <em>at fixed size</em>. After adjustment no metric correlates with size by
-more than |ρ| = {scd.get('max_abs_rho_adj','0.16')}; the composite's own size correlation drops from
-{scd.get('comp_rho_raw','0.18')} to {scd.get('comp_rho_adj','0.10')}. The per-metric charts plot the
-size-adjusted percentile, and the composite and PCA are built from the adjusted values. (Three
-genuinely distributional panels stay raw and descriptive: the reuse CCDF, the statement/proof/file-length
-histograms, and the Mathlib-leverage scatter — they show shapes, not a single score to adjust.)</p>""",
+quality signal. Raw, the most size-correlated metrics are <b>{top_names}</b> (Spearman ρ up to
+{scd.get('max_raw','+0.80')} against log-size), and they are exactly the reuse metrics this dashboard
+surfaces first.</p>
+<p><b>But correlation with size is the wrong test.</b> An earlier revision residualized every metric
+against log-declarations — and threw real signal away: good libraries <em>grow</em>, so a genuine
+quality signal co-varies with size, and regressing it out pushed Mathlib to mid-pack on metrics where
+it genuinely leads. The operative question is <b>discriminant validity</b>: <em>does a large-but-bad
+library score high?</em> The corpus contains the control group — its three largest non-Mathlib corpora
+(lean-pool at 44k declarations, Erdős-90 at 37k, Meta ATLAS at 16k) are none of them curated
+libraries. A metric that ranks them high despite their bulk is a size proxy; a metric that ranks them
+near the bottom is measuring architecture. That test cleanly splits the battery: cross-directory reuse
+is real (Mathlib 62% of edges, reviewed median 17%, lean-pool <b>0.05%</b> — 44,000 declarations
+arranged as an archipelago score nothing), while the amortization exponent, dependency depth and mean
+in-degree are genuine size proxies — the big-uncurated corpora's <em>median beats the reviewed
+median</em> on them purely from bulk.</p>
+<p><b>The Architecture Index</b> distills the discriminant-valid wiring metrics — cross-directory
+reuse, directory breadth of reuse, and cross-directory reuse relative to a random-wiring baseline —
+into one mean percentile. Mathlib ranks <b>#{pri.get('mathlib_rank','1')}</b> (sharing the exact top
+score, 94, with Tao's Equational Theories project), the reviewed-vs-slop
+AUC is {pri.get('auc','0.93')}, residual size correlation ρ = {pri.get('rho_size','0.32')}, and the
+big-uncurated control corpora rank {bb_str} — huge, but low. (A max-separation variant that swaps
+directory breadth for the definitions-are-hubs ratio reaches AUC {sep.get('auc','1.00')} at
+ρ = {sep.get('rho_size','0.43')}; it is reported in the how-box, and the size-independent variant
+leads.) Every per-metric chart is back to raw values, badged with its verdict; the composite averages
+only the discriminant-valid checks.</p>""",
         "cohortProse": f"""
-<p>Adjustment removes the correlation — but does any quality signal survive it, or was size all there was?
-The groups overlap in size (AddCombi, a reviewed library, has {scd.get('addcombi_decls','242')} declarations —
-smaller than three of the slop dumps; ATLAS, slop, has {scd.get('atlas_decls','15,633')} — larger than most
-reviewed libraries), so we can compare quality <em>within</em> a size band. In both bands the reviewed repos
-still separate from the slop dumps on nearly every metric — including the size-heavy amortization and depth.
-The signal is real; size just inflated its raw magnitude.</p>""",
+<p>A second, independent check: does quality separate <em>within</em> a size band? The groups overlap
+in size (AddCombi, a reviewed library, has {scd.get('addcombi_decls','242')} declarations — smaller
+than three of the slop dumps; ATLAS, slop, has {scd.get('atlas_decls','15,633')} — larger than most
+reviewed libraries). In both bands the reviewed repos still separate from the slop dumps on nearly
+every metric — including the size-proxy amortization and depth. Size inflates magnitudes; it does not
+create the separation.</p>""",
         "corpusIntroProse": f"""
 <p>{ncorp_word} corpora — formalization projects plus a declared slop calibration set,
 every one measured on the exact tier (a repo that cannot be built at all is excluded, not
@@ -620,23 +620,29 @@ headline). The curated AI projects are clean on both counts (TauCeti:
 {pct(tc['m7']['dup'])} duplicates, zero sorries; StrongPNT: {pct(spnt['m7']['dup'])}
 duplicates, {pct(spnt['m8']['sorry'])} sorries).</p>""",
         "discussProse": f"""
-<p>The discriminating metrics form a coherent family: <b>compounding reuse</b> (the
-amortization exponent), <b>organization</b> (cross-directory and outside-file reuse),
-<b>process discipline</b> (docstring coverage, granular imports, sorry hygiene) and
-<b>economy</b> (duplication, triviality). The failures are <em>volume</em> metrics — raw
-citation counts, depth, Mathlib leverage, statement share, elaboration cost — that a large
-or machine-generated corpus satisfies incidentally, mirroring the software-measurement
-literature where volume indices predict quality poorly and process signals hold up.</p>
-<p>The slop calibration set behaves as floors should: Pedigree Polytopes
-({comp.get('pedigree',0)*100:.0f}) is exposed by axioms ({byk['pedigree']['m12'].get('n_axioms_declared','several') if 'pedigree' in byk else 'several'} declared in the built library) rather than sorries,
-GBLean ({comp.get('gblean',0)*100:.0f}) by
-sorry-rate, Seed-Prover ({comp.get('seed-prover',0)*100:.0f}) by duplication and
-isolation. TauCeti and LeanPool sit inside the human band. One cautionary result from an
-earlier revision of this study is worth recording: we separately measured Math Inc's Gauss
-PR against the community Sphere Packing repo, and it passed — indeed topped — every
-mechanical check here while community review rejected it on definition quality and API
-design; it is excluded from this corpus, and the lesson stands in §12. Treat low scores as
-meaningful and high scores as necessary-not-sufficient.</p>""",
+<p>The discriminating metrics form a coherent family: <b>organization</b> (cross-directory
+and outside-file reuse, directory breadth, the definitions-are-hubs shape — the §14
+architecture family), <b>process discipline</b> (docstring coverage, granular imports,
+sorry hygiene, no declared axioms) and <b>economy</b> (duplication, triviality). The
+failures are <em>volume</em> metrics — raw citation counts, depth, the amortization
+exponent, Mathlib leverage, statement share, elaboration cost — that a large or
+machine-generated corpus satisfies incidentally (§14 makes this precise), mirroring the
+software-measurement literature where volume indices predict quality poorly and process
+signals hold up.</p>
+<p>Read the composite as a floor, not a ranking: hygiene checks are table stakes a modern
+pipeline already passes, so the slop calibration set interleaves with the lower human band
+here — Pedigree Polytopes ({comp.get('pedigree',0)*100:.0f}) is sorry-free because it
+axiomatizes instead (the axiom check, not the sorry counter, is what catches it), GBLean
+({comp.get('gblean',0)*100:.0f}) is exposed by sorry-rate, Seed-Prover
+({comp.get('seed-prover',0)*100:.0f}) by duplication and isolation. What cleanly separates
+reviewed libraries from slop is the <b>Architecture Index</b> of §14 (AUC 0.93 for the
+size-independent variant that leads the dashboard; 1.00 for the max-separation variant,
+which puts every slop corpus in the bottom seven). And one cautionary result from an earlier revision of
+this study is worth recording: we separately measured Math Inc's Gauss PR against the
+community Sphere Packing repo, and it passed — indeed topped — every mechanical check here
+while community review rejected it on definition quality and API design; it is excluded
+from this corpus, and the lesson stands in §12. Treat low scores as meaningful and high
+scores as necessary-not-sufficient.</p>""",
         "amortProse": f"""
 <p>This is the graph-theoretic formulation under which reuse <em>does</em> discriminate —
 massively. Mathlib's average declaration would cost 10<sup>{ml['m14'].get('mean_log10_cost','?')}</sup>
@@ -650,17 +656,17 @@ design philosophy. The same construction appears independently in Freedman et&nb
 mathematics</i></a> (2026), as "wrapped" versus "unwrapped" length measured on Mathlib —
 their observation that unwrapped length grows exponentially with depth while wrapped length
 stays constant is precisely why we report the exponent.</p>
-<p><b>The size caveat, taken seriously.</b> Those raw exponents are the single most
-size-driven number in this study — they correlate with log-declarations at ρ = +0.79, so a
-big library scores high largely <em>because</em> it is big. The chart above therefore plots
-the <b>size-adjusted</b> exponent (§14): controlling for size, Mathlib falls to the
-{ (lambda p: f"{int(round(p*100))}th" if p is not None else "middle")(byk['mathlib4']['adjPct'].get('m14_amort_mean')) }
-percentile and the metric becomes a much weaker separator than its raw form suggests — an
-honest demotion of what earlier drafts called the winning reuse metric. It does not vanish:
-the size-matched cohorts in §14 show reviewed repos still out-compound the dumps at equal
-size. Two further caveats: it measures each repo's <em>internal</em> economy (chains through
-Mathlib are credited to M4, not here), and it needs the elaborated graph, so it is
-exact-tier only.</p>""",
+<p><b>The size caveat, taken seriously.</b> Those exponents are the single most size-driven
+number in this study — they correlate with log-declarations at ρ = +0.79, and they fail the
+discriminant test of §14: the median of the three largest <em>uncurated</em> corpora out-scores the
+reviewed median (2.5 vs 1.4 — lean-pool and Erdős-90 individually rank #2 and #3) purely from bulk,
+so a big pile compounds incidentally. The metric is
+therefore badged a <b>size proxy</b>, excluded from the composite, and reported here as
+descriptive — an honest demotion of what earlier drafts called the winning reuse metric. It
+does not vanish: the size-matched cohorts in §14 show reviewed repos still out-compound the
+dumps at equal size. Two further caveats: it measures each repo's <em>internal</em> economy
+(chains through Mathlib are credited to M4, not here), and it needs the elaborated graph, so
+it is exact-tier only.</p>""",
         "validityProse": f"""
 <p><b>Every row is exact now — at the price of coverage.</b> Corpora that ship no lakefile
 were built anyway: Erdős-90 and Seed-Prover's IMO-2025 subproject ship lakefiles in
