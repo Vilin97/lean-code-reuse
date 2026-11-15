@@ -1190,8 +1190,7 @@ dotRank('amortChart', charted.filter(r => r.m14 && r.m14.mean_log10_cost != null
 
   document.getElementById('archHow').innerHTML =
     `<p>Each component is a percentile rank over the ${DATA.totals.repos} corpora (ties averaged); the index is their mean.
-    Mathlib and Equational Theories share the exact top score (${P.score['mathlib4']}); the ranking lists Mathlib first by
-    stable sort order, and the AUC and discriminant facts are unaffected by how that tie is broken.
+    Mathlib scores ${P.score['mathlib4']}; Equational Theories scores ${P.score['equational_theories']}.
     Components: <b>cross-directory reuse</b> (share of internal reference pairs whose two declarations live under
     different top-level directories), <b>directory breadth</b> (mean number of distinct directories using each reused
     declaration — generality), and <b>cross-directory reuse divided by its random-wiring expectation</b> (so a repo

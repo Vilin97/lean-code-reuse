@@ -97,8 +97,8 @@ python3 -m lean_reuse.run_all --repos-dir . --cache-dir cache_env \
     --out results_env.json --skip-build
 ```
 
-The repo registry lives in `lean_reuse/repos.py` (35 entries, including
-name-resolution upstreams). The dashboard selects its 26 formalization
+The repo registry lives in `lean_reuse/repos.py` (36 entries, including
+name-resolution upstreams). The dashboard selects its 27 formalization
 projects through `ORDER` in `report/make_report.py`; only entries with
 exact-tier results are included.
 
@@ -106,6 +106,11 @@ TorchLean is also registered and measured on the exact tier. Its measurement
 reuses a built checkout, imports every library module, and keeps FloatLib in
 the external `other` bucket. See [the TorchLean reproduction guide](docs/torchlean.md)
 and [measurement provenance](results/torchlean_measurement.json).
+
+FloatLib is measured separately across its numerical library, excluding worked
+examples, tests and benchmarks. Its exact graph, source metrics and Git author
+concentration are included in the dashboard. See [reproduction and scope](docs/floatlib.md)
+and [measurement provenance](results/floatlib_measurement.json).
 
 Elaboration-cost benchmark:
 ```bash

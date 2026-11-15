@@ -21,6 +21,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # provenance groups (colors only — the analysis axis is quality, not authorship)
 GROUP_OF = {
     "torchlean": 1,
+    "floatlib": 1,
     "mathlib4": 0, "cslib": 0, "flt": 0, "pfr": 0,
     "addcombi": 0, "pnt": 0, "carleson": 0, "spherepacking": 0,
     "physlib": 1, "equational_theories": 1, "lean-pool": 1,
@@ -32,13 +33,14 @@ GROUP_OF = {
 GROUPS = ["Human", "Human + AI mix", "AI, curated", "AI, less curated", "Unspecified"]
 ORDER = [
     "mathlib4", "flt", "pfr", "addcombi", "carleson", "pnt", "brownian", "spherepacking",
-    "cslib", "physlib", "torchlean", "statlearn", "econlib", "econcs", "asympstat",
+    "cslib", "physlib", "torchlean", "floatlib", "statlearn", "econlib", "econcs", "asympstat",
     "equational_theories",
     "lean-pool", "tauceti", "strongpnt", "atlas", "erdos90", "clawristotle",
     "seed-prover", "superhuman", "pedigree", "gblean",
 ]
 
 DESC = {
+    "floatlib": "Numerical representations, executable floating-point arithmetic and correctness proofs in Lean. Library modules only, excluding worked examples, tests and benchmarks. The pinned README discloses AI assistance with proofs and arithmetic backend optimization; the AI share is not quantified.",
     "torchlean": "Tensor computation, neural-network execution and verification in Lean; library modules only, excluding examples and tests. Maintainers describe primarily manual development with AI assistance in their contribution guide; the AI share is not quantified. FloatLib is counted as an external dependency.",
     "mathlib4": "The community's monolithic mathematics library — the reference point for scale, review process and reuse discipline.",
     "flt": "Kevin Buzzard's ongoing formalization of Fermat's Last Theorem, structured to feed results back into Mathlib.",

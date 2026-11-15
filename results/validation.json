@@ -382,5 +382,17 @@
   "mean_deg_env": 11.279,
   "textual_zero_env_nonzero": 0.1088,
   "env_zero_textual_nonzero": 0.0223
+ },
+ "floatlib": {
+  "n_joined": 13982,
+  "join_rate_env": 0.8911,
+  "spearman_indeg": 0.868,
+  "pearson_log1p": 0.886,
+  "never_textual": 0.2155,
+  "never_env": 0.2098,
+  "mean_deg_textual": 5.123,
+  "mean_deg_env": 8.049,
+  "textual_zero_env_nonzero": 0.0441,
+  "env_zero_textual_nonzero": 0.0384
  }
 }
