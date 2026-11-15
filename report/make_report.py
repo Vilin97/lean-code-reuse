@@ -171,12 +171,19 @@ def main():
     ap.add_argument("--env", required=True)
     ap.add_argument("--textual", required=True)
     ap.add_argument("--validation", required=True)
+    ap.add_argument("--authorship", help="Git author concentration JSON; defaults to a sibling of --env")
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
 
     env = json.load(open(args.env))
     tx = json.load(open(args.textual))
     validation = json.load(open(args.validation))
+    authorship_path = args.authorship or os.path.join(os.path.dirname(args.env), "author_concentration.json")
+    if args.authorship or os.path.exists(authorship_path):
+        with open(authorship_path) as f:
+            authorship = json.load(f)
+    else:
+        authorship = {}
 
     repos = []
     for k in ORDER:
@@ -462,6 +469,13 @@ def main():
         "composite_n_checks": len(COMPOSITE_IDS),
         "size_confound": size_confound,
         "architecture": arch,
+        # Keep this descriptive Git measurement out of the quality-score/PCA inputs.
+        "author_concentration": {
+            r["key"]: {"label": env[r["key"]]["meta"]["label"], **{field: value for field, value in authorship.get(
+                r["key"], {"status": "unavailable"}).items()
+                if field not in ("files", "authors", "excluded_directory_parts")}}
+            for r in repos
+        },
         "verdicts": {mid: v["real_signal"] for mid, v in verdicts.items()},
         # per-repo decl-level agreement table: only repos whose two tiers cover
         # the same file set (partial-exact slices would compare mismatched
@@ -473,7 +487,9 @@ def main():
     }
 
     tpl = open(os.path.join(os.path.dirname(__file__), "template.html")).read()
-    html = tpl.replace("/*__DATA__*/", json.dumps(data))
+    # Git author names are external text. Do not let a name close the script tag.
+    payload = json.dumps(data).replace("<", "\\u003c").replace(">", "\\u003e").replace("&", "\\u0026")
+    html = tpl.replace("/*__DATA__*/", payload)
     with open(args.out, "w") as f:
         f.write(html)
     print(f"wrote {args.out} ({len(html)//1024} KB)")
@@ -486,7 +502,7 @@ FOOTER = (
     "values, generated auxiliaries contracted). Elaboration cost: timed re-elaboration of "
     "sampled files, import baseline subtracted. Amortization: log-space inlined-cost DP "
     "over the declaration DAG. Original graph snapshots: July 2026; added repositories have separate measurement records. "
-    "Code: lean-code-reuse repo, "
+    "Git author concentration (M17) uses its own pinned source snapshots and full histories. Code: lean-code-reuse repo, "
     "one module per metric."
 )
 

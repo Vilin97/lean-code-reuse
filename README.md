@@ -70,6 +70,15 @@ exponent — which is why the corpus is exact-only).
 | M11 | `complexity` | Branching tactic tokens per proof (McCabe cyclomatic adaptation) |
 | M12 | `trust_base` | Declared axioms, `native_decide` reliance |
 | M13 | `elab_cost` | Elaboration seconds per kLOC — heartbeats proxy, fed by `elab_bench.py` |
+| M14 | `amortization` | How much internal dependency structure would be repeated if references were fully inlined? |
+| M15 | `triviality` | How common are trivial statements and one-line proofs? |
+| M16 | `architecture` | How broadly is reuse distributed across directories and abstraction kinds? |
+| M17 | `author_concentration` (standalone Git collector) | How many surviving code lines are attributed to the largest author, and what share of the analyzed source is that? |
+
+M17 uses complete Git history and separately pinned library source snapshots;
+it requires no Lean build. It reports attribution concentration, not maintenance
+responsibility or AI authorship, and does not enter PCA or composite quality
+scores. See [measurement rules and reproduction](docs/author-concentration.md).
 
 ## Usage
 
