@@ -28,6 +28,12 @@ def run_extract(
     dyn: bool = False,
     private_level: bool = True,
 ) -> subprocess.CompletedProcess:
+    # Lean runs in the target checkout, but these paths belong to the caller.
+    out_path = os.path.abspath(out_path)
+    scratch_dir = os.path.abspath(scratch_dir)
+    os.makedirs(os.path.dirname(out_path), exist_ok=True)
+    os.makedirs(scratch_dir, exist_ok=True)
+
     def quote_mod(m: str) -> str:
         if "«" in m:  # caller already quoted problem segments
             return m
@@ -71,7 +77,7 @@ def run_extract(
     )
 
 
-if __name__ == "__main__":
+def main() -> int:
     import argparse
 
     ap = argparse.ArgumentParser()
@@ -80,6 +86,7 @@ if __name__ == "__main__":
     ap.add_argument("--full-prefixes", default="", help="comma-separated module prefixes")
     ap.add_argument("--out", required=True)
     ap.add_argument("--scratch", required=True)
+    ap.add_argument("--dyn", action="store_true", help="load modules dynamically to avoid notation clashes")
     args = ap.parse_args()
     cp = run_extract(
         args.repo_dir,
@@ -87,7 +94,13 @@ if __name__ == "__main__":
         [p for p in args.full_prefixes.split(",") if p],
         args.out,
         args.scratch,
+        dyn=args.dyn,
     )
     print("returncode:", cp.returncode)
     print(cp.stdout[-4000:])
     print(cp.stderr[-4000:])
+    return cp.returncode
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

@@ -77,6 +77,16 @@ REPOS = {
         stars=517,
         provenance="human",
     ),
+    "torchlean": dict(
+        label="TorchLean",
+        url="https://github.com/lean-dojo/TorchLean",
+        dir="torchlean",
+        roots=["TorchLean"],
+        deps=["mathlib4", "batteries", "aesop", "core"],
+        category="machine learning library",
+        stars=212,
+        provenance="human+AI",
+    ),
     "flt": dict(
         label="FLT",
         url="https://github.com/ImperialCollegeLondon/FLT",
@@ -352,7 +362,7 @@ REPOS = {
 # Build order: dependencies before dependents.
 BUILD_ORDER = [
     "core", "batteries", "aesop", "mathlib4",
-    "cslib", "physlib", "scilean", "flt", "pfr", "analysis",
+    "cslib", "physlib", "scilean", "torchlean", "flt", "pfr", "analysis",
     "equational_theories", "formal-conjectures", "nng4",
     "tauceti", "lean-pool", "atlas", "seed-prover", "superhuman",
     "erdos90", "clawristotle", "addcombi", "pnt", "carleson", "strongpnt",

@@ -873,7 +873,7 @@ dotRank('crossChart', charted.map(r => ({
 })).sort((a,b) => b.value - a.value), { fmt: fmtPct, max: 1, ticks: 4 });
 
 // 06 — mathlib scatter
-const downstream = charted.filter(r => r.m4.ml_per_decl > 0 && r.group < 4);
+const downstream = charted.filter(r => r.m4.ml_per_decl > 0);
 scatterChart('mlScatter', downstream.map(r => ({
   x: r.m4.ml_per_decl, y: r.m1.never, label: r.label, group: r.group, dy: r.sdy
 })), { xlabel: 'Mathlib references per declaration', ylabel: 'declarations never reused internally',
@@ -987,7 +987,7 @@ sizePanel('fileLenChart', r => r.m9.file_stats);
 })();
 
 // 10 — composite quality score
-document.getElementById('compLegend').innerHTML = legendHTML(GROUPS.slice(0,4));
+document.getElementById('compLegend').innerHTML = legendHTML(GROUPS);
 dotRank('compChart', DATA.composite.map(c => ({
   label: (c.anchor === 'high' ? '▲ ' : c.anchor === 'low' ? '▼ ' : '') + c.label,
   value: c.score, group: c.group,

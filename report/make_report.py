@@ -9,6 +9,7 @@ calibrate each metric; a composite percentile score ranks everyone.
 from __future__ import annotations
 
 import argparse
+from datetime import datetime, timezone
 import json
 import math
 import os
@@ -19,6 +20,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # provenance groups (colors only — the analysis axis is quality, not authorship)
 GROUP_OF = {
+    "torchlean": 1,
     "mathlib4": 0, "cslib": 0, "flt": 0, "pfr": 0,
     "addcombi": 0, "pnt": 0, "carleson": 0, "spherepacking": 0,
     "physlib": 1, "equational_theories": 1, "lean-pool": 1,
@@ -27,16 +29,17 @@ GROUP_OF = {
     "pedigree": 3, "gblean": 3,
     "statlearn": 1, "econlib": 1, "econcs": 1, "asympstat": 1, "brownian": 0,
 }
-GROUPS = ["Human", "Human + AI mix", "AI, curated", "AI, less curated", "—"]
+GROUPS = ["Human", "Human + AI mix", "AI, curated", "AI, less curated", "Unspecified"]
 ORDER = [
     "mathlib4", "flt", "pfr", "addcombi", "carleson", "pnt", "brownian", "spherepacking",
-    "cslib", "physlib", "statlearn", "econlib", "econcs", "asympstat",
+    "cslib", "physlib", "torchlean", "statlearn", "econlib", "econcs", "asympstat",
     "equational_theories",
     "lean-pool", "tauceti", "strongpnt", "atlas", "erdos90", "clawristotle",
     "seed-prover", "superhuman", "pedigree", "gblean",
 ]
 
 DESC = {
+    "torchlean": "Tensor computation, neural-network execution and verification in Lean; library modules only, excluding examples and tests. Maintainers describe primarily manual development with AI assistance in their contribution guide; the AI share is not quantified. FloatLib is counted as an external dependency.",
     "mathlib4": "The community's monolithic mathematics library — the reference point for scale, review process and reuse discipline.",
     "flt": "Kevin Buzzard's ongoing formalization of Fermat's Last Theorem, structured to feed results back into Mathlib.",
     "pfr": "Tao-led formalization of the Polynomial Freiman–Ruzsa conjecture; the archetype crowd-sourced research project.",
@@ -466,7 +469,7 @@ def main():
         "validation": {k: v for k, v in validation.items()
                        if k not in PARTIAL_EXACT and k in byk},
         "prose": build_prose(byk, validation, {c["key"]: c["score"] for c in comp}, size_confound, arch),
-        "footer": FOOTER.format(nrepos=len(repos)),
+        "footer": FOOTER.format(nrepos=len(repos), generated_at=datetime.now(timezone.utc).date()),
     }
 
     tpl = open(os.path.join(os.path.dirname(__file__), "template.html")).read()
@@ -477,12 +480,13 @@ def main():
 
 
 FOOTER = (
-    "Generated 2026-07-22 by the <span class=\"mono\">lean_reuse</span> toolkit — "
+    "Generated {generated_at} by the <span class=\"mono\">lean_reuse</span> toolkit — "
     "{nrepos} corpora, 16 metric families, all measured on the exact tier: a Lean "
     "metaprogram over elaborated environments (getUsedConstants on types and "
     "values, generated auxiliaries contracted). Elaboration cost: timed re-elaboration of "
     "sampled files, import baseline subtracted. Amortization: log-space inlined-cost DP "
-    "over the declaration DAG. Repos pinned 2026-07-18/19. Code: lean-code-reuse repo, "
+    "over the declaration DAG. Original graph snapshots: July 2026; added repositories have separate measurement records. "
+    "Code: lean-code-reuse repo, "
     "one module per metric."
 )
 

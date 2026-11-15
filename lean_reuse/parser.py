@@ -53,7 +53,7 @@ NAMESPACE_RE = re.compile(r"^namespace\s+([^\s]+)\s*$")
 SECTION_RE = re.compile(r"^(?:noncomputable\s+|public\s+)*section(?:\s+([^\s]+))?\s*$")
 END_RE = re.compile(r"^end(?:\s+([^\s]+))?\s*$")
 OPEN_RE = re.compile(r"^open\s+(.*)$")
-IMPORT_RE = re.compile(r"^(?:public\s+|meta\s+)?import\s+(?:all\s+)?([\w.«»\-]+)")
+IMPORT_RE = re.compile(r"^(?:public\s+)?(?:meta\s+)?import\s+(?:all\s+)?([\w.«»\-]+)")
 MUTUAL_RE = re.compile(r"^mutual\b")
 SKIP_RE = re.compile(
     r"^(?:module\b|variable[s]?\b|universe\b|set_option\b|attribute\b|export\b|include\b|omit\b|"

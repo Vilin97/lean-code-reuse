@@ -88,12 +88,15 @@ python3 -m lean_reuse.run_all --repos-dir . --cache-dir cache_env \
     --out results_env.json --skip-build
 ```
 
-Repo registry lives in `lean_reuse/repos.py` (24 repos; core/Batteries/Aesop/
-Formal-Conjectures/NNG4 are kept only as name-resolution upstreams — the
-analysis corpus is 19 formalization projects: Mathlib, CSLib, Physlib,
-SciLean, FLT, PFR, AddCombi, PNT+, Carleson, Tao's Analysis, Equational
-Theories, LeanPool, TauCeti, StrongPNT, Meta ATLAS, Erdős-90, Clawristotle,
-Seed-Prover, DeepMind superhuman).
+The repo registry lives in `lean_reuse/repos.py` (35 entries, including
+name-resolution upstreams). The dashboard selects its 26 formalization
+projects through `ORDER` in `report/make_report.py`; only entries with
+exact-tier results are included.
+
+TorchLean is also registered and measured on the exact tier. Its measurement
+reuses a built checkout, imports every library module, and keeps FloatLib in
+the external `other` bucket. See [the TorchLean reproduction guide](docs/torchlean.md)
+and [measurement provenance](results/torchlean_measurement.json).
 
 Elaboration-cost benchmark:
 ```bash

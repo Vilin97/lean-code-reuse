@@ -43,6 +43,7 @@ ENV_SELF_PREFIXES = {
     "flt": ("FLT",),
     "atlas": ("Atlas",),
     "scilean": ("SciLean",),
+    "torchlean": ("TorchLean",),
     "equational_theories": ("equational_theories",),
     "nng4": ("Game",),
     "addcombi": ("AddCombi",),

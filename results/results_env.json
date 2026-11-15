@@ -11520,5 +11520,386 @@
     "reuse_entropy": 0.881361
    }
   }
+ },
+ "torchlean": {
+  "meta": {
+   "tier": "env",
+   "join_rate": 0.8157,
+   "label": "TorchLean",
+   "category": "machine learning library",
+   "provenance": "human+AI",
+   "stars": 212,
+   "url": "https://github.com/lean-dojo/TorchLean",
+   "files": 969,
+   "loc": 196308,
+   "decls": 16622,
+   "edges": 1077226,
+   "dotted_coverage": 1.0,
+   "parse_errors": 0
+  },
+  "metrics": {
+   "reuse_degree": {
+    "n_reusable_decls": 16622,
+    "degree": {
+     "mean": 10.569,
+     "median": 1.0,
+     "p90": 12.0,
+     "p99": 150.79000000000087,
+     "max": 7265
+    },
+    "pct_never_reused": 0.2473,
+    "pct_reused_ge2": 0.4749,
+    "ccdf": {
+     "1": 0.75274,
+     "2": 0.47485,
+     "3": 0.34268,
+     "5": 0.22254,
+     "10": 0.12014,
+     "20": 0.05956,
+     "50": 0.02599,
+     "100": 0.01408,
+     "200": 0.00812,
+     "500": 0.00229,
+     "1000": 0.0009
+    },
+    "top": [
+     {
+      "name": "TorchLean.Shape",
+      "deg": 7265
+     },
+     {
+      "name": "TorchLean.Tensor",
+      "deg": 5848
+     },
+     {
+      "name": "TorchLean.Storage",
+      "deg": 5469
+     },
+     {
+      "name": "TorchLean.Context",
+      "deg": 4650
+     },
+     {
+      "name": "TorchLean.instArrayStorage",
+      "deg": 3854
+     },
+     {
+      "name": "TorchLean.Shape.Coord",
+      "deg": 3323
+     },
+     {
+      "name": "TorchLean.Tensor.Rep.get",
+      "deg": 2743
+     },
+     {
+      "name": "TorchLean.Shape.rank",
+      "deg": 2319
+     },
+     {
+      "name": "TorchLean.instContextReal",
+      "deg": 1984
+     },
+     {
+      "name": "TorchLean.Shape.size",
+      "deg": 1763
+     },
+     {
+      "name": "TorchLean.Port",
+      "deg": 1591
+     },
+     {
+      "name": "TorchLean.configuredBinaryContext",
+      "deg": 1356
+     },
+     {
+      "name": "TorchLean.Shape.extent",
+      "deg": 1172
+     },
+     {
+      "name": "TorchLean.Op",
+      "deg": 1097
+     },
+     {
+      "name": "TorchLean.Tensor.map",
+      "deg": 1003
+     },
+     {
+      "name": "TorchLean.Shape.scalar",
+      "deg": 960
+     },
+     {
+      "name": "TorchLean.Port.value",
+      "deg": 944
+     },
+     {
+      "name": "TorchLean.Shape.dim",
+      "deg": 939
+     },
+     {
+      "name": "TorchLean.Tensor.getScalar",
+      "deg": 895
+     },
+     {
+      "name": "TorchLean.Tensor.Rep",
+      "deg": 891
+     }
+    ]
+   },
+   "statement_vs_proof": {
+    "share_signature": 0.2949,
+    "share_value": 0.1736,
+    "share_proof": 0.5315,
+    "load_bearing_share": 0.4685,
+    "mean_stmt_indeg": 8.886,
+    "mean_proof_indeg": 7.294,
+    "internal_refs_to_theorems": 24694,
+    "internal_refs_to_defs": 243690,
+    "thm_def_ref_ratio": 0.101,
+    "pct_theorems_used_in_statements": 0.0235
+   },
+   "cross_file": {
+    "pct_edges_cross_file": 0.8479,
+    "pct_edges_cross_dir": 0.5213,
+    "pct_decls_used_outside_file": 0.3841,
+    "pct_decls_used_in_5plus_external_files": 0.0822,
+    "mean_user_files_per_used_decl": 3.574,
+    "n_dirs": 4
+   },
+   "external_reuse": {
+    "external_refs_total": 808273,
+    "external_refs_per_decl": 48.627,
+    "external_internal_ratio": 3.005,
+    "per_dep": {
+     "mathlib4": {
+      "refs": 293273,
+      "distinct_decls_used": 3351
+     },
+     "batteries": {
+      "refs": 1638,
+      "distinct_decls_used": 42
+     },
+     "aesop": {
+      "refs": 0,
+      "distinct_decls_used": 0
+     },
+     "core": {
+      "refs": 428329,
+      "distinct_decls_used": 3383
+     },
+     "other": {
+      "refs": 85033,
+      "distinct_decls_used": 928
+     }
+    },
+    "mathlib_refs_per_decl": 17.644,
+    "mathlib_vocab": 3351,
+    "mathlib_vocab_per_1k_refs": 11.4,
+    "top_mathlib": [
+     {
+      "name": "Real",
+      "refs": 10948
+     },
+     {
+      "name": "Real.instZero",
+      "refs": 5609
+     },
+     {
+      "name": "Real.instAdd",
+      "refs": 4163
+     },
+     {
+      "name": "Real.instMul",
+      "refs": 4099
+     },
+     {
+      "name": "Real.instLE",
+      "refs": 3807
+     },
+     {
+      "name": "Real.instAddGroup",
+      "refs": 3203
+     },
+     {
+      "name": "abs",
+      "refs": 3116
+     },
+     {
+      "name": "Real.instSub",
+      "refs": 3106
+     },
+     {
+      "name": "Real.lattice",
+      "refs": 3098
+     },
+     {
+      "name": "DFunLike",
+      "refs": 2808
+     },
+     {
+      "name": "Real.semiring",
+      "refs": 2593
+     },
+     {
+      "name": "Real.instAddCommMonoid",
+      "refs": 2531
+     },
+     {
+      "name": "Real.instOne",
+      "refs": 2372
+     },
+     {
+      "name": "AddMonoid.toAddZeroClass",
+      "refs": 2198
+     },
+     {
+      "name": "EquivLike.toFunLike",
+      "refs": 2195
+     },
+     {
+      "name": "instOfNatAtLeastTwo",
+      "refs": 2161
+     },
+     {
+      "name": "AddMonoidWithOne",
+      "refs": 2153
+     },
+     {
+      "name": "Semiring.toNonAssocSemiring",
+      "refs": 2128
+     },
+     {
+      "name": "MulZeroClass",
+      "refs": 2114
+     },
+     {
+      "name": "Semiring",
+      "refs": 1957
+     },
+     {
+      "name": "CommSemiring",
+      "refs": 1911
+     },
+     {
+      "name": "PseudoMetricSpace",
+      "refs": 1894
+     },
+     {
+      "name": "Real.instLT",
+      "refs": 1854
+     },
+     {
+      "name": "NormedAddCommGroup.toSeminormedAddCommGroup",
+      "refs": 1834
+     },
+     {
+      "name": "UniformSpace",
+      "refs": 1825
+     }
+    ]
+   },
+   "concentration": {
+    "gini": 0.8773,
+    "top1pct_share": 0.5498,
+    "top10pct_share": 0.8274
+   },
+   "dependency_depth": {
+    "max_depth": 48,
+    "mean_depth": 11.242,
+    "p90_depth": 23.0,
+    "pct_in_cycles": 0.0087
+   },
+   "duplication": {
+    "body_dup_rate": 0.0048,
+    "body_dup_n": 9743,
+    "body_max_cluster": 4,
+    "stmt_dup_rate": 0.0023,
+    "stmt_dup_n": 6498,
+    "stmt_max_cluster": 5
+   },
+   "proof_economy": {
+    "stmt_lines": {
+     "mean": 5.305,
+     "median": 4.0,
+     "p90": 11.0,
+     "p99": 25.0,
+     "max": 86
+    },
+    "stmt_chars_median": 153.0,
+    "n_theorems": 8468,
+    "proof_lines": {
+     "mean": 13.133,
+     "median": 8.0,
+     "p90": 26.0,
+     "p99": 83.0,
+     "max": 344
+    },
+    "refs_per_proof": 62.343,
+    "refs_per_proof_line": 6.665,
+    "sorry_rate": 0.0,
+    "n_sorried_theorems": 0,
+    "n_examples": 0
+   },
+   "import_graph": {
+    "file_loc_stats": {
+     "mean": 202.6,
+     "median": 118.0,
+     "p90": 469.20000000000005,
+     "max": 2124
+    },
+    "median_file_loc": 118.0,
+    "n_files": 969,
+    "mean_internal_imports_per_file": 2.686,
+    "median_fan_in": 2.0,
+    "pct_files_fan_in_ge2": 0.5088,
+    "max_fan_in": 51,
+    "pct_files_importing_all_mathlib": 0.0,
+    "n_distinct_external_modules": 300
+   },
+   "doc_coverage": {
+    "pct_defs_with_doc": 0.8588,
+    "pct_theorems_with_doc": 0.7687,
+    "pct_public_decls_with_doc": 0.8135,
+    "comment_density": 0.3198
+   },
+   "complexity": {
+    "branch_per_proof": 0.791,
+    "branch_per_100_lines": 6.02,
+    "pct_proofs_branchy": 0.0382,
+    "p90_branch": 2.0
+   },
+   "trust_base": {
+    "n_axioms_declared": 0,
+    "axioms_per_1k_decls": 0.0,
+    "axiom_names": [],
+    "n_native_decide_users": 0
+   },
+   "elab_cost": {
+    "secs_per_kloc": null
+   },
+   "amortization": {
+    "mean_log10_cost": 2.7,
+    "median_log10_cost": 2.6,
+    "p90_log10_cost": 5.73,
+    "max_log10_cost": 10.67,
+    "mean_log10_cost_theorems": 3.55,
+    "total_amortization_exp": 7.46,
+    "n_scored": 16477
+   },
+   "triviality": {
+    "pct_trivial_statements": 0.0,
+    "n_trivial_statements": 0,
+    "pct_trivial_proofs": 0.0505,
+    "pct_statements_no_refs": 0.0
+   },
+   "architecture": {
+    "dir_breadth_mean": 1.203565,
+    "crossdir_vs_random": 0.797664,
+    "modularity_q": 0.132232,
+    "def_thm_indeg_ratio": 6.673004,
+    "def_reuse_auc": 0.713829,
+    "hub_def_share": 0.847172,
+    "reuse_entropy": 0.736858
+   }
+  }
  }
 }
