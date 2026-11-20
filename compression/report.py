@@ -1,0 +1,190 @@
+"""Aggregate classical + LM results into compression/results.md and results.json.
+
+Sample bpb of a method on a corpus = sum(bits) / sum(bytes) over the chunks it scored
+(chunk sampling is uniform over the corpus, so this is the corpus bpb at 8 KB context).
+95% intervals: percentile bootstrap over chunks (2000 resamples, seed 0).
+Paired tables restrict every method to the same chunks (the first `rank < K` chunks).
+"""
+from __future__ import annotations
+
+import argparse
+import json
+import random
+import statistics
+from pathlib import Path
+
+from .corpora import CORPORA, ORDER
+
+CLASSICAL = ["gzip-9", "bzip2-9", "zstd-19", "xz-9e", "brotli-11", "ppmd-o4", "ppmd-o6",
+             "ppmd-o8", "ppmd-o16", "zstd-19+dict(mathlib)", "zstd-19+dict(self)"]
+LMS = [  # (model id, short label, params)
+    ("HuggingFaceTB/SmolLM2-135M", "SmolLM2-135M", "135M"),
+    ("HuggingFaceTB/SmolLM2-360M", "SmolLM2-360M", "360M"),
+    ("Qwen/Qwen3-0.6B-Base", "Qwen3-0.6B", "0.6B"),
+    ("Qwen/Qwen2.5-Coder-1.5B", "Qwen2.5-Coder-1.5B", "1.5B"),
+    ("Qwen/Qwen3-1.7B-Base", "Qwen3-1.7B", "1.7B"),
+    ("project-numina/Kimina-Prover-Distill-1.7B", "Kimina-Prover-1.7B (Lean)", "1.7B"),
+    ("Qwen/Qwen3-4B-Base", "Qwen3-4B", "4B"),
+]
+WHOLE = ["gzip-9", "bzip2-9", "zstd-19 --long", "xz-9e", "ppmd-o8", "ppmd-o16"]
+
+
+def agg(rows, key="bits"):
+    b = sum(r[key] for r in rows)
+    n = sum(r["bytes"] for r in rows)
+    return b / n if n else float("nan")
+
+
+def boot(rows, reps=2000, seed=0):
+    rng = random.Random(seed)
+    vals = sorted(agg([rows[rng.randrange(len(rows))] for _ in rows]) for _ in range(reps))
+    return vals[int(0.025 * reps)], vals[int(0.975 * reps) - 1]
+
+
+def load(work: Path):
+    data = {}   # method -> corpus -> {id: (bits, bytes, rank, tokens)}
+    for line in (work / "classical_chunks.jsonl").read_text().splitlines():
+        r = json.loads(line)
+        for m in CLASSICAL:
+            data.setdefault(m, {}).setdefault(r["corpus"], {})[r["id"]] = dict(
+                bits=r[m] * r["bytes"], bytes=r["bytes"], rank=r["rank"])
+    ranks = {}
+    index = work / "chunks.jsonl"
+    if not index.exists():
+        index = work / "sample_index.jsonl"          # committed copy without chunk texts
+    for line in index.read_text().splitlines():
+        c = json.loads(line)
+        ranks[(c["corpus"], c["id"])] = c["rank"]
+    label_of = {mid: label for mid, label, _ in LMS}
+    lm_files = sorted((work / "lm").glob("*.jsonl")) if (work / "lm").is_dir() else []
+    if not lm_files and (work / "lm_chunks.jsonl").exists():
+        lm_files = [work / "lm_chunks.jsonl"]
+    for p in lm_files:
+        for line in p.read_text().splitlines():
+            r = json.loads(line)
+            if r["model"] not in label_of:
+                continue
+            data.setdefault(label_of[r["model"]], {}).setdefault(r["corpus"], {})[r["id"]] = dict(
+                bits=r["bits"], bytes=r["bytes"], rank=ranks[(r["corpus"], r["id"])],
+                tokens=r["tokens"])
+    return data
+
+
+def fmt(x, nd=3):
+    return "—" if x is None or x != x else f"{x:.{nd}f}"
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--work", type=Path, default=Path(__file__).parent / "data",
+                    help="work dir of the runs, or the committed compression/data")
+    ap.add_argument("--out-dir", type=Path, default=Path(__file__).parent)
+    a = ap.parse_args()
+    work = a.work
+    data = load(work)
+    stats = json.loads((work / "corpus_stats.json").read_text())
+    whole = json.loads((work / "classical_whole.json").read_text()) if (work / "classical_whole.json").exists() else {}
+    # K available per method = min over corpora of chunks scored (a run still in progress,
+    # which has not reached every corpus, is left out)
+    kmax = {m: min(len(data[m].get(c, {})) for c in ORDER) for m in data}
+    lm_labels = [l for _, l, _ in LMS if kmax.get(l, 0) > 0]
+    common_k = min(kmax[m] for m in lm_labels) if lm_labels else kmax["gzip-9"]
+    methods = CLASSICAL + lm_labels
+
+    def rows(m, c, k):
+        return [v for v in data[m].get(c, {}).values() if v["rank"] < k]
+
+    out = {"corpora": {c: stats[c] for c in ORDER}, "common_k": common_k, "kmax": kmax,
+           "paired": {}, "full": {}, "whole": whole}
+    for m in methods:
+        out["paired"][m] = {c: agg(rows(m, c, common_k)) for c in ORDER}
+        out["full"][m] = {}
+        for c in ORDER:
+            rr = rows(m, c, kmax[m])
+            lo, hi = boot(rr)
+            out["full"][m][c] = dict(bpb=agg(rr), lo=lo, hi=hi, k=len(rr),
+                                     median=statistics.median(v["bits"] / v["bytes"] for v in rr))
+    tpb = {l: {c: sum(v["tokens"] for v in rows(l, c, common_k)) /
+               sum(v["bytes"] for v in rows(l, c, common_k)) for c in ORDER} for l in lm_labels}
+    out["tokens_per_byte"] = tpb
+    (a.out_dir / "results.json").write_text(json.dumps(out, indent=1))
+
+    names = {c: CORPORA[c]["name"] for c in ORDER}
+    L = []
+    L.append("# Compression of Lean corpora, in bits per byte\n")
+    L.append(f"Generated by `python3 -m compression.report`. Corpora and scopes as in "
+             f"[RemyDegenne/lean-quality-indicators](https://github.com/RemyDegenne/lean-quality-indicators) "
+             f"(same commits), plus [AxiomMath/Stacks](https://github.com/AxiomMath/Stacks) split into its "
+             f"two tiers. Lower bpb = more predictable source. See [README.md](README.md) for the method.\n")
+    L.append("## Corpora\n")
+    L.append("| Corpus | Files | MB | 8 KB chunks | sampled |")
+    L.append("|---|---:|---:|---:|---:|")
+    for c in ORDER:
+        s = stats[c]
+        L.append(f"| {names[c]} | {s['files']:,} | {s['bytes'] / 1e6:,.1f} | {s['chunks']:,} | "
+                 f"{len(data['gzip-9'][c])} |")
+    L.append("")
+
+    def table(title, ms, getter, note=""):
+        L.append(f"## {title}\n")
+        if note:
+            L.append(note + "\n")
+        L.append("| Method | " + " | ".join(names[c] for c in ORDER) + " |")
+        L.append("|---|" + "---:|" * len(ORDER))
+        for m in ms:
+            L.append(f"| {m} | " + " | ".join(getter(m, c) for c in ORDER) + " |")
+        L.append("")
+
+    table(f"Paired comparison: every method on the same {common_k} chunks per corpus",
+          methods, lambda m, c: fmt(out["paired"][m][c]),
+          f"Each ~8 KB chunk compressed on its own (no cross-chunk context). bpb = total bits / "
+          f"total bytes over the {common_k} chunks. Classical compressors see only the chunk; "
+          f"LMs see only the chunk too, but bring their pretraining.")
+    table("Each method on all the chunks it scored, with 95% bootstrap interval", methods,
+          lambda m, c: f"{fmt(out['full'][m][c]['bpb'], 2)} [{fmt(out['full'][m][c]['lo'], 2)}, "
+                       f"{fmt(out['full'][m][c]['hi'], 2)}]",
+          "Chunks per corpus: " + ", ".join(f"{m}: {kmax[m]}" for m in methods
+                                            if m in lm_labels or m == "gzip-9") +
+          " (classical: all sampled chunks).")
+    table("Median chunk bpb (robust to a few highly repetitive chunks)", methods,
+          lambda m, c: fmt(out["full"][m][c]["median"], 2))
+    if whole:
+        def wg(m, c):
+            return fmt(whole.get(c, {}).get(m))
+        table("Whole corpus as one stream (classical only)", WHOLE, wg,
+              "The compressor's window/model spans the corpus (zstd `--long` window = corpus "
+              "size up to 2 GB; xz dictionary up to 192 MB; PPMd 2 GB model memory), so "
+              "repetition across files counts. This number falls as a corpus grows.")
+    if lm_labels:
+        best_c = {c: min(out["paired"][m][c] for m in CLASSICAL) for c in ORDER}
+        L.append("## LM gain over the best classical compressor (paired chunks)\n")
+        L.append("Ratio best-classical bpb / LM bpb on the same chunks (higher = the LM's prior "
+                 "helps more).\n")
+        L.append("| Model | " + " | ".join(names[c] for c in ORDER) + " |")
+        L.append("|---|" + "---:|" * len(ORDER))
+        for m in lm_labels:
+            L.append(f"| {m} | " + " | ".join(f"{best_c[c] / out['paired'][m][c]:.2f}x"
+                                               for c in ORDER) + " |")
+        L.append("")
+        L.append("## Relative to Mathlib (paired chunks)\n")
+        L.append("Corpus bpb / Mathlib bpb under the same method. Values below 1: more "
+                 "predictable than Mathlib under that method.\n")
+        ms = ["gzip-9", "xz-9e", "ppmd-o8", "zstd-19+dict(self)"] + lm_labels
+        L.append("| Method | " + " | ".join(names[c] for c in ORDER) + " |")
+        L.append("|---|" + "---:|" * len(ORDER))
+        for m in ms:
+            base = out["paired"][m]["mathlib"]
+            L.append(f"| {m} | " + " | ".join(f"{out['paired'][m][c] / base:.2f}" for c in ORDER) + " |")
+        L.append("")
+        L.append(f"## Tokens per byte (same {common_k} chunks)\n")
+        L.append("| Model | " + " | ".join(names[c] for c in ORDER) + " |")
+        L.append("|---|" + "---:|" * len(ORDER))
+        for m in lm_labels:
+            L.append(f"| {m} | " + " | ".join(f"{tpb[m][c]:.3f}" for c in ORDER) + " |")
+        L.append("")
+    (a.out_dir / "results.md").write_text("\n".join(L))
+    print("\n".join(L))
+
+
+if __name__ == "__main__":
+    main()
