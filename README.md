@@ -70,6 +70,15 @@ exponent — which is why the corpus is exact-only).
 | M11 | `complexity` | Branching tactic tokens per proof (McCabe cyclomatic adaptation) |
 | M12 | `trust_base` | Declared axioms, `native_decide` reliance |
 | M13 | `elab_cost` | Elaboration seconds per kLOC — heartbeats proxy, fed by `elab_bench.py` |
+| M14 | `amortization` | How much internal dependency structure would be repeated if references were fully inlined? |
+| M15 | `triviality` | How common are trivial statements and one-line proofs? |
+| M16 | `architecture` | How broadly is reuse distributed across directories and abstraction kinds? |
+| M17 | `author_concentration` (standalone Git collector) | How many surviving code lines are attributed to the largest author, and what share of the analyzed source is that? |
+
+M17 uses complete Git history and separately pinned library source snapshots;
+it requires no Lean build. It reports attribution concentration, not maintenance
+responsibility or AI authorship, and does not enter PCA or composite quality
+scores. See [measurement rules and reproduction](docs/author-concentration.md).
 
 ## Usage
 
@@ -88,12 +97,20 @@ python3 -m lean_reuse.run_all --repos-dir . --cache-dir cache_env \
     --out results_env.json --skip-build
 ```
 
-Repo registry lives in `lean_reuse/repos.py` (24 repos; core/Batteries/Aesop/
-Formal-Conjectures/NNG4 are kept only as name-resolution upstreams — the
-analysis corpus is 19 formalization projects: Mathlib, CSLib, Physlib,
-SciLean, FLT, PFR, AddCombi, PNT+, Carleson, Tao's Analysis, Equational
-Theories, LeanPool, TauCeti, StrongPNT, Meta ATLAS, Erdős-90, Clawristotle,
-Seed-Prover, DeepMind superhuman).
+The repo registry lives in `lean_reuse/repos.py` (36 entries, including
+name-resolution upstreams). The dashboard selects its 27 formalization
+projects through `ORDER` in `report/make_report.py`; only entries with
+exact-tier results are included.
+
+TorchLean is also registered and measured on the exact tier. Its measurement
+reuses a built checkout, imports every library module, and keeps FloatLib in
+the external `other` bucket. See [the TorchLean reproduction guide](docs/torchlean.md)
+and [measurement provenance](results/torchlean_measurement.json).
+
+FloatLib is measured separately across its numerical library, excluding worked
+examples, tests and benchmarks. Its exact graph, source metrics and Git author
+concentration are included in the dashboard. See [reproduction and scope](docs/floatlib.md)
+and [measurement provenance](results/floatlib_measurement.json).
 
 Elaboration-cost benchmark:
 ```bash

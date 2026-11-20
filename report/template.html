@@ -173,6 +173,8 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
     intensive architecture signals), extracts exact declaration-level dependency graphs
     from elaborated environments, calibrates every metric against declared high/low
     quality anchors, and asks which ones actually discriminate.
+    A separate Git author-concentration metric describes how much surviving code is
+    attributed to the largest contributor, without entering the quality scores.
   </p>
   <div class="tiles" id="heroTiles"></div>
 </header>
@@ -192,6 +194,7 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
   <a href="#taxonomy">Expert review</a>
   <a href="#validity">Validity</a>
   <a href="#sizecontrol">Architecture</a>
+  <a href="#authorship">Author concentration</a>
 </nav>
 
 <section id="corpus">
@@ -320,7 +323,7 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
 </section>
 <section id="metrics">
   <div class="secno">06</div>
-  <h2>Sixteen ways to measure quality</h2>
+  <h2>Metrics: code structure and author concentration</h2>
   <div class="mgrid" id="metricCards"></div>
 </section>
 <section id="where">
@@ -559,6 +562,40 @@ footer { margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairli
   </div>
 </section>
 
+<section id="authorship">
+  <div class="secno">15</div>
+  <h2>Git-attributed code: author concentration</h2>
+  <p class="prose">
+    For each project, count the current Lean code lines attributed by Git to each
+    author identity. The largest author's <b>share</b> shows concentration; their
+    <b>line count</b> shows its scale. Attribution records the last modifying author,
+    ignoring whitespace-only changes and tracking moves within files. It does not
+    establish current maintenance responsibility, original authorship, or AI usage.
+  </p>
+  <p class="note" id="authorCoverage"></p>
+  <div class="legend" id="authorLegend"></div>
+  <div class="card">
+    <h4>Largest author's share of analyzed code</h4>
+    <div class="sub">One author identity per project; percentages use the Git scan's own source-line denominator.</div>
+    <div class="chartwrap" id="authorShareChart"></div>
+  </div>
+  <div class="card">
+    <h4>Code lines attributed to the largest author</h4>
+    <div class="sub">Absolute nonblank code lines, with comments and literals stripped by the source parser.</div>
+    <div class="chartwrap" id="authorLinesChart"></div>
+  </div>
+  <div class="tablewrap"><table class="data" id="authorTable"></table></div>
+  <p class="note">
+    Click a header to sort. Each row identifies its source revision and measured roots.
+    These scans cover all tracked Lean files under the registered library roots; their
+    dates and file sets can differ from the older, sometimes sampled declaration graphs.
+    Bot identities remain in the denominator. Aliases are combined by snapshot mailmap
+    and author email; missing emails use a flagged name-only fallback. Reviewer contributions and co-author trailers are not attributed
+    to individual lines. Imported or squashed histories can concentrate attribution.
+    This metric is excluded from PCA and composite quality scores.
+  </p>
+</section>
+
 <footer>
   <div id="footerText"></div>
 </footer>
@@ -676,6 +713,7 @@ document.getElementById('groupLegend').innerHTML = legendHTML(GROUPS);
     ['M14','Amortization exponent','log₁₀ of the fully-inlined dependency-tree size: reuse measured as compression.'],
     ['M15','Triviality & vacuity','True-typed and numerals-only statements, zero-reference statements, one-liner trivial proofs.'],
     ['M16','Architecture','Intensive reuse-shape signals: directory breadth of reuse, cross-directory wiring vs a random baseline, definitions-are-hubs — the discriminant-valid family behind the Architecture Index (§14).'],
+    ['M17','Git author concentration','Largest author’s surviving code-line count and share, with pinned source scope. Descriptive attribution, excluded from quality scoring (§15).'],
   ];
   document.getElementById('metricCards').innerHTML = M.map(([id,t,d]) =>
     `<div class="mcard"><span class="id">${id}</span><h4>${t}</h4><p>${d}</p></div>`).join('');
@@ -718,6 +756,72 @@ function dotRank(elId, rows, opts = {}) {
 }
 
 // ---------- CCDF chart ----------
+// ---------- Git author concentration (separate source/history measurement) ----------
+(function() {
+  const exact = n => Number(n).toLocaleString('en-US');
+  const share = n => (n * 100).toFixed(2) + '%';
+  const rows = DATA.repos.map(r => {
+    const a = (DATA.author_concentration || {})[r.key] || {status: 'unavailable'};
+    return {...r, label: a.label || r.label, a};
+  });
+  const measured = rows.filter(r => r.a.status === 'ok' && r.a.top_author_share != null);
+  const complete = rows.filter(r => r.a.status === 'ok').length;
+  const dates = [...new Set(rows.filter(r => r.a.measured_at).map(r => r.a.measured_at.slice(0,10)))].sort();
+  document.getElementById('authorCoverage').textContent =
+    `${complete} of ${rows.length} projects measured with complete Git history.` +
+    (dates.length ? ` Scanned ${dates.join(', ')}. Source revisions and denominators are listed below.` : ' No Git attribution results supplied.');
+  document.getElementById('authorLegend').innerHTML = legendHTML(GROUPS);
+  const tip = r => `<b>${esc(r.label)}</b><br>${esc(r.a.top_author)}: ${exact(r.a.top_author_sloc)} code lines (${share(r.a.top_author_share)})` +
+    `<br>Total: ${exact(r.a.total_sloc)} code lines in ${exact(r.a.files_measured)} files` +
+    `<br>Source: ${esc(r.a.revision.slice(0,12))} · ${esc(r.a.revision_date.slice(0,10))}`;
+  for (const [id, field, fmt, maximum] of [
+    ['authorShareChart', 'top_author_share', share, 1],
+    ['authorLinesChart', 'top_author_sloc', fmtNum, null],
+  ]) {
+    if (!measured.length) {
+      document.getElementById(id).textContent = 'No measured code attribution available.';
+      continue;
+    }
+    dotRank(id, [...measured].sort((a,b) => b.a[field] - a.a[field]).map(r => ({
+      label: r.label, group: r.group, value: r.a[field], tip: tip(r),
+    })), {fmt, ...(maximum == null ? {} : {max: maximum})});
+  }
+  const available = (r, field, format = exact) => r.a.status === 'ok' && r.a[field] != null ? format(r.a[field]) : '—';
+  const numeric = field => r => r.a.status === 'ok' && r.a[field] != null ? r.a[field] : -1;
+  const columns = [
+    ['Project', r => esc(r.label), r => r.label],
+    ['Largest Git author', r => r.a.status === 'ok'
+      ? esc(r.a.top_author || 'No code lines') + ((r.a.top_author_ties || []).length > 1 ? ' (tied)' : '')
+      : esc(r.a.status === 'error' ? `Unavailable: ${r.a.error}` : 'Not measured'), r => r.a.top_author || ''],
+    ['Author code lines', r => available(r, 'top_author_sloc'), numeric('top_author_sloc')],
+    ['Share', r => available(r, 'top_author_share', share), numeric('top_author_share')],
+    ['Total code lines', r => available(r, 'total_sloc'), numeric('total_sloc')],
+    ['Author identities', r => available(r, 'n_authors'), numeric('n_authors')],
+    ['Files', r => available(r, 'files_measured'), numeric('files_measured')],
+    ['Name-only lines', r => available(r, 'name_only_sloc'), numeric('name_only_sloc')],
+    ['Revision', r => esc((r.a.revision || '').slice(0,12)), r => r.a.revision || ''],
+    ['Commit date', r => esc((r.a.revision_date || '').slice(0,10)), r => r.a.revision_date || ''],
+    ['Source roots', r => esc((r.a.roots || []).join(', ')), r => (r.a.roots || []).join(', ')],
+  ];
+  const table = document.getElementById('authorTable');
+  let sortColumn = 3, sortDirection = -1;
+  function render() {
+    const sorted = [...rows].sort((a,b) => {
+      const va = columns[sortColumn][2](a), vb = columns[sortColumn][2](b);
+      return (va > vb ? 1 : va < vb ? -1 : 0) * sortDirection;
+    });
+    table.innerHTML = '<tr>' + columns.map((c,i) => `<th data-i="${i}">${c[0]}${i === sortColumn ? (sortDirection > 0 ? ' ↑' : ' ↓') : ''}</th>`).join('') + '</tr>' +
+      sorted.map(r => '<tr>' + columns.map(c => `<td>${c[1](r)}</td>`).join('') + '</tr>').join('');
+    table.querySelectorAll('th').forEach(th => th.onclick = () => {
+      const i = Number(th.dataset.i);
+      sortDirection = i === sortColumn ? -sortDirection : -1;
+      sortColumn = i;
+      render();
+    });
+  }
+  render();
+})();
+
 function ccdfChart(elId, series) {
   const el = document.getElementById(elId);
   const W = Math.max(640, Math.min(el.clientWidth || 900, 980)), H = 380;
@@ -873,7 +977,7 @@ dotRank('crossChart', charted.map(r => ({
 })).sort((a,b) => b.value - a.value), { fmt: fmtPct, max: 1, ticks: 4 });
 
 // 06 — mathlib scatter
-const downstream = charted.filter(r => r.m4.ml_per_decl > 0 && r.group < 4);
+const downstream = charted.filter(r => r.m4.ml_per_decl > 0);
 scatterChart('mlScatter', downstream.map(r => ({
   x: r.m4.ml_per_decl, y: r.m1.never, label: r.label, group: r.group, dy: r.sdy
 })), { xlabel: 'Mathlib references per declaration', ylabel: 'declarations never reused internally',
@@ -987,7 +1091,7 @@ sizePanel('fileLenChart', r => r.m9.file_stats);
 })();
 
 // 10 — composite quality score
-document.getElementById('compLegend').innerHTML = legendHTML(GROUPS.slice(0,4));
+document.getElementById('compLegend').innerHTML = legendHTML(GROUPS);
 dotRank('compChart', DATA.composite.map(c => ({
   label: (c.anchor === 'high' ? '▲ ' : c.anchor === 'low' ? '▼ ' : '') + c.label,
   value: c.score, group: c.group,
@@ -1086,8 +1190,7 @@ dotRank('amortChart', charted.filter(r => r.m14 && r.m14.mean_log10_cost != null
 
   document.getElementById('archHow').innerHTML =
     `<p>Each component is a percentile rank over the ${DATA.totals.repos} corpora (ties averaged); the index is their mean.
-    Mathlib and Equational Theories share the exact top score (${P.score['mathlib4']}); the ranking lists Mathlib first by
-    stable sort order, and the AUC and discriminant facts are unaffected by how that tie is broken.
+    Mathlib scores ${P.score['mathlib4']}; Equational Theories scores ${P.score['equational_theories']}.
     Components: <b>cross-directory reuse</b> (share of internal reference pairs whose two declarations live under
     different top-level directories), <b>directory breadth</b> (mean number of distinct directories using each reused
     declaration — generality), and <b>cross-directory reuse divided by its random-wiring expectation</b> (so a repo

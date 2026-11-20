@@ -1,0 +1,66 @@
+{
+  "repository": "https://github.com/lean-dojo/TorchLean",
+  "revision": "bb95db148ab63e3beb3e9c43813ad782bdddad67",
+  "measured_at": "2026-11-15T22:03:11+00:00",
+  "lean_toolchain": "leanprover/lean4:v4.35.0",
+  "checkout_clean": true,
+  "dependency_revisions": {
+    "mathlib": "56a005855ea17e0b0958f73ec801ae140b0a1679",
+    "floatlib": "acba2057e452f32f4ed4f06bb0adbeda5342ba92",
+    "aesop": "4a174c490d8707121c4a9290800489f105d85e07",
+    "batteries": "66e469188fe07963e5cf666c7d4433f45b8131c5"
+  },
+  "dependency_checkouts_clean": true,
+  "roots": [
+    "TorchLean"
+  ],
+  "excluded_roots": [
+    "TorchLeanExamples",
+    "TorchLeanTest"
+  ],
+  "extraction": {
+    "tier": "env",
+    "dynamic_imports": true,
+    "private_level": true,
+    "source_modules": 977,
+    "built_modules": 977,
+    "loaded_library_modules": 977,
+    "missing_modules": [],
+    "dump_constants": 595146,
+    "dump_modules": 7698,
+    "dump_sha256": "5dba335264492f92346666f6a60f2cbb51ab02e52babea398c965d8be3378210",
+    "files_with_retained_declarations": 969,
+    "modules_without_retained_declarations": [
+      "TorchLean/Tensor/Tactic/Verify/Lowering.lean",
+      "TorchLean/Verify/Coverage/Layers/MultiheadAttention.lean",
+      "TorchLean/Verify/RuntimeApprox/Roundoff/Rules/Autograd.lean",
+      "TorchLean/Verify/RuntimeApprox/Roundoff/Rules/Movement.lean",
+      "TorchLean/Verify/RuntimeApprox/Roundoff/Rules/Ordering.lean",
+      "TorchLean/Verify/RuntimeApprox/Roundoff/Rules/Reduction.lean",
+      "TorchLean/Verify/RuntimeApprox/Roundoff/Rules/Softmax.lean",
+      "TorchLean/Verify/RuntimeApprox/Roundoff/Rules/Tensor.lean"
+    ],
+    "declarations": 16622,
+    "edges": 1077226,
+    "source_metadata_join_rate": 0.8157,
+    "source_parse_errors": 0
+  },
+  "authorship_provenance": "human+AI",
+  "quality_anchor": false,
+  "floatlib_attribution": "other",
+  "elaboration_benchmark": null,
+  "notes": [
+    "Reused the existing clean, fully built checkout supplied by the user; no rebuild required.",
+    "All library modules were imported. Eight modules have no retained source-level declarations under the existing corpus contraction rules.",
+    "Source-derived statistics use the existing approximate parser; the metadata join covers 81.57% of retained declarations.",
+    "No elaboration-cost benchmark was run; M13 remains unavailable.",
+    "Existing repositories were not remeasured. Their saved result entries are unchanged."
+  ],
+  "authorship_evidence": {
+    "source": "https://github.com/lean-dojo/TorchLean/blob/bb95db148ab63e3beb3e9c43813ad782bdddad67/docs/CONTRIBUTING.md#ai-usage-disclosure",
+    "basis": "maintainer self-report",
+    "summary": "Maintainers describe primarily manual development with AI assistance for proof engineering, debugging, refactoring, and repository maintenance.",
+    "ai_share": null,
+    "classification_method": "manual provenance label; not inferred from code-quality metrics"
+  }
+}

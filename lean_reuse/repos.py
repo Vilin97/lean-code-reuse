@@ -77,6 +77,28 @@ REPOS = {
         stars=517,
         provenance="human",
     ),
+    "floatlib": dict(
+        label="FloatLib",
+        url="https://github.com/lean-dojo/FloatLib",
+        dir="floatlib",
+        roots=["FloatLib.lean", "FloatLib/Floats.lean", "FloatLib/Floats",
+               "FloatLib/Numerics.lean", "FloatLib/Numerics",
+               "FloatLib/Kernels.lean", "FloatLib/Kernels"],
+        deps=["mathlib4", "batteries", "aesop", "core"],
+        category="numerical library",
+        stars=81,
+        provenance="human+AI",
+    ),
+    "torchlean": dict(
+        label="TorchLean",
+        url="https://github.com/lean-dojo/TorchLean",
+        dir="torchlean",
+        roots=["TorchLean"],
+        deps=["mathlib4", "batteries", "aesop", "core"],
+        category="machine learning library",
+        stars=212,
+        provenance="human+AI",
+    ),
     "flt": dict(
         label="FLT",
         url="https://github.com/ImperialCollegeLondon/FLT",
@@ -352,7 +374,7 @@ REPOS = {
 # Build order: dependencies before dependents.
 BUILD_ORDER = [
     "core", "batteries", "aesop", "mathlib4",
-    "cslib", "physlib", "scilean", "flt", "pfr", "analysis",
+    "cslib", "physlib", "scilean", "floatlib", "torchlean", "flt", "pfr", "analysis",
     "equational_theories", "formal-conjectures", "nng4",
     "tauceti", "lean-pool", "atlas", "seed-prover", "superhuman",
     "erdos90", "clawristotle", "addcombi", "pnt", "carleson", "strongpnt",
