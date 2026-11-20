@@ -7,6 +7,54 @@ means the text is more predictable to that compressor.
 
 Results: [results.md](results.md) (tables) and [results.json](results.json) (all numbers).
 
+## Findings
+
+Headline (bpb, the same 16 random ~8 KB chunks per corpus, each compressed alone; whole-corpus
+row: the entire corpus as one stream):
+
+| Method | Mathlib | Tau Ceti | Lean Pool | Formal Frontier | OpenAI Math | CFSG | Stacks Core | Stacks Frontier |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| gzip -9 | 2.45 | 2.45 | 2.08 | 2.21 | 1.81 | 2.36 | 2.59 | 2.43 |
+| PPMd o16 (best plain classical) | 2.06 | 2.09 | 1.75 | 1.85 | 1.51 | 1.99 | 2.22 | 2.07 |
+| zstd -19 + own-corpus dictionary | 1.85 | 1.78 | 1.59 | 1.56 | 1.36 | 1.71 | 1.97 | 1.77 |
+| SmolLM2-135M | 1.10 | 1.03 | 0.98 | 1.00 | 0.88 | 1.26 | 1.12 | 1.10 |
+| Qwen3-0.6B | 0.69 | 0.66 | 0.63 | 0.65 | 0.68 | 0.82 | 0.75 | 0.72 |
+| Qwen3-1.7B | 0.58 | 0.56 | 0.53 | 0.54 | 0.63 | 0.70 | 0.63 | 0.61 |
+| Qwen3-4B | **0.49** | **0.48** | **0.47** | **0.47** | **0.58** | **0.62** | **0.55** | **0.53** |
+| *best classical, whole corpus* | *1.10* | *1.00* | *0.87* | *0.97* | *0.78* | see results | *1.28* | *0.89* |
+
+1. **LMs dominate at every scale tried.** On an isolated 8 KB chunk, even a 135M model needs
+   about half the bits of the best classical compressor (1.35-1.75x fewer), and Qwen3-4B
+   2.4-3.7x fewer. Qwen3-4B on 8 KB chunks also beats every classical compressor given the
+   *whole* corpus as context (e.g. Mathlib 0.49 vs 1.10 for PPMd over all 95 MB).
+2. **Within a model family, bpb falls steadily with size** (Qwen3 0.6B → 1.7B → 4B:
+   0.69 → 0.58 → 0.49 on Mathlib; SmolLM2 135M → 360M: 1.10 → 0.89).
+3. **Classical and LM rankings disagree on the generated-looking corpora.** OpenAI Math is
+   the *most* compressible corpus classically (xz 0.68x Mathlib on chunks; 0.78 bpb whole) —
+   it is full of templated, repeated text — but for Qwen3-4B it is *less* predictable than
+   Mathlib (1.17x). CFSG is the least predictable corpus for every LM (1.26x Mathlib for
+   Qwen3-4B) though about Mathlib-level classically: its proofs are dense term-mode
+   arguments threading many idiosyncratically named local hypotheses (`hJ₀'L`, `hz₀'`). The
+   larger the model, the larger the gap: repetition that classical coders exploit is not the
+   same as being conventional Lean.
+4. **Mathlib-style corpora sit together.** Tau Ceti, Lean Pool and Formal Frontier are within
+   0.84-0.97x of Mathlib under every LM. No large memorisation advantage for Mathlib is
+   visible at 8 KB context: Formal Frontier (2026, Mathlib style, not in pretraining) is
+   *more* predictable than Mathlib for all models.
+5. **Stacks: the human-reviewed tier is less predictable than the AI tier**, under every
+   method (Qwen3-4B 0.55 vs 0.53; PPMd 2.22 vs 2.07; whole corpus 1.28 vs 0.89 — the last
+   partly a size effect, 1.8 MB vs 1 GB). Stacks Core is also the least predictable corpus
+   classically.
+6. **A Lean prover fine-tune is worse, not better, at Lean source.** Kimina-Prover-Distill-1.7B
+   (Qwen3-1.7B tuned for theorem proving) is 0.07-0.19 bpb worse than Qwen3-1.7B-Base on every
+   corpus; Qwen2.5-Coder-1.5B is also behind Qwen3-1.7B-Base. Base pretraining scale matters
+   more than code or Lean specialisation here.
+7. Among classical coders on short chunks: PPMd > brotli (its built-in text dictionary helps)
+   > zstd ≈ xz > gzip > bzip2; PPMd gains steadily with order up to 16. A dictionary trained
+   on the corpus itself cuts zstd's bpb by 18-28%; one trained on Mathlib helps the
+   Mathlib-style corpora (Tau Ceti, Formal Frontier: -23%) more than OpenAI Math (-8%) or
+   CFSG (-13%).
+
 ## Corpora
 
 The libraries and scopes of
@@ -65,10 +113,12 @@ environment.
 
 ## Caveats
 
-- **Memorisation.** Mathlib (and, to a lesser degree, older Lean code generally) is in the
-  pretraining data of every model here; the AI-written corpora (2026) and Stacks are not. LM
-  bpb on Mathlib is therefore partly recall. Formal Frontier and Stacks Core, recent
+- **Memorisation.** Older Mathlib is in the pretraining data of every model here; the 2026
+  corpora are not. Some of Mathlib's LM bpb may be recall, although finding 4 suggests the
+  effect is small at this context length. Formal Frontier and Stacks Core, recent
   Mathlib-style code, are the closest uncontaminated comparators.
+- **Chunk counts differ by model**: SmolLM2-135M 32, SmolLM2-360M and Qwen3-0.6B 24, the
+  1.5B-4B models 16 per corpus. Paired tables use the 16 chunks every method scored.
 - **Low bpb is not quality.** A corpus of templated, generated or near-duplicate code compresses
   well under every method. LM bpb measures how conventional the text is relative to
   everything the model has read; classical bpb measures repetition inside the text.
@@ -84,7 +134,7 @@ python3 -m compression.classical --work <work> chunks
 python3 -m compression.classical --work <work> whole
 python3 -m compression.lm_bpb --model Qwen/Qwen3-0.6B-Base --chunks <work>/chunks.jsonl \
     --out <work>/lm/Qwen_Qwen3-0.6B-Base.jsonl --limit 24
-python3 -m compression.report --work <work>
+python3 -m compression.report --work <work>   # or with no --work: rebuild from compression/data
 ```
 Checkouts: one directory per source (`mathlib`, `tauceti`, `lean-pool`,
 `formal-frontier/<repo>`, `openai-math`, `cfsg`, `stacks`) at the commits above.

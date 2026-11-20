@@ -1,0 +1,50 @@
+{
+ "mathlib": {
+  "name": "Mathlib",
+  "files": 8175,
+  "bytes": 95246615,
+  "chunks": 11627
+ },
+ "tauceti": {
+  "name": "Tau Ceti",
+  "files": 16726,
+  "bytes": 177033633,
+  "chunks": 21611
+ },
+ "lean-pool": {
+  "name": "Lean Pool",
+  "files": 21182,
+  "bytes": 360428730,
+  "chunks": 43998
+ },
+ "formal-frontier": {
+  "name": "Formal Frontier",
+  "files": 1342,
+  "bytes": 13831710,
+  "chunks": 1688
+ },
+ "openai-math": {
+  "name": "OpenAI Math",
+  "files": 121797,
+  "bytes": 1485450407,
+  "chunks": 180915
+ },
+ "cfsg": {
+  "name": "CFSG (AxiomMath)",
+  "files": 194203,
+  "bytes": 1958838886,
+  "chunks": 237755
+ },
+ "stacks-core": {
+  "name": "Stacks Core (reviewed)",
+  "files": 445,
+  "bytes": 1824554,
+  "chunks": 223
+ },
+ "stacks-frontier": {
+  "name": "Stacks Frontier (AI)",
+  "files": 63768,
+  "bytes": 1021743183,
+  "chunks": 124725
+ }
+}

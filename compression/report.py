@@ -49,16 +49,22 @@ def load(work: Path):
             data.setdefault(m, {}).setdefault(r["corpus"], {})[r["id"]] = dict(
                 bits=r[m] * r["bytes"], bytes=r["bytes"], rank=r["rank"])
     ranks = {}
-    for line in (work / "chunks.jsonl").read_text().splitlines():
+    index = work / "chunks.jsonl"
+    if not index.exists():
+        index = work / "sample_index.jsonl"          # committed copy without chunk texts
+    for line in index.read_text().splitlines():
         c = json.loads(line)
         ranks[(c["corpus"], c["id"])] = c["rank"]
-    for mid, label, _ in LMS:
-        p = work / "lm" / (mid.replace("/", "_") + ".jsonl")
-        if not p.exists():
-            continue
+    label_of = {mid: label for mid, label, _ in LMS}
+    lm_files = sorted((work / "lm").glob("*.jsonl")) if (work / "lm").is_dir() else []
+    if not lm_files and (work / "lm_chunks.jsonl").exists():
+        lm_files = [work / "lm_chunks.jsonl"]
+    for p in lm_files:
         for line in p.read_text().splitlines():
             r = json.loads(line)
-            data.setdefault(label, {}).setdefault(r["corpus"], {})[r["id"]] = dict(
+            if r["model"] not in label_of:
+                continue
+            data.setdefault(label_of[r["model"]], {}).setdefault(r["corpus"], {})[r["id"]] = dict(
                 bits=r["bits"], bytes=r["bytes"], rank=ranks[(r["corpus"], r["id"])],
                 tokens=r["tokens"])
     return data
@@ -70,7 +76,8 @@ def fmt(x, nd=3):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--work", required=True, type=Path)
+    ap.add_argument("--work", type=Path, default=Path(__file__).parent / "data",
+                    help="work dir of the runs, or the committed compression/data")
     ap.add_argument("--out-dir", type=Path, default=Path(__file__).parent)
     a = ap.parse_args()
     work = a.work
@@ -97,8 +104,8 @@ def main():
             lo, hi = boot(rr)
             out["full"][m][c] = dict(bpb=agg(rr), lo=lo, hi=hi, k=len(rr),
                                      median=statistics.median(v["bits"] / v["bytes"] for v in rr))
-    tpb = {l: {c: sum(v["tokens"] for v in data[l][c].values()) /
-               sum(v["bytes"] for v in data[l][c].values()) for c in ORDER} for l in lm_labels}
+    tpb = {l: {c: sum(v["tokens"] for v in rows(l, c, common_k)) /
+               sum(v["bytes"] for v in rows(l, c, common_k)) for c in ORDER} for l in lm_labels}
     out["tokens_per_byte"] = tpb
     (a.out_dir / "results.json").write_text(json.dumps(out, indent=1))
 
@@ -169,7 +176,7 @@ def main():
             base = out["paired"][m]["mathlib"]
             L.append(f"| {m} | " + " | ".join(f"{out['paired'][m][c] / base:.2f}" for c in ORDER) + " |")
         L.append("")
-        L.append("## Tokens per byte\n")
+        L.append(f"## Tokens per byte (same {common_k} chunks)\n")
         L.append("| Model | " + " | ".join(names[c] for c in ORDER) + " |")
         L.append("|---|" + "---:|" * len(ORDER))
         for m in lm_labels:
