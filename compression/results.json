@@ -1411,7 +1411,13 @@
    "bzip2-9": 1.302497058964348,
    "bzip2-9 seconds": 127.2,
    "zstd-19 --long": 1.0542479541117298,
-   "zstd-19 --long seconds": 1130.7
+   "zstd-19 --long seconds": 1130.7,
+   "xz-9e": 1.0025741218616997,
+   "xz-9e seconds": 1804.5,
+   "ppmd-o8": 1.1256977752278499,
+   "ppmd-o8 seconds": 346.3,
+   "ppmd-o16": 0.9872479568490657,
+   "ppmd-o16 seconds": 448.8
   }
  },
  "tokens_per_byte": {

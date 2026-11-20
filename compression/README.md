@@ -21,7 +21,7 @@ row: the entire corpus as one stream):
 | Qwen3-0.6B | 0.69 | 0.66 | 0.63 | 0.65 | 0.68 | 0.82 | 0.75 | 0.72 |
 | Qwen3-1.7B | 0.58 | 0.56 | 0.53 | 0.54 | 0.63 | 0.70 | 0.63 | 0.61 |
 | Qwen3-4B | **0.49** | **0.48** | **0.47** | **0.47** | **0.58** | **0.62** | **0.55** | **0.53** |
-| *best classical, whole corpus* | *1.10* | *1.00* | *0.87* | *0.97* | *0.78* | see results | *1.28* | *0.89* |
+| *best classical, whole corpus* | *1.10* | *1.00* | *0.87* | *0.97* | *0.78* | *0.99* | *1.28* | *0.89* |
 
 1. **LMs dominate at every scale tried.** On an isolated 8 KB chunk, even a 135M model needs
    about half the bits of the best classical compressor (1.35-1.75x fewer), and Qwen3-4B
